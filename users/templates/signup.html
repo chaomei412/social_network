@@ -1,55 +1,71 @@
-    <!DOCTYPE html>  
-    <html lang="en">  
+<!DOCTYPE html>
+<html lang="en">  
     <head>  
         <meta charset="UTF-8">  
-		        {% load staticfiles %}
-		        <link rel="stylesheet" href="{% static 'css/style.css' %}"/>  
-     		        <link rel="stylesheet" href="{% static 'css/main.css' %}"/> 
-				        <link rel="stylesheet" href="{% static 'css/add_new_data.css' %}"/>  
-	 <title>signup</title>  
-
-	
-<style>
-input{
-width:250px;
-font-size:18px;
-
-}
-</style>
-    </head>  
+		{% load staticfiles %}
+		<link rel="stylesheet" href="{% static 'css/style.css' %}"/>  
+		<link rel="stylesheet" href="{% static 'css/main.css' %}"/>  
+		<title>signup</title>  	
+	</head>  
     <body>  
-	<span id="header_title"><a href="/hospital/">hospital signup</a>   </span>
-	<h3>
-	
-	
-<div id="login_signup">
- 
-<center> <h1><span id="login_word">Step 1: SIGNUP</span></h1></center>
-<a href="/hospital/login/"><button id="login_key" >LOGIN</button></a>
-  <form id="signup_form" method="POST" class="post-form" action="/hospital/signup/" style="margin-left:450px">   
- {% csrf_token %}  
-
-<span style="position:absolute">USER NAME</span><br>
-<input type="text" id="user_name" name="username" onkeyup="key()" required="true" value="" /><br>
-<div id="user_name_error"></div>
-<span style="position:absolute">PASSWORD</span><br>
-<input type="password" id="user_pass" name="password" placeholder="password"  required="true" value="" /><br>
-<span style="position:absolute">PASSWORD AGAIN</span><br>
-<input type="password" id="user_pass" name="password2" placeholder="password"  required="true" value="" /><br>
-
-
-<span style="position:absolute" onkeyup="key2()">EMAIL</span><br>
-<input type="email" id="email" name="email" onkeyup="key2()" required="true" /><br>
-<div id="email_error"></div>
-<button type="submit" id="signup_submit" style="cursor:pointer;font-size:22px">Next</button>
-{% if email == 1 %}
-<span id="login_error" >username present</span>
-{% endif %}
-</form>	
-
- 
- 
-</div>
-	 <h4 id="footer"><a href="/administrator/">admin</a><a href="/hospital/">hospital</a><a href="/view/">public</a><a href="/hospital/profile">profile</a></h4>
+	<div id="titles">
+		<span class="active">Signup</span>
+		<span class="unactive"><a href="/login/">Login</a></span>
+	</div>
+			<div id="login_box">
+				<form method="POST" class="post-form" action="/signup/" enctype="multipart/form-data">   
+				{% csrf_token %}  
+				<span id="step1">
+					<span >USER NAME</span><br>
+					<input type="text" id="user_name" name="username" onkeyup="key()" required="true" value="" /><br>
+					<div id="user_name_error"></div>
+					<span >PASSWORD</span><br>
+					<input type="password" id="user_pass" name="password" placeholder="password"  required="true" value="" /><br>
+					<span >PASSWORD AGAIN</span><br>
+					<input type="password" id="user_pass" name="password2" placeholder="password"  required="true" value="" /><br>
+					<span  onkeyup="key2()">EMAIL</span><br>
+					<input type="email" id="email" name="email" onkeyup="key2()" required="true" /><br>
+					<div id="email_error"></div>
+					<button onclick="step2()" id="next">Next</button>
+				</span>
+				<span id="step2" style="display:none">
+					<span >First Name</span><br>
+					<input type="text" id="f_name" name="f_name" onkeyup="key()" required="true" value="" /><br>
+					<span >Last Name</span><br>
+					<input type="password" id="l_pass" name="l_name" required="true" value=""/><br>
+					<span >Date of birth</span><br>
+					<input type="date" id="dob" name="dob" placeholder=""  value="" /><br>
+					<span>select profile pic</span><br>
+					<input type="file" id="pic" name="pic"/><br>
+					<button type="submit" id="signup_submit">Signup</button>
+				</span>
+				{% if email == 1 %}
+					<span id="login_error" >username present</span>
+				{% endif %}
+				</form>	
+			</div>
+	 <script>
+	 function step2()
+	 {
+	 document.getElementById("next").style.display="none";
+	 document.getElementById("step2").style.display="block";	 
+	 }
+	 
+	 function key()
+	 {
+	 //validat usernme 
+	 
+	 }
+	 
+	 
+	 
+	 function key2()
+	 {
+	 //validate password
+	 
+	 
+	 }
+	 </script>
+	 
     </body>  
-    </html>  
+</html>  

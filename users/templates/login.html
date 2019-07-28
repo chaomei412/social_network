@@ -11,25 +11,21 @@
 	
 	<div id="titles">
 		<span class="active">Login</span>
-		<span class="unactive">	<a href="/hospital/signup/">Signup</a></span>
+		<span class="unactive">	<a href="/signup/">Signup</a></span>
 	</div>
 	<div id="body">
 
 	   {% if invalid == 1 %}
 	   <h4 style="color:red">invalid login details</h4>
 	   {%endif%}
-     	   
-		{% if username == 0 %}
-		
+
 		<div id="login_box">
 			  <form method="POST" class="post-form" action="/login/">  
 					{% csrf_token %}
-					<input type = "text" style = "margin-left:20%;"  placeholder = "Identifiant" name = "username" />
-				  <input type = "password" style = "margin-left:20%;" placeholder = "password" name = "password"/></br>
-					<button type="submit" id="login_button">Login </button>
+					<input type = "text" style = "margin-left:5%;"  placeholder = "Username" name = "username" />
+				  <input type = "password" style = "margin-left:5%;" placeholder = "Password" name = "password"/></br>
+					<br/><button type="submit" id="login_button">Login </button>
 				</form>
-				
-			{% endif %}		
 		</div>
    </body>
 </html>

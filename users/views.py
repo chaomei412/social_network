@@ -9,116 +9,114 @@ from django.contrib.staticfiles.storage import staticfiles_storage
 from django.core.files import File
 import datetime  
 import sqlite3 as db
-
+from django.core.files.storage import FileSystemStorage
 def main(request):
-		if (is_login(request)):#is user not login
+		if (not is_login(request)):#is user not login
 			return render(request, 'login.html', {"username" : 0})
-		User=get_username(request) 
-		conn=db.connect('hos_data.db')
-		id=get_id(request);
-		c=conn.cursor()
-		data=[]
-		q='select * from users where id='+id
-		for row in c.execute(q):
-			data.append(row[1]);data.append(row[3]);data.append(row[2]);data.append(row[4])
-		q='select * from hospital where id='+str(data[3])
-		for row in c.execute(q):
-			data[3]=row[1]
-			data.append(row[2])
-		conn.close()
+		#user is loogin
 		help='this is information about login creditional contact and address'
-		return render(request,'profile.html',{'User':User,'data':data,'help':help})	
+		return render(request,'profile.html',{'help':help})	
 	#return HttpResponse("hi"+str(username))
 def signup(request):  
-	if request.method == "POST":  
-		u=request.POST.get('username')
-		p=request.POST.get('password')	
-		e=request.POST.get('email')	
-		conn = db.connect('hos_data.db')
-		#con.isolation_level = None
+	if request.method == "POST":
+		u_name=request.POST.get('username')
+		pass_d=request.POST.get('password')
+		email=request.POST.get('email')
+		f_name=request.POST.get('f_name')
+		l_name=request.POST.get('l_name')
+		dob=request.POST.get('dob')
+		
+		conn=db.connect('../sqlite3_manager/db')	
 		c = conn.cursor()
-		#create table for store hospitals data
-		q='select * from users where username="'+u+'"'
-		count=0
-		for row in c.execute(q):
-			count=count+1
-		if count==0:
-			#not same username user present
-			q="insert into users(username,email,password) values(?,?,?)"
-			q2=(u,e,p)
-			c.execute(q,q2)
-			print("signup success as username and email ",u,e)
-			id=0
-			for row in c.execute(q):
-				id=row[0]
-			request.session['signup_id']=id
-			conn.commit()	
-			conn.close()
-			#success		
-			return render(request,'add_new_hospital.html',{'error':0})
-		else:
-			return render(request,'signup.html',{'email':1})
+		q="insert into users values(?,?,?,?,?,?,?,?,?)"
+		q2=(None,u_name,"".join(dob.split("-")),f_name,l_name,'',1,0,0)
+		print("values: ",q2)
+		#pic varchar(25),gender integer,religion_id integer,address_id integer)
+		c.execute(q,q2)
+		conn.commit()
+		q="SELECT id from users where u_id='"+u_name+"'"
+		u_id=0
+		for i in c.execute(q):
+			u_id=i[0]
+		print(u_id)
+		
+		
+		#save password
+		q="insert into passwords values(?,?,?,?)"
+		q2=(None,u_id,pass_d,"date")
+		c.execute(q,q2)
+		conn.commit()		
+
+		#handle pic
+		pic=request.FILES['pic']
+		fs = FileSystemStorage()
+		pic_name=str(u_id)+"."+pic.name.split(".")[-1]
+		filename = fs.save(pic_name, pic)
+		uploaded_file_url = fs.url(filename)
+		print(uploaded_file_url)
+
+		print("pic new name",pic_name)
+		
+		#save pic data in db
+		q="insert into pics values(?,?,?)"
+		q2=(None,u_id,pic_name)
+		c.execute(q,q2)
+		conn.commit()		
+		conn.close()
+		#success		
+		
+		return render(request,'login.html',{'error':0})
 	return render(request,'signup.html',{})  
 
-
+def get_id(request):
+	return request.session['u_id']
 def login_check(request):
-	if request.method == 'GET' and request.GET.get('x')=='1':
-		request.session['username']=0
+	if request.method == 'GET' and request.GET.get('x')=='1':#logout request
+		request.session['u_id']=0
 		return render(request, 'login.html', {"username" : 0})
 		#LOGOUT
 	elif request.method == 'POST':
 		username=request.POST.get('username')
 		password=request.POST.get('password')
 		#LOGIN
-		if(validate_login(request,username,password)):
+		print(1)
+		data=validate_login(request,username,password)
+		if(data!=-1):
 		#return if login success
-			request.session['username'] = username
-			return render(request, 'profile.html', {"username" : username})
+			request.session['u_id'] = data[0]
+			return render(request, 'profile.html', {"data" : data})
 		else:
-			request.session['username'] = 0
+			request.session['u_id'] = 0
 			return render(request, 'login.html', {"username" : 0,"invalid":1})
 	elif request.session.has_key('username'):
-		if request.session['username']==0:
+		if request.session['u_id']==0:
 			return render(request, 'login.html', {"username" : 0})
 			#PRIVIUS LOGIN IS LOGED OUT
 		else:
 			#user still login
-			username = request.session['username']
+			username = request.session['u_id']
 			return render(request, 'profile.html', {"username" : username})
 	else:
 		return render(request, 'login.html', {"username" : 0})
 def validate_login(request,u,p):
-		return 1
-		conn = db.connect('hos_data.db')
-		#con.isolation_level = None
+		conn=db.connect('../sqlite3_manager/db')	
 		c = conn.cursor()
-
-		q ="select * from users where username = '"+str(u)+"' and password = '"+str(p)+"'";
-		count=0
-		id=0
-		hos_id=0
-		for row in c.execute(q):
-			count=count+1
-			hos_id=row[4]
-			id=row[0]
-		request.session['id'] = id		
-		request.session['hos_id'] = hos_id
-		print('login success as ',id,hos_id);
-		conn.close()	
-		if(count==0):
-			return 0
-		else:
-			return 1
-			
-			
+		q="select u.id,u.fname,u.lname,pc.pic_url from users u,passwords p,pics pc where u.u_id='"+u+"' and p.password='"+p+"' and u.id=p.u_id and u.id=pc.u_id"
+		print(q)
+		#pic varchar(25),gender integer,religion_id integer,address_id integer)
+		data=-1
+		for i in c.execute(q):
+			data=list(i)
+		conn.close()
+		return data
 def is_login(request):
-	if(request.session.has_key('username')):
-		if request.session['username']==0:
+	if(request.session.has_key('u_id')):
+		if request.session['u_id']==0:
 			#recently logout
-			return 1
+			return 0
 		else:
 			#still login
-			return 0
+			return 1
 	else:
 		#not login
-		return 1
+		return 0
