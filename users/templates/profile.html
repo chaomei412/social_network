@@ -1,0 +1,27 @@
+    <!DOCTYPE html>  
+    <html lang="en">  
+    <head>  
+        <meta charset="UTF-8">  
+        <title>Index</title>  
+        {% load staticfiles %}  
+        <link rel="stylesheet" href="{% static 'css/style.css' %}"/>  
+		        <link rel="stylesheet" href="{% static 'css/main.css' %}"/> 
+				        <link rel="stylesheet" href="{% static 'css/add_new_data.css' %}"/>  
+    </head>  
+    <body>  
+     <span id="header_title"><a href="/hospital/" >hospital main page</a> <a href="/hospital/view" >view data</a>
+<a href="/hospital/add" >Add data</a>  	{% if username != 0 %}			<span id="header_button">welcome <a href="/hospital/profile/">{{User}}</a>		<a id="logout_button" href="/hospital/login/?x=1" >logout</a>  </span> {% endif %}</span>
+	<center style="border:solid 1px black;margin:3% 33% 3% 33%;font-size:16px;text-align:left;padding:25px;">
+	{{selected}}<span id="help">?</span><span id="view_help" style="display:none">{{help}}</span>
+   <br><H1>Profile of hospital</H1><br>
+	Username:{{data.0}}<br>
+	Password:{{data.1}}<br>
+	Email:{{data.2}}<br>
+	Name:{{data.3}}<br>
+	Address:{{data.4}}
+	
+	</center>
+	 <h4 id="footer"><a href="/administrator/">admin</a><a href="/hospital/">hospital</a><a href="/view/">public</a><a href="/hospital/profile">profile</a></h4>
+	         <script src="{% static 'js/add_new_data.js' %}"></script>  
+	</body>  
+    </html>  

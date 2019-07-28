@@ -1,0 +1,55 @@
+    <!DOCTYPE html>  
+    <html lang="en">  
+    <head>  
+        <meta charset="UTF-8">  
+		        {% load staticfiles %}
+		        <link rel="stylesheet" href="{% static 'css/style.css' %}"/>  
+     		        <link rel="stylesheet" href="{% static 'css/main.css' %}"/> 
+				        <link rel="stylesheet" href="{% static 'css/add_new_data.css' %}"/>  
+	 <title>signup</title>  
+
+	
+<style>
+input{
+width:250px;
+font-size:18px;
+
+}
+</style>
+    </head>  
+    <body>  
+	<span id="header_title"><a href="/hospital/">hospital signup</a>   </span>
+	<h3>
+	
+	
+<div id="login_signup">
+ 
+<center> <h1><span id="login_word">Step 1: SIGNUP</span></h1></center>
+<a href="/hospital/login/"><button id="login_key" >LOGIN</button></a>
+  <form id="signup_form" method="POST" class="post-form" action="/hospital/signup/" style="margin-left:450px">   
+ {% csrf_token %}  
+
+<span style="position:absolute">USER NAME</span><br>
+<input type="text" id="user_name" name="username" onkeyup="key()" required="true" value="" /><br>
+<div id="user_name_error"></div>
+<span style="position:absolute">PASSWORD</span><br>
+<input type="password" id="user_pass" name="password" placeholder="password"  required="true" value="" /><br>
+<span style="position:absolute">PASSWORD AGAIN</span><br>
+<input type="password" id="user_pass" name="password2" placeholder="password"  required="true" value="" /><br>
+
+
+<span style="position:absolute" onkeyup="key2()">EMAIL</span><br>
+<input type="email" id="email" name="email" onkeyup="key2()" required="true" /><br>
+<div id="email_error"></div>
+<button type="submit" id="signup_submit" style="cursor:pointer;font-size:22px">Next</button>
+{% if email == 1 %}
+<span id="login_error" >username present</span>
+{% endif %}
+</form>	
+
+ 
+ 
+</div>
+	 <h4 id="footer"><a href="/administrator/">admin</a><a href="/hospital/">hospital</a><a href="/view/">public</a><a href="/hospital/profile">profile</a></h4>
+    </body>  
+    </html>  

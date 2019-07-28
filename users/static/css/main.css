@@ -1,0 +1,50 @@
+body{
+  margin: 0;
+  padding: 0;
+}
+
+#login_box
+{
+  display: block;
+  background-color: #999;
+  padding: 25px;
+  width: 200px;
+  margin: auto;
+  margin-top:25px;
+}
+#login_box>.post-form
+{
+
+}
+#logout_button
+{
+  font-size: 20px;
+  padding:5px 10px;
+  border: none;
+  background-color: #ddd;
+}
+#titles
+{
+  background-color: black;
+  font-size: 25px;
+  color:white;
+  background-color: #aaa;
+  
+}
+
+#titles>.unactive>a
+{
+
+ color: white;
+ text-decoration: none;
+  
+}
+#titles>.active
+{
+  
+  
+  background-color: #eee;
+  color: black;
+  width: 50%;
+  display: inline-block;
+}
