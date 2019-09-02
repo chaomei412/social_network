@@ -60,8 +60,8 @@ function xhr(url,method="get",data=null,callback,retry=0)
 		return 0; 
 	}
     var tmr=setTimeout(xhr,10000,url,method,data,callback,1);    
-    var xhr=new XMLHttpRequest(); 
-    xhr.onreadystatechange=function() 
+    var XHR=new XMLHttpRequest(); 
+    XHR.onreadystatechange=function() 
     { 
          if(this.readyState===4&&this.status===200)
         {
@@ -79,8 +79,8 @@ function xhr(url,method="get",data=null,callback,retry=0)
             xhr(url,method,data,callback);
         }
     };
-    xhr.open(method,url); 
-    xhr.send(data);
+    XHR.open(method,url); 
+    XHR.send(data);
 }
 
 
@@ -283,9 +283,28 @@ function date()
         return dt;
 }
 
+
+
+
+
+
+
 function get(id)
 {
     /*return object of pass id*/
     try
     {    return document.getElementById(id);}catch(e){return 0;}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

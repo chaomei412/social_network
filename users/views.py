@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from random import randint
 import datetime
+import json
 from django.http import HttpResponse , HttpResponseRedirect  
 from django.shortcuts import render, redirect  
 import os
@@ -28,7 +29,28 @@ def main(request):
 def logout(request):
 	request.session['u_id']=0#reset session variable
 	return render(request, 'login.html', {"username" : 0})
-	
+def is_username_avail(request):
+	u_name=request.POST.get('u_name')
+	conn=db.connect('../sqlite3_manager/db')	
+	c = conn.cursor()
+	q="select count(id) from users where u_id='"+u_name+"'"
+	count=0
+	for row in c.execute(q):
+		count=row[0]
+	response_data = {}
+	response_data['count'] = count
+	return HttpResponse(json.dumps(response_data), content_type="application/json")
+def is_email_avail(request):
+	email=request.POST.get('email')
+	conn=db.connect('../sqlite3_manager/db')	
+	c = conn.cursor()
+	q="select count(id) from users where email='"+email+"'"
+	count=0
+	for row in c.execute(q):
+		count=row[0]
+	response_data = {}
+	response_data['count'] = count
+	return HttpResponse(json.dumps(response_data), content_type="application/json")	
 def signup(request):  
 	if request.method == "POST":
 		u_name=request.POST.get('username')
@@ -37,7 +59,6 @@ def signup(request):
 		f_name=request.POST.get('f_name')
 		l_name=request.POST.get('l_name')
 		dob=request.POST.get('dob')
-		
 		conn=db.connect('../sqlite3_manager/db')	
 		c = conn.cursor()
 		q="insert into users values(?,?,?,?,?,?,?,?,?)"

@@ -24,6 +24,21 @@ urlpatterns = [
     path('', views.main),
 	path('login/',views.login_check),
 	path('logout/',views.logout),
-	path('signup/',views.signup)
+	path('signup/',views.signup),
+	path('signup/is_username_avail',views.is_username_avail),
+	path('signup/is_email_avail',views.is_email_avail),
+	
 	
 ]
+
+
+
+
+
+
+
+
+
+
+
+
