@@ -14,9 +14,21 @@ def main(request):
 		if (not is_login(request)):#is user not login
 			return render(request, 'login.html', {"username" : 0})
 		#user is loogin
-		help='this is information about login creditional contact and address'
-		return render(request,'profile.html',{'help':help})	
-	#return HttpResponse("hi"+str(username))
+		conn=db.connect('../sqlite3_manager/db')	
+		c = conn.cursor()
+		id = request.session['u_id']
+		q="select u.fname,u.lname,pc.pic_url from users u,passwords p,pics pc where u.id='"+str(id)+"' and u.id=p.u_id and u.id=pc.u_id"
+		#pic varchar(25),gender integer,religion_id integer,address_id integer)
+		data=-1
+		for i in c.execute(q):
+			data=list(i)
+		conn.close()
+		return render(request,'main.html',{"data":data})	
+		#return HttpResponse("hi"+str(username))
+def logout(request):
+	request.session['u_id']=0#reset session variable
+	return render(request, 'login.html', {"username" : 0})
+	
 def signup(request):  
 	if request.method == "POST":
 		u_name=request.POST.get('username')
@@ -79,12 +91,12 @@ def login_check(request):
 		username=request.POST.get('username')
 		password=request.POST.get('password')
 		#LOGIN
-		print(1)
 		data=validate_login(request,username,password)
 		if(data!=-1):
 		#return if login success
 			request.session['u_id'] = data[0]
-			return render(request, 'profile.html', {"data" : data})
+			print("login success")
+			return render(request, 'main.html', {"data" : data[1:]})
 		else:
 			request.session['u_id'] = 0
 			return render(request, 'login.html', {"username" : 0,"invalid":1})
@@ -95,28 +107,33 @@ def login_check(request):
 		else:
 			#user still login
 			username = request.session['u_id']
-			return render(request, 'profile.html', {"username" : username})
+			return render(request, 'main.html', {"username" : username})
 	else:
 		return render(request, 'login.html', {"username" : 0})
 def validate_login(request,u,p):
 		conn=db.connect('../sqlite3_manager/db')	
 		c = conn.cursor()
 		q="select u.id,u.fname,u.lname,pc.pic_url from users u,passwords p,pics pc where u.u_id='"+u+"' and p.password='"+p+"' and u.id=p.u_id and u.id=pc.u_id"
-		print(q)
 		#pic varchar(25),gender integer,religion_id integer,address_id integer)
 		data=-1
 		for i in c.execute(q):
 			data=list(i)
+		print("------",data,"===========")
 		conn.close()
 		return data
 def is_login(request):
+	
 	if(request.session.has_key('u_id')):
+		
 		if request.session['u_id']==0:
+			
 			#recently logout
 			return 0
 		else:
+			
 			#still login
 			return 1
 	else:
+		
 		#not login
 		return 0

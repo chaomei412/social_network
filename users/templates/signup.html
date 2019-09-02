@@ -4,7 +4,10 @@
         <meta charset="UTF-8">  
 		{% load staticfiles %}
 		<link rel="stylesheet" href="{% static 'css/style.css' %}"/>  
-		<link rel="stylesheet" href="{% static 'css/main.css' %}"/>  
+		<link rel="stylesheet" href="{% static 'css/main.css' %}"/>
+		<script src="{% static 'js/signup.js' %}"></script>
+		<script src="{% static 'js/blogi5_lib.js' %}"></script>		
+		
 		<title>signup</title>  	
 	</head>  
     <body>  
@@ -17,7 +20,7 @@
 				{% csrf_token %}  
 				<span id="step1">
 					<span >USER NAME</span><br>
-					<input type="text" id="user_name" name="username" onkeyup="key()" required="true" value="" /><br>
+					<input type="text" id="user_name" onchange="is_username_available()" name="username" onkeyup="key()" required="true" value="" /><br>
 					<div id="user_name_error"></div>
 					<span >PASSWORD</span><br>
 					<input type="password" id="user_pass" name="password" placeholder="password"  required="true" value="" /><br>
@@ -66,6 +69,6 @@
 	 
 	 }
 	 </script>
-	 
+	 <div id="tost"></div>
     </body>  
 </html>  

@@ -9,9 +9,21 @@
 	</head>  
     <body>  
 		<div>
-			{% for i in  data %}
-				{{i}}<br/>
-			{% endfor %}		
+		<div id="header">
+			<span id="name">
+				welcome mr. {{data.0}} {{data.1}}
+			</span>
+			<img id="prof_pic" src="/media/{{data.2}}"/>
+			<span id="logout">
+				<input type="text" placeholder="Search"></input>
+				<a href="/">Home</a>
+				<a href="#">Create</a>
+				<a href="/logout/">logout</a>
+			</span>	
+		</div>
+			
+			<br/>{{i}}
+			
 		</div>
 	</body>  
     </html>  

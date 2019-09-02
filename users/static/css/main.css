@@ -50,14 +50,93 @@ button
 
 #titles>.unactive>a
 {
- color: white;
- text-decoration: none;
-  
+	color: white;
+	text-decoration: none;  
 }
 #titles>.active
 {
-  background-color: #eee;
-  color: black;
-  width: 50%;
-  display: inline-block;
+	background-color: #eee;
+	color: black;
+	width: 50%;
+	display: inline-block;
 }
+
+#header
+{
+	display: block;
+	width: 100%;
+	height: 40px;
+	background-color: black;
+}
+#name
+{
+	background-color: black;
+	color: white;
+	display: inline;
+	position:  absolute;
+	font-size: 20px;
+	margin-top: 7px;
+  text-transform: capitalize;
+}
+#prof_pic
+{
+	position: absolute;
+	display: inline-block;
+	right: 0;
+	width: 40px;
+	height: 40px;
+	border-radius: 50px;
+}
+
+#logout>a,#logout>input
+{
+  color: white;
+  text-decoration: none;
+  color: white;
+  display:inline;
+  float: left;
+  width: 100px;
+  
+}
+#logout>a:hover
+{
+opacity: 0.9;
+}
+#logout>input
+{
+  width: 250px;
+  margin-top: 0px;
+  background-color: white;
+  border-radius: 4px;
+  color: black;
+  font-size: 16px;
+}
+#logout>input:focus
+{
+  width: 400px;
+}
+#logout
+{
+    font-size: 20px;
+    margin-top: 7px;
+    position: absolute;
+    right: 150px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
