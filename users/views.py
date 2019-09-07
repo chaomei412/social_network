@@ -29,13 +29,32 @@ def main(request):
 def find_friend(request):
     q=request.POST.get('query');
     print(q)
+    q1=q.split(" ")
     conn=db.connect('sqlite3_manager/db')	
     c = conn.cursor()
-    q="select fname,lname from users where fname like '"+str(q)+"%' or lname like '"+str(q)+"%'"
-    #pic varchar(25),gender integer,religion_id integer,address_id integer)
     data=[]
-    for i in c.execute(q):
-        data.append(list(i))
+    for q in q1:
+        if(q==""):
+            continue
+        q2="select fname,lname from users where fname like '"+str(q)+"%' or lname like '"+str(q)+"%' limit 50"
+        for i in c.execute(q2):
+            data.append(list(i))
+    conn.close()
+    print(data)
+    return HttpResponse(json.dumps(data), content_type="application/json")
+def search_friend(request):
+    q=request.POST.get('query');
+    print(q)
+    q1=q.split(" ")
+    conn=db.connect('sqlite3_manager/db')	
+    c = conn.cursor()
+    data=[]
+    for q in q1:
+        if(q==""):
+            continue
+        q2="select u.id,u.fname,u.lname,pc.pic_url from users u,passwords p,pics pc where  u.id=p.u_id and u.id=pc.u_id	and (u.fname like '"+str(q)+"%' or u.lname like '"+str(q)+"%') limit 50"
+        for i in c.execute(q2):
+            data.append(list(i))
     conn.close()
     print(data)
     return HttpResponse(json.dumps(data), content_type="application/json")
