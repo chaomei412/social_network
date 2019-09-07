@@ -15,7 +15,7 @@ def main(request):
 		if (not is_login(request)):#is user not login
 			return render(request, 'login.html', {"username" : 0})
 		#user is loogin
-		conn=db.connect('../sqlite3_manager/db')	
+		conn=db.connect('sqlite3_manager/db')	
 		c = conn.cursor()
 		id = request.session['u_id']
 		q="select u.fname,u.lname,pc.pic_url from users u,passwords p,pics pc where u.id='"+str(id)+"' and u.id=p.u_id and u.id=pc.u_id"
@@ -31,7 +31,7 @@ def logout(request):
 	return render(request, 'login.html', {"username" : 0})
 def is_username_avail(request):
 	u_name=request.POST.get('u_name')
-	conn=db.connect('../sqlite3_manager/db')	
+	conn=db.connect('sqlite3_manager/db')	
 	c = conn.cursor()
 	q="select count(id) from users where u_id='"+u_name+"'"
 	count=0
@@ -42,7 +42,7 @@ def is_username_avail(request):
 	return HttpResponse(json.dumps(response_data), content_type="application/json")
 def is_email_avail(request):
 	email=request.POST.get('email')
-	conn=db.connect('../sqlite3_manager/db')	
+	conn=db.connect('sqlite3_manager/db')	
 	c = conn.cursor()
 	q="select count(id) from users where email='"+email+"'"
 	count=0
@@ -59,7 +59,7 @@ def signup(request):
 		f_name=request.POST.get('f_name')
 		l_name=request.POST.get('l_name')
 		dob=request.POST.get('dob')
-		conn=db.connect('../sqlite3_manager/db')	
+		conn=db.connect('sqlite3_manager/db')	
 		c = conn.cursor()
 		q="insert into users values(?,?,?,?,?,?,?,?,?)"
 		q2=(None,u_name,"".join(dob.split("-")),f_name,l_name,'',1,0,0)
@@ -132,7 +132,7 @@ def login_check(request):
 	else:
 		return render(request, 'login.html', {"username" : 0})
 def validate_login(request,u,p):
-		conn=db.connect('../sqlite3_manager/db')	
+		conn=db.connect('sqlite3_manager/db')	
 		c = conn.cursor()
 		q="select u.id,u.fname,u.lname,pc.pic_url from users u,passwords p,pics pc where u.u_id='"+u+"' and p.password='"+p+"' and u.id=p.u_id and u.id=pc.u_id"
 		#pic varchar(25),gender integer,religion_id integer,address_id integer)
