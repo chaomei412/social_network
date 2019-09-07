@@ -9,14 +9,14 @@
 		<link rel="stylesheet" href="{% static 'css/bs.css' %}"/>	
 	</head>  
     <body>  
-		<div>
+		<div id="body" class="container-fluid">
 		<div id="header">
 			<span id="name">
 				welcome mr. {{data.0}} {{data.1}}
 			</span>
 			<img id="prof_pic" src="/media/{{data.2}}"/>
 			<span id="logout">
-				<input type="text" placeholder="Search"></input><span class="glyphicon glyphicon-search"></span>
+				<input type="text" id="search" placeholder="Search" onkeyup="search()"></input><span class="glyphicon glyphicon-search"></span>
 				<a href="/">Home</a>
 				<a href="#">Create</a>
 				<a href="/logout/">logout</a>
@@ -26,7 +26,8 @@
 			<br/>{{i}}
 			
 		</div>
-		
+						<script src="{% static 'js/blogi5_lib.js' %}"></script>
+				<script src="{% static 'js/find_friend.js' %}"></script>	
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 	</body>  
