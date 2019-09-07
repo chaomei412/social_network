@@ -33,9 +33,9 @@ def find_friend(request):
     c = conn.cursor()
     q="select fname,lname from users where fname like '"+str(q)+"%' or lname like '"+str(q)+"%'"
     #pic varchar(25),gender integer,religion_id integer,address_id integer)
-    data=-1
+    data=[]
     for i in c.execute(q):
-        data=list(i)
+        data.append(list(i))
     conn.close()
     print(data)
     return HttpResponse(json.dumps(data), content_type="application/json")

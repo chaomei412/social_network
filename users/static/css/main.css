@@ -88,7 +88,7 @@ button
 	border-radius: 50px;
 }
 
-#logout>a,#logout>input
+#logout>a,#logout>input,#logout>span
 {
   color: white;
   text-decoration: none;
@@ -155,4 +155,29 @@ opacity: 0.9;
 .error
 {
   color: red;
+}
+#search_result
+{
+  border: solid 1px black;
+ }
+.search_result
+{
+  opacity: 0.7;
+  padding: 5px;
+  border-bottom: solid 1px gray;
+}
+.search_result:hover
+{
+  opacity: 1.0;
+  cursor: pointer;
+}
+
+.glyphicon-search
+{
+  top:5px;
+  cursor: pointer;
+}
+.glyphicon-search:hover
+{
+  opacity: 0.6;
 }
