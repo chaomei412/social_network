@@ -143,7 +143,7 @@ opacity: 0.9;
 
 
 
-.success
+.success,.error
 {
   color: green;
   text-align: center;
@@ -152,3 +152,7 @@ opacity: 0.9;
   font-size: 16px;
 }
 
+.error
+{
+  color: red;
+}

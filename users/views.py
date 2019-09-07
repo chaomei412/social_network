@@ -97,6 +97,7 @@ def signup(request):
 		conn.commit()		
 		conn.close()
 		#success		
+        
 		return render(request,'login.html',{'error':0,'signup_ok':1})
 	return render(request,'signup.html',{'error':1,'signup_ok':0})  
 
