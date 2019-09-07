@@ -13,7 +13,7 @@ function search_friend(data)
 	//show sugestions
 	data=JSON.parse(data);
 	console.log(data);
-	var temp="";
+	var temp='<button class="result_close_button" onclick="vanish(\'search_result\')">close</button>';
 	if(data.length==0)
 		temp+='<div class="search_result">No Sugestion found</div>';
 	for(let i=0;i<data.length;i++)
@@ -45,14 +45,14 @@ function show_friends(data)
 	//sow actual search results
 	data=JSON.parse(data);
 	console.log(data);
-	var temp="";
+	var temp='<button class="result_close_button" onclick="vanish(\'search_result\')">close</button>';
 	if(data.length==0)
 		temp+='<div class="search_result">No Result found</div>';
 	for(let i=0;i<data.length;i++)
 	{
 		console.log(data[i][0]+" "+data[i][1]+data[i][2]+" "+data[i][3]);
 		let name=data[i][1]+" "+data[i][2];
-		temp+='<div class="search_result"><img src="/media/'+data[i][3]+'"/>'+name+'<button  onclick="add_friend('+data[i][0]+')">Add </button></div>';
+		temp+='<div class="search_result"><img src="/media/'+data[i][3]+'"/><span class="search_result_name">'+name+'</span><button  onclick="add_friend('+data[i][0]+')">Add </button></div>';
 	}
 	insert("search_result",temp);
 	

@@ -203,3 +203,9 @@ opacity: 0.9;
 	border-radius: 5px;
   margin: 5px;
 }
+
+.search_result_name
+{
+  display: inline-block;
+  width: 200px;
+}
