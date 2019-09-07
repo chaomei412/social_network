@@ -12,20 +12,33 @@ import datetime
 import sqlite3 as db
 from django.core.files.storage import FileSystemStorage
 def main(request):
-		if (not is_login(request)):#is user not login
-			return render(request, 'login.html', {"username" : 0})
-		#user is loogin
-		conn=db.connect('sqlite3_manager/db')	
-		c = conn.cursor()
-		id = request.session['u_id']
-		q="select u.fname,u.lname,pc.pic_url from users u,passwords p,pics pc where u.id='"+str(id)+"' and u.id=p.u_id and u.id=pc.u_id"
-		#pic varchar(25),gender integer,religion_id integer,address_id integer)
-		data=-1
-		for i in c.execute(q):
-			data=list(i)
-		conn.close()
-		return render(request,'main.html',{"data":data})	
-		#return HttpResponse("hi"+str(username))
+    if (not is_login(request)):#is user not login
+        return render(request, 'login.html', {"username" : 0})
+    #user is loogin
+    conn=db.connect('sqlite3_manager/db')	
+    c = conn.cursor()
+    id = request.session['u_id']
+    q="select u.fname,u.lname,pc.pic_url from users u,passwords p,pics pc where u.id='"+str(id)+"' and u.id=p.u_id and u.id=pc.u_id"
+    #pic varchar(25),gender integer,religion_id integer,address_id integer)
+    data=-1
+    for i in c.execute(q):
+        data=list(i)
+    conn.close()
+    return render(request,'main.html',{"data":data})	
+    #return HttpResponse("hi"+str(username))
+def find_friend(request):
+    q=request.POST.get('query');
+    print(q)
+    conn=db.connect('sqlite3_manager/db')	
+    c = conn.cursor()
+    q="select fname,lname from users where fname like '"+str(q)+"%' or lname like '"+str(q)+"%'"
+    #pic varchar(25),gender integer,religion_id integer,address_id integer)
+    data=-1
+    for i in c.execute(q):
+        data=list(i)
+    conn.close()
+    print(data)
+    return HttpResponse(json.dumps(data), content_type="application/json")
 def logout(request):
 	request.session['u_id']=0#reset session variable
 	return render(request, 'login.html', {"username" : 0})

@@ -27,7 +27,7 @@ urlpatterns = [
 	path('signup/',views.signup),
 	path('signup/is_username_avail',views.is_username_avail),
 	path('signup/is_email_avail',views.is_email_avail),
-	
+    path('find_friend',views.find_friend),
 	
 ]
 

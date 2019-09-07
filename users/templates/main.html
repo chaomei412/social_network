@@ -9,6 +9,7 @@
 		<link rel="stylesheet" href="{% static 'css/bs.css' %}"/>	
 	</head>  
     <body>  
+	{% csrf_token %}  
 		<div id="body" class="container-fluid">
 		<div id="header">
 			<span id="name">
@@ -30,5 +31,9 @@
 				<script src="{% static 'js/find_friend.js' %}"></script>	
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+		 <div id="tost_div">
+		<span id="tost"></span>
+		</div>
+    </body> 
 	</body>  
     </html>  
