@@ -23,9 +23,11 @@
 					<input type="text" id="user_name" onkeyup="is_username_available()" name="username" onkeyup="key()" required="true" value="" /><br>
 					<div class="inpt_error" id="user_name_error"></div>
 					<span >PASSWORD</span><br>
-					<input type="password" id="user_pass" name="password" placeholder="password"  required="true" value="" /><br>
+					<input type="password" id="user_pass" onkeyup="pass1()" name="password" placeholder="password"  required="true" value="" /><br>
+					<div class="inpt_error" id="pass1_error"></div>
 					<span >PASSWORD AGAIN</span><br>
-					<input type="password" id="user_pass" name="password2" placeholder="password"  required="true" value="" /><br>
+					<input type="password" id="user_pass2" onkeyup="pass2()" name="password2" placeholder="password"  required="true" value="" /><br>
+					<div class="inpt_error" id="pass2_error"></div>
 					<span>EMAIL</span><br>
 					<input type="email" id="email" name="email" onkeyup="is_email_avail()" required="true" /><br>
 					<div class="inpt_error" id="email_error"></div>
@@ -39,19 +41,20 @@
 					<span >Date of birth</span><br>
 					<input type="date" id="dob" name="dob" placeholder=""  value="" /><br>
 					<span>select profile pic</span><br>
-					<input type="file" id="pic" name="pic"/><br>
-					<button type="submit" id="signup_submit">Signup</button>
+					<input type="file" id="pic" name="pic" required="true"/><br>
 				</span>
 				{% if email == 1 %}
 					<span id="login_error" >username present</span>
 				{% endif %}
-				</form>	
+				</form>
+			<button onclick="signup()" id="signup_submit" style="display:none;">Signup</button>				
 			</div>
 	 <script>
 	 function step2()
 	 {
-	 document.getElementById("next").style.display="none";
-	 document.getElementById("step2").style.display="block";	 
+	 get("signup_submit").style.display="block";
+	get("next").style.display="none";
+	 get("step2").style.display="block";	 
 	 }
 	 
 	 function key()

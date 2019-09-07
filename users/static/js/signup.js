@@ -32,7 +32,7 @@ return 0;
 	var fd=new FormData();
 	fd.append("csrfmiddlewaretoken",document.getElementsByName("csrfmiddlewaretoken")[0].value);
 	fd.append("email",data);
-xhr("/signup/is_email_avail","post",fd,check_email,0);	
+	xhr("/signup/is_email_avail","post",fd,check_email,0);	
 	
 	
 }
@@ -52,12 +52,28 @@ function check_email(res)
 
 function signup()
 {
-	
-	
-
-	
-	
-	
+	alert(1);
 var fd=	new FormData(document.getElementsByClassName("post"));
 	xhr("/signup/","post",fd,null,0);
+	
+}
+var pat="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})";
+
+function pass1()
+{
+	var paswd=valueof("user_pass");
+	if(!paswd.match(pat))
+		insert("pass1_error","password not contaion small,capital alphabet,number,symbol,length be more than 8");
+	else
+		vanish("pass1_error");
+	return paswd;
+}
+function pass2()
+{
+	
+	var paswd=valueof("user_pass2");	
+	if(pass1()!=paswd)
+		insert("pass2_error","password Not match");
+	else
+		vanish("pass2_error");
 }
