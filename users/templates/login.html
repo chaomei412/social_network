@@ -17,8 +17,10 @@
 
 	   {% if invalid == 1 %}
 	   <h4 style="color:red">invalid login details</h4>
-	   {%endif%}
-
+	   {% endif %}
+	   {% if signup_ok == 1 %}
+			<span class="success">you have created account successfuly now you can login</span>
+	   {% endif %}
 		<div id="login_box">
 			  <form method="POST" class="post-form" action="/login/">  
 					{% csrf_token %}

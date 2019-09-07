@@ -21,14 +21,14 @@
 				<span id="step1">
 					<span >USER NAME</span><br>
 					<input type="text" id="user_name" onkeyup="is_username_available()" name="username" onkeyup="key()" required="true" value="" /><br>
-					<div id="user_name_error"></div>
+					<div class="inpt_error" id="user_name_error"></div>
 					<span >PASSWORD</span><br>
 					<input type="password" id="user_pass" name="password" placeholder="password"  required="true" value="" /><br>
 					<span >PASSWORD AGAIN</span><br>
 					<input type="password" id="user_pass" name="password2" placeholder="password"  required="true" value="" /><br>
 					<span>EMAIL</span><br>
 					<input type="email" id="email" name="email" onkeyup="is_email_avail()" required="true" /><br>
-					<div id="email_error"></div>
+					<div class="inpt_error" id="email_error"></div>
 					<button onclick="step2()" id="next">Next</button>
 				</span>
 				<span id="step2" style="display:none">

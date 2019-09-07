@@ -134,9 +134,21 @@ opacity: 0.9;
 
 
 
+.inpt_error
+{
+  font-size: 12px;
+  height: 12px;
+  color: red;
+}
 
 
 
-
-
+.success
+{
+  color: green;
+  text-align: center;
+  display: block;
+  margin-top:  15px;
+  font-size: 16px;
+}
 
