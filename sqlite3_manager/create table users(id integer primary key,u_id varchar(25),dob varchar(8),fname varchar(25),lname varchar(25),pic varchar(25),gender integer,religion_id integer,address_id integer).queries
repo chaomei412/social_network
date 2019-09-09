@@ -1,0 +1,8 @@
+
+
+
+
+create table users(id integer primary key,u_id varchar(25),dob varchar(8),fname varchar(25),lname varchar(25),pic varchar(25),gender integer,religion_id integer,address_id integer)
+
+
+

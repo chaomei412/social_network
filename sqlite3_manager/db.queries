@@ -1,0 +1,137 @@
+create table users
+select * from users
+select * from users
+select * from users
+select * from users
+exit
+select * from users
+create table users(id integer primary key,u_id varchar(25),dob varchar(8),fname varchar(25),lname varchar(25),pic varchar(25),gender integer,religion_id integer,address_id integer)
+create table users(id integer primary key,u_id varchar(25),dob varchar(8),fname varchar(25),lname varchar(25),pic varchar(25),gender integer,religion_id integer,address_id integer)
+create table users(id integer primary key,u_id varchar(25),dob varchar(8),fname varchar(25),lname varchar(25),pic varchar(25),gender integer,religion_id integer,address_id integer)d
+
+
+
+
+
+
+insert into users values(null,'admin','20081997','nilesh','mahajan','null',1,1,1)
+
+
+
+select * from users
+
+
+
+
+
+
+
+insert into users(null,'admin2','20081997','nilesh','mahajan','null',1,1,1)
+
+
+
+insert into users(null,'admin2','20081997','nilesh','mahajan','null',1,1,1)
+
+
+
+
+
+
+insert into users(null,'admin2','20081997','nilesh','mahajan','null',1,1)
+
+
+insert into users values(null,'admin2','20081997','nilesh','mahajan','null',,11,1)
+
+
+
+insert into users values(null,'admin2','20081997','nilesh','mahajan','null',1,1,1)
+
+
+
+select * from users
+
+
+
+
+
+
+
+
+
+create table passwords(id integer primary key ,u_id integer, password varchar(10),date_created varchar(8))
+
+
+
+
+
+
+
+
+insert into passwords values(null,1,'9657681290','28072019')
+
+
+
+
+select * from passwords; 
+
+
+
+
+select u.u_id,p.password  from users u,passwords p where u.id=p.u_id; 
+
+
+
+
+
+
+create table pics(id integer primary key,u_id int,pic_url text)
+alter table users drop column religion_id
+alter table users drop column religion_id
+alter table users drop column religion_id
+select * from users
+select * from users
+select u.u_id,p.password,pc.pic_url from users u,passwords p,pics pc whre u.id=passwords.u_id and u.id=pics.u_id
+select u.u_id,p.password,pc.pic_url from users u,passwords p,pics pc where u.id=passwords.u_id and u.id=pics.u_id
+select u.u_id,p.password,pc.pic_url from users u,passwords p,pics pc where u.id=p.u_id and u.id=pics.u_id
+select u.u_id,p.password,pc.pic_url from users u,passwords p,pics pc where u.id=p.u_id and u.id=pics.u_id
+select u.u_id,p.password,pc.pic_url from users u,passwords p,pics pc where u.id=p.u_id and u.id=pics.u_id
+select u.u_id,p.password,pc.pic_url from users u,passwords p,pics pc where u.id=p.u_id and u.id=pc.u_id
+select u.u_id,p.password,pc.pic_url from users u,passwords p,pics pc where u.id=p.u_id and u.id=pc.u_id
+select u.u_id,p.password,pc.pic_url from users u,passwords p,pics pc where u.id=p.u_id and u.id=pc.u_id
+select * from users
+select * from friend
+select * from friends
+s
+.tables
+.dbs
+tables
+select tables
+show tables
+select * from friend
+select * from friends
+create table friend(id integer primary key,f_id varchar(25),t_id varchar(25),status integer)
+select * from friend
+select * from student;
+select * from f
+sql error:no such table: f
+select * from f;
+sql error:no such table: f
+select * from users;
+insert into friend(null,7,43,0)
+sql error:near "null": syntax error
+insert into friend values(null,7,43,0)
+insert into friend values(null,7,13,1)
+insert into friend values(null,7,11,2)
+select * from friend
+select u.id,u.fname,u.lname,pc.pic_url from users u,pics pc,friend f  where u.id=f.t_id and f.f_id=7 and u.id=pc.u_id
+select u.id,u.fname,u.lname,pc.pic_url from users u,pics pc,friend f  where u.id=f.t_id and f.f_id='7' and u.id=pc.u_id
+select u.id,u.fname,u.lname,pc.pic_url from users u,pics pc,friend f  where u.id=f.t_id  and u.id=pc.u_id
+select * from users
+select * from pics
+drop table friend
+select * from friend
+sql error:no such table: friend
+create table friend(id integer primary key,f_id integer,t_id integer,status integer)
+insert into friend values(null,7,43,0)
+insert into friend values(null,7,13,1)
+insert into friend values(null,7,11,2)

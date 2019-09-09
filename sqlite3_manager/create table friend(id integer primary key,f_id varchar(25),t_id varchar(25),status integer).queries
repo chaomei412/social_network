@@ -1,0 +1,2 @@
+select * from friend
+create table friend(id integer primary key,f_id varchar(25),t_id varchar(25),status integer);
