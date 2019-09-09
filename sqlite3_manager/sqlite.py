@@ -20,7 +20,10 @@ while(1):
 		conn.commit()
 	except sqlite3.OperationalError as s:
 		print("sql error",s)
+<<<<<<< HEAD
 		fo.write("sql error:"+str(s)+"\n")
+=======
+>>>>>>> e846ba3d74b81031f7239c91690b56f6075cf3e1
 	except Exception as e:
 		print("error "+e)
 fo.close()	

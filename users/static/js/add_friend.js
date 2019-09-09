@@ -1,5 +1,6 @@
 function add_friend(id)
 {
+<<<<<<< HEAD
 	alert("sent successfully to user id:"+id);
 	var crf=document.getElementsByName("csrfmiddlewaretoken")[0].value;
 	var fd=new FormData();
@@ -14,3 +15,8 @@ function friend_added(data)
 
 
 
+=======
+	
+	alert("sent successfully to user id:"+id);
+}
+>>>>>>> e846ba3d74b81031f7239c91690b56f6075cf3e1

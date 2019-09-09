@@ -26,8 +26,11 @@ urlpatterns = [
 	path('signup/is_email_avail',views.is_email_avail),
     path('find_friend',views.find_friend),
     path('search_friend',views.search_friend),	
+<<<<<<< HEAD
 	path('friends',views.my_friends),	
 	path('add_friend',views.add_friend),
+=======
+>>>>>>> e846ba3d74b81031f7239c91690b56f6075cf3e1
 ]
 
 

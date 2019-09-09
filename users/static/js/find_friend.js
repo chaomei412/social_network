@@ -54,6 +54,7 @@ function show_friends(data)
 		let name=data[i][1]+" "+data[i][2];
 		temp+='<div class="search_result"><img src="/media/'+data[i][3]+'"/><span class="search_result_name">'+name+'</span><button  onclick="add_friend('+data[i][0]+')">Add </button></div>';
 	}
+<<<<<<< HEAD
 	insert("search_result",temp);	
 }
 
@@ -81,3 +82,8 @@ function put_my_friends(data)
 	}
 	insert("search_result",temp);	
 }
+=======
+	insert("search_result",temp);
+	
+}
+>>>>>>> e846ba3d74b81031f7239c91690b56f6075cf3e1

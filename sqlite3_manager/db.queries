@@ -98,6 +98,7 @@ select u.u_id,p.password,pc.pic_url from users u,passwords p,pics pc where u.id=
 select u.u_id,p.password,pc.pic_url from users u,passwords p,pics pc where u.id=p.u_id and u.id=pc.u_id
 select u.u_id,p.password,pc.pic_url from users u,passwords p,pics pc where u.id=p.u_id and u.id=pc.u_id
 select u.u_id,p.password,pc.pic_url from users u,passwords p,pics pc where u.id=p.u_id and u.id=pc.u_id
+<<<<<<< HEAD
 select * from users
 select * from friend
 select * from friends
@@ -135,3 +136,5 @@ create table friend(id integer primary key,f_id integer,t_id integer,status inte
 insert into friend values(null,7,43,0)
 insert into friend values(null,7,13,1)
 insert into friend values(null,7,11,2)
+=======
+>>>>>>> e846ba3d74b81031f7239c91690b56f6075cf3e1
