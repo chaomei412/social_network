@@ -28,6 +28,10 @@
 				<a href="/logout/">logout</a>
 			</span>	
 		</div>
+		<div id="search_result">
+		
+		</div>
+		
 		<span id="controls" style="float: left">
     
     <span id="visual_tools">
@@ -35,7 +39,7 @@
 <span class="glyphicon glyphicon-italic"  title="make selected text italic"  onClick="Func('italic','')"></span>
   <button onClick="Func('underline','')"><u>U</u></button>
   <button onClick="Func('strikethrough','')"><del><s>Z</s></del></button>
-<button onClick="Func('insertHorizontalRule','')">____</button>
+<span class="glyphicon glyphicon-resize-horizontal" title="insertHorizontalRule" onClick="Func('insertHorizontalRule','')"></span>
 <span class="glyphicon glyphicon-font"  onClick="select_font_style(event)"></span>
 <span class="glyphicon glyphicon-text-color"  onClick="text_color_select(event)"></span>
 <span class="glyphicon glyphicon-text-background" onClick="bg_color_select(event)"></span>
@@ -52,17 +56,22 @@
  <span class="glyphicon glyphicon-subscript"  onClick="Func('subscript','')"></span>
  <span class="glyphicon glyphicon-superscript" onClick="Func('superscript','')"></span>
 <span  class="glyphicon glyphicon-text-size" onClick="Func('fontSize',5)"></span><!--int 1-7-->
-<!--<button onClick="Func('indent','')">indent</button>-->
-<!--<button onClick="Func('outdent','')">outdent</button>-->
+<span class="glyphicon glyphicon-indent-left"  onClick="Func('indent','')"></span>
+<span class="glyphicon glyphicon-indent-right" onClick="Func('outdent','')"></span>
 <!--document.execCommand("strikethrough", false, null);---????-->
-<!--<button  onClick="Func('decreaseFontSize','1px')">decres_Font</button>-->
-<!--<button onClick="Func('increaseFontSize','1px')">incrise_Font</button>-->
+<span class="glyphicon glyphicon-minus"  title="decrease font size"  onClick="Func('decreaseFontSize','1px')"></span>
+<span class="glyphicon glyphicon-plus" title="incrise font size" onClick="Func('increaseFontSize','1px')"></span>
  <span class="glyphicon glyphicon-remove-sign" title="clear all applied styles" onClick="Func('removeFormat','')"></span>
     </span>
+  </span>
+  
+  <span id="functions">
+  
   <span class="glyphicon glyphicon-circle-arrow-left" title="undo" onClick="Func('undo','')"></span>
  <span class="glyphicon glyphicon-circle-arrow-right" title="redo" onClick="Func('redo','')"></span>
-
-  </span>
+ <span class="glyphicon glyphicon-floppy-remove" title="cancle"></span>
+<span class="glyphicon glyphicon-send"></span>
+</span>
   
 
 
@@ -116,7 +125,8 @@ window.addEventListener("load", function () {
 
     // Bind the FormData object and the form element
     var FD = new FormData(form);
-
+	var crf=document.getElementsByName("csrfmiddlewaretoken")[0].value;
+	FD.append("csrfmiddlewaretoken",crf);
     // Define what happens on successful data submission
     XHR.addEventListener("load", function(event) {
 	document.getElementById("myForm").style.display="none";
@@ -147,7 +157,7 @@ var temp=document.createElement("div");
     });
 
     // Set up our request
-    XHR.open("POST", "/assets3.php?s=editor/php/upload2.php");
+    XHR.open("POST", "/new_post/upload_post_image");
 
     // The data sent is what the user provided in the form
     XHR.send(FD);

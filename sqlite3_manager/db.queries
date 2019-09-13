@@ -138,3 +138,66 @@ insert into friend values(null,7,13,1)
 insert into friend values(null,7,11,2)
 delete from friend
 select * from friend
+select * from friend
+select * from friend
+select * from friend
+select * from friend
+select * from friend
+delete from friend where t_id=2
+select * from friend
+select * from friend
+select * from friend
+select * from friend
+select * from friend
+select * from friend
+select * from friend
+select * from friend
+select * from friend
+select * from friend
+select * from friend
+select * from friend
+select * from friend
+select * from friend
+select * from friend
+select * from friend
+select * from friend
+select * from friend
+select * from friend
+select * from friend
+select * from friend
+select * from friend
+select * from friend
+select * from friend
+select * from friend
+select * from friend
+select * from friend
+select * from friend
+select * from friend
+select * from users
+select * from password
+sql error:no such table: password
+select * from passwords
+select * from pics
+select * from friend
+create table ppics(id int primary key, u_id int,ext text)
+select * from ppics
+select last_insert_rowid
+sql error:no such column: last_insert_rowid
+select last_insert_rowid()
+insert into ppics(null,13,'jpg')
+sql error:near "null": syntax error
+insert into ppics('',13,'jpg')
+sql error:near "13": syntax error
+insert into ppics('null',13,'jpg')
+sql error:near "13": syntax error
+insert into ppics(NULL,13,'jpg')
+sql error:near "NULL": syntax error
+insert into ppics values(NULL,13,'jpg')
+select * from ppics
+select last_insert_rowid()
+select * from ppics
+insert into ppics values(null,13,'jpg')
+select * from ppics
+select last_insert_rowid()
+create table ppics(id int primary key, u_id int,ext text)
+sql error:table ppics already exists

@@ -21,3 +21,59 @@ def new_post(request):
 	conn.close()
 	return render(request,'controls.html',{"data":data})	
 	#return HttpResponse("ok new post")
+def upload_post_image(request):
+	my_id=request.session['u_id']
+	pic=request.FILES['fileToUpload']
+	
+	conn=db.connect('sqlite3_manager/db')	
+	c = conn.cursor()
+
+
+	q="insert into ppics values(null,"+str(my_id)+",'"+pic.name.split(".")[-1]+"')"
+	c.execute(q)
+	conn.commit()
+
+	qq="select last_insert_rowid()"
+	id=0
+	for row in c.execute(qq):
+		id=row[0]
+
+	#handle pic
+
+	fs = FileSystemStorage()
+	pic_name=str(id)+str(my_id)+"."+pic.name.split(".")[-1]
+	filename = fs.save(pic_name, pic)
+	uploaded_file_url = fs.url(filename)
+	print(uploaded_file_url)
+	print("pic new name",pic_name)
+
+
+	conn.commit()
+	conn.close()
+	return HttpResponse("/media/"+pic_name)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
