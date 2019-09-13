@@ -19,9 +19,6 @@ def main(request):
     conn.close()
     return render(request,'main.html',{"data":data})	
     #return HttpResponse("hi"+str(username))
-<<<<<<< HEAD
-
-=======
 def find_friend(request):
     q=request.POST.get('query');
     print(q)
@@ -38,25 +35,6 @@ def find_friend(request):
             if t not in data:#avoid repetaion of result
                 data.append(t)
     conn.close()
-    print(data)
-    return HttpResponse(json.dumps(data), content_type="application/json")
-def search_friend(request):
-    q=request.POST.get('query');
-    print(q)
-    q1=q.split(" ")
-    conn=db.connect('sqlite3_manager/db')	
-    c = conn.cursor()
-    data=[]
-    for q in q1:
-        if(q==""):
-            continue
-        q2="select u.id,u.fname,u.lname,pc.pic_url from users u,passwords p,pics pc where  u.id=p.u_id and u.id=pc.u_id	and (u.fname like '"+str(q)+"%' or u.lname like '"+str(q)+"%') limit 50"
-        for i in c.execute(q2):
-            t=list(i)
-            if t not in data:#avoid repetaion of result
-                data.append(t)
-    conn.close()
-    print(data)
     return HttpResponse(json.dumps(data), content_type="application/json")
 def logout(request):
 	request.session['u_id']=0#reset session variable
@@ -148,7 +126,6 @@ def login_check(request):
 		if(data!=-1):
 		#return if login success
 			request.session['u_id'] = data[0]
-			print("login success")
 			return render(request, 'main.html', {"data" : data[1:]})
 		else:
 			request.session['u_id'] = 0
@@ -171,7 +148,6 @@ def validate_login(request,u,p):
 		data=-1
 		for i in c.execute(q):
 			data=list(i)
-		print("------",data,"===========")
 		conn.close()
 		return data
 def is_login(request):
@@ -190,4 +166,3 @@ def is_login(request):
 		
 		#not login
 		return 0
->>>>>>> e846ba3d74b81031f7239c91690b56f6075cf3e1

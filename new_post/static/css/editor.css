@@ -1,0 +1,46 @@
+#controls
+{
+font-size: 20px;
+}
+
+#textEditor
+{
+	color:black;
+	height:400px;
+	width:100%;
+	overflow:scroll;
+	background-color:whitesmoke;
+	resize: none;		
+  -webkit-user-select:   text;
+}
+
+#code
+{
+	border:none;
+  display: none;
+	height:100%;
+	width:100%;
+	overflow:auto;
+	background-color:#444;
+	color:white;
+	word-break:break-all;
+  resize: none;		
+}
+#controls
+{
+     
+	text-align: left;
+
+}
+
+#new_post_changer
+{
+	border: none;
+	font-size: 18px;
+	cursor: pointer;
+}
+#new_post_changer:hover
+{
+	color: blue;
+}
+

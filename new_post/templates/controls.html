@@ -1,0 +1,176 @@
+    <!DOCTYPE html>  
+    <html lang="en">  
+    <head>  
+        <meta charset="UTF-8"/>  
+        <title>Index</title>  
+        {% load staticfiles %}  
+		 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+		 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+          <link rel="stylesheet" href="{% static 'css/style.css' %}"/>  
+		<link rel="stylesheet" href="{% static 'css/main.css' %}"/> 
+				<link rel="stylesheet" href="{% static 'css/editor.css' %}"/> 
+	</head>  
+    <body>  
+	{% csrf_token %}  
+		<div id="body" class="container-fluid">
+		<div id="header">
+			<span id="name">
+				welcome mr. {{data.0}} {{data.1}}
+			</span>
+			<img id="prof_pic" src="/media/{{data.2}}"/>
+			<span id="logout">
+				<input type="text" id="search" placeholder="Search" onkeyup="search()"></input>
+				<span class="glyphicon glyphicon-search" onclick="find_it()"></span>
+				<a href="/">Home</a>
+				<a href="/new_post.html">Create</a>
+				<a onclick="my_friends()">Friend's</a>
+				<a href="/logout/">logout</a>
+			</span>	
+		</div>
+		<span id="controls" style="float: left">
+    
+    <span id="visual_tools">
+<span class="glyphicon glyphicon-bold" title="make selected text bold"  onClick="Func('bold','')"></span>
+<span class="glyphicon glyphicon-italic"  title="make selected text italic"  onClick="Func('italic','')"></span>
+  <button onClick="Func('underline','')"><u>U</u></button>
+  <button onClick="Func('strikethrough','')"><del><s>Z</s></del></button>
+<button onClick="Func('insertHorizontalRule','')">____</button>
+<span class="glyphicon glyphicon-font"  onClick="select_font_style(event)"></span>
+<span class="glyphicon glyphicon-text-color"  onClick="text_color_select(event)"></span>
+<span class="glyphicon glyphicon-text-background" onClick="bg_color_select(event)"></span>
+<span class="glyphicon glyphicon-resize-small" title="add hyperlink to selected text" onClick="editor_link_adder(event)"></span>
+<span class="glyphicon glyphicon-resize-full"  title="remove hyperlink of selected text"  onClick="Func('unlink','')"></span>
+<span class="glyphicon glyphicon-picture" onClick="setimg(event)"></span>
+<button onClick="Func('insertParagraph','')">p</button>
+ <span class="glyphicon glyphicon-align-right" onClick="Func('justifyRight','')"></span>
+ <span class="glyphicon glyphicon-align-left" title="justify left"  onClick="Func('justifyLeft','')"></span>
+ <span class="glyphicon glyphicon-align-justify"  onClick="Func('justifyFull','')"></span>
+ <span class="glyphicon glyphicon-align-center"  onClick="Func('justifyCenter','')"></span>
+<span class="glyphicon glyphicon-th-list" title="ordred list"  onClick="Func('insertOrderedList','')"></span>
+<span title="unorderd list"  class="glyphicon glyphicon-list-alt" onClick="Func('insertUnorderedList','')"></span>
+ <span class="glyphicon glyphicon-subscript"  onClick="Func('subscript','')"></span>
+ <span class="glyphicon glyphicon-superscript" onClick="Func('superscript','')"></span>
+<span  class="glyphicon glyphicon-text-size" onClick="Func('fontSize',5)"></span><!--int 1-7-->
+<!--<button onClick="Func('indent','')">indent</button>-->
+<!--<button onClick="Func('outdent','')">outdent</button>-->
+<!--document.execCommand("strikethrough", false, null);---????-->
+<!--<button  onClick="Func('decreaseFontSize','1px')">decres_Font</button>-->
+<!--<button onClick="Func('increaseFontSize','1px')">incrise_Font</button>-->
+ <span class="glyphicon glyphicon-remove-sign" title="clear all applied styles" onClick="Func('removeFormat','')"></span>
+    </span>
+  <span class="glyphicon glyphicon-circle-arrow-left" title="undo" onClick="Func('undo','')"></span>
+ <span class="glyphicon glyphicon-circle-arrow-right" title="redo" onClick="Func('redo','')"></span>
+
+  </span>
+  
+
+
+
+  <!--------------------------image adder------------------>
+  
+  
+  
+  <form id="myForm" enctype="multipart/form-data" style="position:absolute;background-color:gray;padding:5px;color:white;overflow:hidden;width:150px;text-align:center;display:none" >
+  <input type="file" name="fileToUpload" id="fileToUpload"><br>
+  <div id="image_upload_error" style="color:red"></div>
+<br>  <input type="submit"  id="image_add_butt" value="ADD IMAGE">
+</form>
+
+<div id="img2" style="position:absolute;background-color:gray;padding:5px;color:white;overflow:hidden;width:150px;text-align:center;display:none">
+	<button id="image_sub_butt" onClick="setimgagain()">ADD ANOTHER</button>
+	<div id="image_viewer"></div>
+	<button id="image_sub_butt" onClick="insert_edit_image()" >INSERT IT</button>
+</div>
+
+<script>
+var img_edit_src,img_edit_x,img_edit_y;
+function insert_edit_image()
+{
+document.getElementById("img2").style.display="none";
+document.getElementById("myForm").style.display="none";
+document.getElementById("image_upload_error").innerHTML='';
+document.execCommand('insertImage', false, img_edit_src);
+}
+function setimgagain()
+{
+setimg(null);	
+}
+function setimg(e)
+{
+	hide_all();
+document.getElementById("img2").style.display="none";
+if(e!=null)
+{
+img_edit_x=e.pageX;
+img_edit_y=e.pageY;
+document.getElementById("myForm").style.top=e.pageY+'px';
+document.getElementById("myForm").style.left=e.pageX+'px';
+}
+document.getElementById("myForm").style.display="block";
+}
+
+window.addEventListener("load", function () {
+  function sendData() {
+    var XHR = new XMLHttpRequest();
+
+    // Bind the FormData object and the form element
+    var FD = new FormData(form);
+
+    // Define what happens on successful data submission
+    XHR.addEventListener("load", function(event) {
+	document.getElementById("myForm").style.display="none";
+var temp=document.createElement("div");
+	
+	if(event.target.responseText==='1')
+	{
+            document.getElementById("image_upload_error").innerHTML='FILE SIZE MORE THAT 250KB';
+            document.getElementById("myForm").style.display="block";
+	}
+	else
+	{
+	img_edit_src=event.target.responseText;
+	temp.innerHTML='<img src="'+event.target.responseText+'" width="100%;" height="auto">';
+	document.getElementById("img2").style.left=img_edit_x+'px';
+	document.getElementById("img2").style.top=img_edit_y+'px';
+	document.getElementById("img2").style.display="block";
+	document.getElementById("image_viewer").innerHTML='';
+    document.getElementById("image_viewer").appendChild(temp);
+	}
+
+	});
+
+    // Define what happens in case of error
+    XHR.addEventListener("error", function(event) {
+	document.getElementById("myForm").style.display="block";
+		document.getElementById("myForm").innerHTML+="error please try again";
+    });
+
+    // Set up our request
+    XHR.open("POST", "/assets3.php?s=editor/php/upload2.php");
+
+    // The data sent is what the user provided in the form
+    XHR.send(FD);
+  }
+ 
+  // Access the form element...
+  var form = document.getElementById("myForm");
+  // ...and take over its submit event.
+  form.addEventListener("submit", function (event) {
+    event.preventDefault();//STOP submitting form 
+    sendData();
+  });
+});
+
+</script>
+	<div id="textEditor" contenteditable="true"></div>
+		</div>
+		<script src="{% static 'js/blogi5_lib.js' %}"></script>
+		<script src="{% static 'js/find_friend.js' %}"></script>	
+		<script src="{% static 'js/add_friend.js' %}"></script>
+		<script src="{% static 'js/editor1.js' %}"></script>		
+		 <div id="tost_div">
+			<span id="tost"></span>
+		</div>
+    </body> 
+</html>  

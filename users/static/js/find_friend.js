@@ -27,6 +27,7 @@ function search_friend(data)
 
 
 
+
 function find_it(q=null)
 {
 	//find friends to add
@@ -40,6 +41,9 @@ function find_it(q=null)
 }
 
 
+
+
+
 function show_friends(data)
 {
 	//sow actual search results
@@ -50,18 +54,39 @@ function show_friends(data)
 		temp+='<div class="search_result">No Result found</div>';
 	for(let i=0;i<data.length;i++)
 	{
+		var action="ADD Friend",evt="add_friend";
+		
+		switch(data[i][4])
+		{
+			case 0:				action="cancle request",evt="cancle_frindship";
+			break;
+			case 1:				action="remove friend",evt="cancle_frindship";
+			break;
+			case 2:				action="unblock",evt="unblock";
+			break;			
+			case 3:				action="accept",evt="accept";
+			break;			
+		}
 		console.log(data[i][0]+" "+data[i][1]+data[i][2]+" "+data[i][3]);
 		let name=data[i][1]+" "+data[i][2];
-		temp+='<div class="search_result"><img src="/media/'+data[i][3]+'"/><span class="search_result_name">'+name+'</span><button  onclick="add_friend('+data[i][0]+')">Add </button></div>';
+		temp+='<div class="search_result"><img src="/media/'+data[i][3]+'"/><span class="search_result_name">'+name+'</span><button  onclick="'+evt+'(this,'+data[i][0]+')">'+action+'</button></div>';
 	}
-<<<<<<< HEAD
 	insert("search_result",temp);	
 }
+
+
+
+
+
+
 
 function my_friends()
 {
 	xhr("/friends","get",null,put_my_friends,0);	
 }
+
+
+
 function put_my_friends(data)
 {
 	//sow actual search results
@@ -73,17 +98,24 @@ function put_my_friends(data)
 	for(let i=0;i<data.length;i++)
 	{
 		var x=data[i][4];
-		var state=(x==0?"Cancle Request":(x==1?"UnFriend":(x==2?"Blocked":"Conform Request")));
-		if(x==2)
-			continue;
+		switch(x)
+		{
+			case 0:				action="cancle request",evt="cancle_frindship";
+			break;
+			case 1:				action="remove friend",evt="cancle_frindship";
+			break;
+			case 2:				action="unblock",evt="unblock";
+			break;			
+			case 3:				action="accept",evt="accept";
+			break;			
+		}
 		console.log(data[i][0]+" "+data[i][1]+data[i][2]+" "+data[i][3]);
 		let name=data[i][1]+" "+data[i][2];
-		temp+='<div class="search_result"><img src="/media/'+data[i][3]+'"/><span class="search_result_name">'+name+'</span><button>'+state+'</button></div>';
+		temp+='<div class="search_result"><img src="/media/'+data[i][3]+'"/><span class="search_result_name">'+name+'</span><button onclick="'+evt+'(this,'+data[i][0]+')">'+action+'</button></div>';
 	}
 	insert("search_result",temp);	
 }
-=======
-	insert("search_result",temp);
-	
-}
->>>>>>> e846ba3d74b81031f7239c91690b56f6075cf3e1
+
+
+
+

@@ -15,21 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from users import views
+from new_post import views
 
 urlpatterns = [
-    path('', views.main),
-	path('login/',views.login_check),
-	path('logout/',views.logout),
-	path('signup/',views.signup),
-	path('signup/is_username_avail',views.is_username_avail),
-	path('signup/is_email_avail',views.is_email_avail),
-    path('find_friend',views.find_friend),
-    path('search_friend',views.search_friend),	
-	path('friends',views.my_friends),	
-	path('add_friend',views.add_friend),
-	path('cancle_frindship',views.cancle_frindship),
-	path('accept_frindship',views.accept_frindship),
+    path('', views.new_post),
 ]
 
 

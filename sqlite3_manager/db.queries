@@ -136,5 +136,5 @@ create table friend(id integer primary key,f_id integer,t_id integer,status inte
 insert into friend values(null,7,43,0)
 insert into friend values(null,7,13,1)
 insert into friend values(null,7,11,2)
-=======
->>>>>>> e846ba3d74b81031f7239c91690b56f6075cf3e1
+delete from friend
+select * from friend

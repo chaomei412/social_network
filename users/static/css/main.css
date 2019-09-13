@@ -35,7 +35,7 @@ button
 {
   margin: auto;
   background-color: #999;
-  width: 100%;
+  width: auto;
   color: white;
   cursor:pointer;
 }
@@ -140,8 +140,6 @@ opacity: 0.9;
   min-height: 12px;
   color: red;
 }
-<<<<<<< HEAD
-
 
 
 .success,.error
@@ -172,8 +170,6 @@ opacity: 0.9;
   opacity: 1.0;
   cursor: pointer;
 }
-=======
->>>>>>> e846ba3d74b81031f7239c91690b56f6075cf3e1
 
 .glyphicon-search
 {
@@ -186,7 +182,6 @@ opacity: 0.9;
 }
 
 
-<<<<<<< HEAD
 .search_result>img
 {
   margin-right: 15px;
@@ -202,11 +197,10 @@ opacity: 0.9;
 
 	display: inline-block;
 	right: 0;
-	width: 100px;
+	width: 200px;
 	height: 40px;
 	border-radius: 5px;
   margin: 5px;
-=======
 .success,.error
 {
   color: green;
@@ -244,7 +238,6 @@ opacity: 0.9;
 .glyphicon-search:hover
 {
   opacity: 0.6;
->>>>>>> e846ba3d74b81031f7239c91690b56f6075cf3e1
 }
 
 .search_result_name
@@ -253,13 +246,12 @@ opacity: 0.9;
   width: 200px;
 }
 
-<<<<<<< HEAD
+
 
 #search_result>.search_result>button
 {
   width: auto;
 }
-=======
 .search_result>img
 {
   margin-right: 15px;
@@ -268,22 +260,10 @@ opacity: 0.9;
 	width: 50px;
 	height: 50px;
 	border-radius: 5px;
-  
 }
-.search_result>button
-{
-
-	display: inline-block;
-	right: 0;
-	width: 100px;
-	height: 40px;
-	border-radius: 5px;
-  margin: 5px;
-}
-
 .search_result_name
 {
   display: inline-block;
   width: 200px;
 }
->>>>>>> e846ba3d74b81031f7239c91690b56f6075cf3e1
+
