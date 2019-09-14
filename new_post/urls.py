@@ -20,6 +20,7 @@ from new_post import views
 urlpatterns = [
     path('', views.new_post),
 	path('upload_post_image',views.upload_post_image),
+	path('share',views.share),
 ]
 
 

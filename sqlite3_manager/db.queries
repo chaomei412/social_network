@@ -201,3 +201,25 @@ select * from ppics
 select last_insert_rowid()
 create table ppics(id int primary key, u_id int,ext text)
 sql error:table ppics already exists
+drop table ppics
+select * from ppics
+sql error:no such table: ppics
+create table ppics(id integer primary key, u_id int,ext text)
+insert into ppics values(null,13,'jpg')
+select * from ppics
+select last_insert_rowid()
+insert into ppics values(null,13,'jpg')
+select last_insert_rowid()
+select last_insert_rowid()
+delete from ppics
+select last_insert_rowid()
+select last_insert_rowid()
+select last_insert_rowid()
+select * from ppics
+select * from ppics
+select * from ppics
+select * from ppics
+select * from ppics
+select * from ppics
+create table post(id integer primary key,u_id integer,content text,date text,privacy int,status int)
+select * from post

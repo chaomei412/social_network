@@ -15,17 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from django.conf.urls import url, include
-from django.conf.urls.static import static
-from django.conf import settings
+from new_post import views
+from posts import views
+
 urlpatterns = [
-#    path('admin/', admin.site.urls),
-	path('new_post/',include('new_post.urls')),
-	path('post/',include('posts.urls')),
-	path('',include('users.urls')),
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-
+    path('', views.initiate),
+	path('get_next',views.post),
+]
 
 
 

@@ -1,4 +1,85 @@
 
+var img_edit_src,img_edit_x,img_edit_y;
+function insert_edit_image()
+{
+document.getElementById("img2").style.display="none";
+document.getElementById("myForm").style.display="none";
+document.getElementById("image_upload_error").innerHTML='';
+document.execCommand('insertImage', false, img_edit_src);
+}
+function setimgagain()
+{
+setimg(null);	
+}
+function setimg(e)
+{
+	hide_all();
+document.getElementById("img2").style.display="none";
+if(e!=null)
+{
+img_edit_x=e.pageX;
+img_edit_y=e.pageY;
+document.getElementById("myForm").style.top=e.pageY+'px';
+document.getElementById("myForm").style.left=e.pageX+'px';
+}
+document.getElementById("myForm").style.display="block";
+}
+
+window.addEventListener("load", function () {
+  function sendData() {
+    var XHR = new XMLHttpRequest();
+
+    // Bind the FormData object and the form element
+    var FD = new FormData(form);
+	var crf=document.getElementsByName("csrfmiddlewaretoken")[0].value;
+	FD.append("csrfmiddlewaretoken",crf);
+    // Define what happens on successful data submission
+    XHR.addEventListener("load", function(event) {
+	document.getElementById("myForm").style.display="none";
+var temp=document.createElement("div");
+	
+	if(event.target.responseText==='1')
+	{
+            document.getElementById("image_upload_error").innerHTML='FILE SIZE MORE THAT 250KB';
+            document.getElementById("myForm").style.display="block";
+	}
+	else
+	{
+	img_edit_src=event.target.responseText;
+	temp.innerHTML='<img src="'+event.target.responseText+'" width="100%;" height="auto">';
+	document.getElementById("img2").style.left=img_edit_x+'px';
+	document.getElementById("img2").style.top=img_edit_y+'px';
+	document.getElementById("img2").style.display="block";
+	document.getElementById("image_viewer").innerHTML='';
+    document.getElementById("image_viewer").appendChild(temp);
+	}
+
+	});
+
+    // Define what happens in case of error
+    XHR.addEventListener("error", function(event) {
+	document.getElementById("myForm").style.display="block";
+		document.getElementById("myForm").innerHTML+="error please try again";
+    });
+
+    // Set up our request
+    XHR.open("POST", "/new_post/upload_post_image");
+
+    // The data sent is what the user provided in the form
+    XHR.send(FD);
+  }
+ 
+  // Access the form element...
+  var form = document.getElementById("myForm");
+  // ...and take over its submit event.
+  form.addEventListener("submit", function (event) {
+    event.preventDefault();//STOP submitting form 
+    sendData();
+  });
+});
+
+
+
 //    document.getElementById("textEditor").addEventListener("mouseover",v_c);
     document.getElementById("textEditor").addEventListener("click",hide_all);
 //   document.getElementById("code").addEventListener("mouseover",c_v);
@@ -322,6 +403,74 @@ editor1=1;
 
 
 
+
+
+
+
+
+
+
+
+
+
+function share()
+{
+	var content=get("textEditor").innerHTML;
+	var crf=document.getElementsByName("csrfmiddlewaretoken")[0].value;
+	var fd=new FormData();
+	fd.append("csrfmiddlewaretoken",crf);
+	fd.append("date",date());
+	fd.append("content",content);
+	
+	xhr("/new_post/share","post",fd,shared,0);	
+	console.log("sharing");
+}
+
+function shared(data)
+{
+	console.log(data);
+	alert("post shared successfully");
+}
+
+
+
+
+
+xhr("/post/","get",null,put_posts,0);
+
+
+function post()
+{
+	xhr("/post/get_next","get",null,put_posts,0);
+}
+
+function put_posts(data)
+{
+	data=JSON.parse(data);
+	var i;
+	for (i=0;i<(data.length/2);i++)
+	{
+		var temp=document.createElement("div");
+		temp.innerHTML='<span class="post_"><span class="cont">'+data[i][2]+'</span>\
+		<span class="date">'+data[i][3]+'</span></span>';
+		document.getElementById("body").appendChild(temp);
+	}
+	//first half posts
+	
+	var temp=document.createElement("div");
+		temp.innerHTML='<span class="post_"><span class="cont">'+data[i][2]+'</span>\
+		<span class="date">'+data[i][3]+'</span></span>';		temp.onfocus=post();
+		document.getElementById("body").appendChild(temp);
+//addevent to thios to load more 
+	for (i;i<(data.length);i++)
+	{
+		var temp=document.createElement("div");
+		temp.innerHTML='<span class="post_"><span class="cont">'+data[i][2]+'</span>\
+		<span class="date">'+data[i][3]+'</span></span>';
+		document.getElementById("body").appendChild(temp);
+	}
+//reemaining poists
+}
 
 
 

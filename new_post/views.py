@@ -3,6 +3,7 @@ from users.login_dignups import *
 from django.shortcuts import render
 import sqlite3 as db
 import os
+import json
 # Create your views here.
 from django.http import HttpResponse , HttpResponseRedirect
 
@@ -28,7 +29,7 @@ def upload_post_image(request):
 	conn=db.connect('sqlite3_manager/db')	
 	c = conn.cursor()
 
-
+	#save image with user id in db so we can identify which image is of witch user
 	q="insert into ppics values(null,"+str(my_id)+",'"+pic.name.split(".")[-1]+"')"
 	c.execute(q)
 	conn.commit()
@@ -46,11 +47,31 @@ def upload_post_image(request):
 	uploaded_file_url = fs.url(filename)
 	print(uploaded_file_url)
 	print("pic new name",pic_name)
-
-
+	
 	conn.commit()
 	conn.close()
 	return HttpResponse("/media/"+pic_name)
+
+
+
+
+def share(request):
+	my_id=request.session['u_id']
+	
+	date=request.POST.get("date");
+	content=request.POST.get("content")
+	
+	conn=db.connect('sqlite3_manager/db')	
+	c = conn.cursor()
+	
+	q="insert into post values(null,"+str(my_id)+",'"+content+"','"+date+"',0,0)"
+	c.execute(q)
+	conn.commit()
+	conn.close()
+	data=[]
+	data['date']=date
+	data['content']=content
+	return HttpResponse(json.dumps(data), content_type="application/json")
 
 
 
