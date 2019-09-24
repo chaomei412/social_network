@@ -9,16 +9,32 @@
 	overflow: hidden;
 }
 
+.post_head
+{
+}
+
+.post_user_icon>img
+{
+
+	width: 40px;
+	height: 40px;
+	border-radius: 40px;
+}
+.post_user_name
+{
+	margin: 10px;
+}
+.post_>.date
+{
+  display: inline-block;
+	color: gray;
+	float: right;
+}
+
 
 .post_>.cont
 {
 	font-size: 18px; 
-}
-
-
-.post_>.date
-{
-	color: gray;
 }
 
 
