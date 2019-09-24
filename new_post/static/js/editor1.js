@@ -451,21 +451,21 @@ function put_posts(data)
 	for (i=0;i<(data.length/2);i++)
 	{
 		var temp=document.createElement("div");
-		temp.innerHTML='<span class="post_"><span class="cont">'+data[i][2]+'</span>\
+		temp.innerHTML='<span class="post_" onclick="expand_me(this)" title="clickto expand"><span class="cont">'+data[i][2]+'</span>\
 		<span class="date">'+data[i][3]+'</span></span>';
 		document.getElementById("body").appendChild(temp);
 	}
 	//first half posts
 	
 	var temp=document.createElement("div");
-		temp.innerHTML='<span class="post_"><span class="cont">'+data[i][2]+'</span>\
+		temp.innerHTML='<span class="post_" onclick="expand_me(this)" title="clickto expand"><span class="cont">'+data[i][2]+'</span>\
 		<span class="date">'+data[i][3]+'</span></span>';		temp.onfocus=post();
 		document.getElementById("body").appendChild(temp);
 //addevent to thios to load more 
 	for (i;i<(data.length);i++)
 	{
 		var temp=document.createElement("div");
-		temp.innerHTML='<span class="post_"><span class="cont">'+data[i][2]+'</span>\
+		temp.innerHTML='<span class="post_" onclick="expand_me(this)" title="clickto expand"><span class="cont">'+data[i][2]+'</span>\
 		<span class="date">'+data[i][3]+'</span></span>';
 		document.getElementById("body").appendChild(temp);
 	}
@@ -473,6 +473,12 @@ function put_posts(data)
 }
 
 
+
+function expand_me(post)
+{
+	console.log(post);
+	post.style.maxHeight="unset";
+}
 
 
 
