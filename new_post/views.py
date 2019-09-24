@@ -68,7 +68,7 @@ def share(request):
 	c.execute(q)
 	conn.commit()
 	conn.close()
-	data=[]
+	data={}
 	data['date']=date
 	data['content']=content
 	return HttpResponse(json.dumps(data), content_type="application/json")

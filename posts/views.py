@@ -22,13 +22,15 @@ def initiate(request):
 	for i in c.execute(q1):
 		print(i)
 		friend.append(str(i[0]))
+	friend.append(str(my_id))	
 	request.session['friends']=','.join(friend)	
 	data=[]
 	q="select * from post where u_id in ("+request.session['friends']+") order by id desc limit 5"
 	for row in c.execute(q):
 		data.append(list(row))
-	conn.close()	
-	request.session['last_fetch_post_id']=data[-1][0]	
+	conn.close()
+	if(len(data)!=0):
+		request.session['last_fetch_post_id']=data[-1][0]	
 	return HttpResponse(json.dumps(data), content_type="application/json")
 	
 def post(request):
