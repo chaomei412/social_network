@@ -2,15 +2,24 @@
 {
 	display: block;
 	background-color:  white;
-	margin: 6px 2px 5px 2px;
+	margin: 26px 2px 18px 2px;
 	padding: 10px;
 	border-radius:5px;
-	max-height: 250px;
-	overflow: hidden;
+  
+
+
+	-webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Opera and Firefox */
 }
 
 .post_head
 {
+	display:block;
 }
 
 .post_user_icon>img
@@ -24,15 +33,19 @@
 {
 	margin: 10px;
 }
-.post_>.date
+.post_head>.date
 {
-  display: inline-block;
+	float: right;
+	display: inline-block;
 	color: gray;
 }
 
 
 .post_>.cont
 {
+	display:block;
+		overflow: hidden;
+	max-height: 250px;
 	font-size: 18px; 
 }
 

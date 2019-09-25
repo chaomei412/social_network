@@ -453,7 +453,7 @@ function put_posts(data)
 	for (i=0;i<(data.length/2);i++)
 	{
 		var temp=document.createElement("div");
-		temp.innerHTML='<span class="post_" onclick="expand_me(this)" title="click to expand">\
+		temp.innerHTML='<span class="post_" title="click to expand">\
 							<span class="post_head">\
 								<span class="post_user">\
 									<span class="post_user_icon">\
@@ -463,14 +463,19 @@ function put_posts(data)
 								</span>\
 								<span class="date">'+data[i][3]+'</span>\
 							</span>\
-							</span><span class="cont">'+data[i][2]+'</span>\
+							<span class="cont" onclick="expand_me(this)" >'+data[i][2]+'</span>\
+							<span class="post_footer">\
+								<span class="post_footer_likes">100 likes</span>\
+								<span class="post_footer_likes">100 dislikes</span>\
+								<span class="post_footer_likes">share</span>\
+							</span>\
 						</span>';
 		document.getElementById("body").appendChild(temp);
 	}
 	//first half posts
 	
 	var temp=document.createElement("div");
-		temp.innerHTML='<span class="post_" onclick="expand_me(this)" title="click to expand">\
+		temp.innerHTML='<span class="post_" title="click to expand">\
 							<span class="post_head">\
 								<span class="post_user">\
 									<span class="post_user_icon">\
@@ -480,7 +485,12 @@ function put_posts(data)
 								</span>\
 								<span class="date">'+data[i][3]+'</span>\
 							</span>\
-							</span><span class="cont">'+data[i][2]+'</span>\
+							<span class="cont" onclick="expand_me(this)" >'+data[i][2]+'</span>\
+							<span class="post_footer">\
+								<span class="post_footer_likes">100 likes</span>\
+								<span class="post_footer_likes">100 dislikes</span>\
+								<span class="post_footer_likes">share</span>\
+							</span>\
 						</span>';
 		temp.onfocus=post();
 		document.getElementById("body").appendChild(temp);
@@ -488,7 +498,7 @@ function put_posts(data)
 	for (i;i<(data.length);i++)
 	{
 		var temp=document.createElement("div");
-				temp.innerHTML='<span class="post_" onclick="expand_me(this)" title="click to expand">\
+				temp.innerHTML='<span class="post_" title="click to expand">\
 							<span class="post_head">\
 								<span class="post_user">\
 									<span class="post_user_icon">\
@@ -498,7 +508,12 @@ function put_posts(data)
 								</span>\
 								<span class="date">'+data[i][3]+'</span>\
 							</span>\
-							</span><span class="cont">'+data[i][2]+'</span>\
+							<span class="cont"  onclick="expand_me(this)" >'+data[i][2]+'</span>\
+							<span class="post_footer">\
+								<span class="post_footer_likes">100 likes</span>\
+								<span class="post_footer_likes">100 dislikes</span>\
+								<span class="post_footer_likes">share</span>\
+							</span>\
 						</span>';
 		
 		document.getElementById("body").appendChild(temp);
@@ -510,9 +525,17 @@ function put_posts(data)
 
 function expand_me(post)
 {
-	console.log(post);
-	post.style.maxHeight="unset";
+	if(post.style.maxHeight=="unset")
+		post.style.maxHeight="250px";
+	else	
+		post.style.maxHeight="unset";
 }
+
+
+
+
+
+
 
 
 
