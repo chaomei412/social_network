@@ -223,3 +223,17 @@ select * from ppics
 select * from ppics
 create table post(id integer primary key,u_id integer,content text,date text,privacy int,status int)
 select * from post
+create table like_dislike (id integer primary key,u_id integer,p_id integer,action int,date text)
+select * from like_dislike
+db
+sql error:near "db": syntax error
+insert into like_dislike values(null,1,572,1,null)
+insert into like_dislike values(null,1,572,0,null)
+insert into like_dislike values(null,2,572,0,null)
+create table comment(id integer primary key,u_id integer,p_p_id,p_c_id,comment text,date text)
+create table comment(id integer primary key,u_id integer,p_p_id,p_c_id,comment text,date text)
+sql error:table comment already exists
+drop table comment
+create table comment(id integer primary key,u_id integer,p_p_id integer,p_c_id integer,comment text,date text)
+create table comment(id integer primary key,u_id integer,p_p_id integer,p_c_id integer,comment text,date text)
+sql error:table comment already exists

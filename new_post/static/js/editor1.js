@@ -385,18 +385,16 @@ document.getElementsByTagName("head")[0].appendChild(coler_css_create);
 
 function hide_all()
 {
-if(create_font_block!==null)
-document.getElementById("font_style_block").style.display="none";
+	if(create_font_block!==null)
+	document.getElementById("font_style_block").style.display="none";
 
-if(text_color_block!==null)
-document.getElementById("font_color_block").style.display="none";
+	if(text_color_block!==null)
+	document.getElementById("font_color_block").style.display="none";
 
-if(bg_color_block!==null)
-document.getElementById("bgcolor_block").style.display="none";
-
-
-document.getElementById("img2").style.display="none";
-document.getElementById("myForm").style.display="none";	
+	if(bg_color_block!==null)
+	document.getElementById("bgcolor_block").style.display="none";
+	document.getElementById("img2").style.display="none";
+	document.getElementById("myForm").style.display="none";	
 }
 
 editor1=1;
@@ -465,9 +463,10 @@ function put_posts(data)
 							</span>\
 							<span class="cont" onclick="expand_me(this)" >'+data[i][2]+'</span>\
 							<span class="post_footer">\
-								<span class="post_footer_likes">100 likes</span>\
-								<span class="post_footer_likes">100 dislikes</span>\
-								<span class="post_footer_likes">share</span>\
+								<span><span class="no_of_likes">'+data[i][9]+'</span><span class="fa fa-thumbs-up" onclick="like_this_post('+data[i][0]+')"></span></span>\
+								<span><span class="no_of_dis_likes">'+data[i][9]+'</span><span class="fa fa-thumbs-down" onclick="like_this_post('+data[i][0]+')"></span></span>\
+								<span><span class="no_of_comments">'+data[i][9]+'</span><span class="fa fa-comment"></span></span>\
+								<span class="fa fa-share-alt" onclick="share_this_post('+data[i][0]+')"></span>\
 							</span>\
 						</span>';
 		document.getElementById("body").appendChild(temp);
@@ -487,14 +486,15 @@ function put_posts(data)
 							</span>\
 							<span class="cont" onclick="expand_me(this)" >'+data[i][2]+'</span>\
 							<span class="post_footer">\
-								<span class="post_footer_likes">100 likes</span>\
-								<span class="post_footer_likes">100 dislikes</span>\
-								<span class="post_footer_likes">share</span>\
+								<span><span class="no_of_likes">'+data[i][9]+'</span><span class="fa fa-thumbs-up" onclick="like_this_post('+data[i][0]+')"></span></span>\
+								<span><span class="no_of_dis_likes">'+data[i][9]+'</span><span class="fa fa-thumbs-down" onclick="like_this_post('+data[i][0]+')"></span></span>\
+								<span><span class="no_of_comments">'+data[i][9]+'</span><span class="fa fa-comment"></span></span>\
+								<span class="fa fa-share-alt" onclick="share_this_post('+data[i][0]+')"></span>\
 							</span>\
 						</span>';
 		temp.onfocus=post();
 		document.getElementById("body").appendChild(temp);
-//addevent to thios to load more 
+//add event to this to load more 
 	for (i;i<(data.length);i++)
 	{
 		var temp=document.createElement("div");
@@ -510,17 +510,30 @@ function put_posts(data)
 							</span>\
 							<span class="cont"  onclick="expand_me(this)" >'+data[i][2]+'</span>\
 							<span class="post_footer">\
-								<span class="post_footer_likes">100 likes</span>\
-								<span class="post_footer_likes">100 dislikes</span>\
-								<span class="post_footer_likes">share</span>\
+								<span><span class="no_of_likes">'+data[i][9]+'</span><span class="fa fa-thumbs-up" onclick="like_this_post('+data[i][0]+')"></span></span>\
+								<span><span class="no_of_dis_likes">'+data[i][10]+'</span><span class="fa fa-thumbs-down" onclick="dis_like_this_post('+data[i][0]+')"></span></span>\
+								<span><span class="no_of_comments">'+data[i][11]+'</span><span class="fa fa-comment"></span></span>\
+								<span class="fa fa-share-alt" onclick="share_this_post('+data[i][0]+')"></span>\
 							</span>\
-						</span>';
-		
+						</span>';		
 		document.getElementById("body").appendChild(temp);
 	}
 //reemaining poists
 }
 
+function share_this_post(p_id)
+{
+	
+}
+function dis_like_this_post(p_id)
+{
+	
+}
+
+function like_this_post(p_id)
+{
+	
+}
 
 
 function expand_me(post)

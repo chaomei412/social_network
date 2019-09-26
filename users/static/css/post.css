@@ -54,6 +54,24 @@
 
 
 
+.post_footer{
+   display: block;  
+  font-size: 16px;
+	margin: 10px -10px 0px -10px;
+	border-top: solid #999 1px;
+}
+
+.post_footer>span
+{
+	font-size:25px;
+	margin:0px 0px 0px 60px;
+}
+
+.post_footer>span:hover
+{
+	opacity:0.6;
+	cursor:pointer;
+}
 
 
 
