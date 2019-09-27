@@ -20,16 +20,16 @@
 				{% csrf_token %}  
 				<span id="step1">
 					<span >USER NAME</span><br>
-					<input type="text" id="user_name" onkeyup="is_username_available()" name="username" onkeyup="key()" required="true" value="" /><br>
+					<input type="text" id="user_name" onkeyup="is_username_available()" name="username" placeholder="username" onkeyup="key()" required="true" value="" /><br>
 					<div class="inpt_error" id="user_name_error"></div>
 					<span >PASSWORD</span><br>
 					<input type="password" id="user_pass" onkeyup="pass1()" name="password" placeholder="password"  required="true" value="" /><br>
 					<div class="inpt_error" id="pass1_error"></div>
 					<span >PASSWORD AGAIN</span><br>
-					<input type="password" id="user_pass2" onkeyup="pass2()" name="password2" placeholder="password"  required="true" value="" /><br>
+					<input type="password" id="user_pass2" onkeyup="pass2()" name="password2" placeholder="password again"  required="true" value="" /><br>
 					<div class="inpt_error" id="pass2_error"></div>
 					<span>EMAIL</span><br>
-					<input type="email" id="email" name="email" onkeyup="is_email_avail()" required="true" /><br>
+					<input type="email" id="email" name="email" placeholder="email" onkeyup="is_email_avail()" required="true" /><br>
 					<div class="inpt_error" id="email_error"></div>
 					<button onclick="step2()" id="next">Next</button>
 				</span>

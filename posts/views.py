@@ -88,15 +88,68 @@ def post(request):
 		request.session['last_fetch_post_id']=data[-1][0]
 	conn.close()
 	return HttpResponse(json.dumps(data), content_type="application/json")
+def dis_like_this(request):
+    my_id=request.session['u_id']
+    post_id=request.GET.get('id')
+    print(post_id)
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+    conn=db.connect('sqlite3_manager/db')	
+    c = conn.cursor()
+    c2 = conn.cursor()
+
+    #check is any entry present of same user for same post if yes which is it like or dislike
+    q="select action from like_dislike where u_id="+str(my_id)+" and p_id="+str(post_id)
+    status=-1
+    for row in c.execute(q):
+        status=row[0]
+    if(status==-1):
+        #user has no entry for that post
+        #add entry as dislike
+        q="insert into like_dislike values(null,"+str(my_id)+","+str(post_id)+",1,'20-08-1997')"
+        c.execute(q)
+        conn.commit()
+    elif(status==1):
+        #user allready dis_likes this post remove dislikes entry
+        q="delete from like_dislike where u_id="+str(my_id)+" and p_id="+str(post_id)
+        c.execute(q)
+        conn.commit()
+    else:
+        #user dislike this post update as dislike
+        q="update like_dislike set action=1 where u_id="+str(my_id)+" and p_id="+str(post_id)
+        c.execute(q)
+        conn.commit()
+    conn.close()
+    return HttpResponse(json.dumps({"key":"disllikeok"}), content_type="application/json")
+
+def like_this(request):
+    my_id=request.session['u_id']
+    post_id=request.GET.get('id')
+    print(post_id)
+
+    conn=db.connect('sqlite3_manager/db')	
+    c = conn.cursor()
+    c2 = conn.cursor()
+
+    #check is any entry present of same user for same post if yes which is it like or dislike
+    q="select action from like_dislike where u_id="+str(my_id)+" and p_id="+str(post_id)
+    status=-1
+    for row in c.execute(q):
+        status=row[0]
+    if(status==-1):
+        #user has no entry for that post
+        #add entry as like
+        q="insert into like_dislike values(null,"+str(my_id)+","+str(post_id)+",0,'20-08-1997')"
+        c.execute(q)
+        conn.commit()
+    elif(status==0):
+        #user allready like this post remove like entry
+        q="delete from like_dislike where u_id="+str(my_id)+" and p_id="+str(post_id)
+        c.execute(q)
+        conn.commit()
+    else:
+        #user dislike this post update as like
+        q="update like_dislike set action=0 where u_id="+str(my_id)+" and p_id="+str(post_id)
+        c.execute(q)
+        conn.commit()
+    conn.close()
+    return HttpResponse(json.dumps({"key":"ok"}), content_type="application/json")

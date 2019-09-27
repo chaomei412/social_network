@@ -15,11 +15,12 @@
 			<script src="{% static 'js/a076d05399.js' %}"></script>
 	</head>  
     <body>  
-	{% csrf_token %}  
+		
+		{% csrf_token %}  
 		<div id="body" class="container-fluid">
 		<div id="header">
 			<span id="name">
-				welcome mr. {{data.0}} {{data.1}}
+				<!--welcome mr. {{data.0}} {{data.1}}-->
 			</span>
 			<img id="prof_pic" src="/media/{{data.2}}"/>
 			<span id="logout">
@@ -34,71 +35,85 @@
 		<div id="search_result">
 		
 		</div>
-		<span id="controls" style="float: left">
-    
-    <span id="visual_tools">
-<span class="glyphicon glyphicon-bold" title="make selected text bold"  onClick="Func('bold','')"></span>
-<span class="glyphicon glyphicon-italic"  title="make selected text italic"  onClick="Func('italic','')"></span>
-  <button onClick="Func('underline','')"><u>U</u></button>
-  <button onClick="Func('strikethrough','')"><del><s>Z</s></del></button>
-<span class="glyphicon glyphicon-resize-horizontal" title="insertHorizontalRule" onClick="Func('insertHorizontalRule','')"></span>
-<span class="glyphicon glyphicon-font"  onClick="select_font_style(event)"></span>
-<span class="glyphicon glyphicon-text-color"  onClick="text_color_select(event)"></span>
-<span class="glyphicon glyphicon-text-background" onClick="bg_color_select(event)"></span>
-<span class="fas fa-link" title="add hyperlink to selected text" onClick="editor_link_adder(event)"></span>
-<span class="fas fa-unlink"  title="remove hyperlink of selected text"  onClick="Func('unlink','')"></span>
-<span class="glyphicon glyphicon-picture" onClick="setimg(event)"></span>
-<span class="fas fa-paragraph" title="new paragraph" onClick="Func('insertParagraph','')"></span>
- <span class="glyphicon glyphicon-align-right" onClick="Func('justifyRight','')"></span>
- <span class="glyphicon glyphicon-align-left" title="justify left"  onClick="Func('justifyLeft','')"></span>
- <span class="glyphicon glyphicon-align-justify"  onClick="Func('justifyFull','')"></span>
- <span class="glyphicon glyphicon-align-center"  onClick="Func('justifyCenter','')"></span>
-<span class="fas fa-list-ol" title="ordred list"  onClick="Func('insertOrderedList','')"></span>
-<span title="unorderd list"  class="fas fa-list-ul" onClick="Func('insertUnorderedList','')"></span>
- <span class="glyphicon glyphicon-subscript"  onClick="Func('subscript','')"></span>
- <span class="glyphicon glyphicon-superscript" onClick="Func('superscript','')"></span>
-<span  class="glyphicon glyphicon-text-size" onClick="Func('fontSize',5)"></span><!--int 1-7-->
-<span class="fas fa-indent"  onClick="Func('indent','')"></span>
-<span class="fas fa-outdent" onClick="Func('outdent','')"></span>
-<!--document.execCommand("strikethrough", false, null);---????-->
-<span class="glyphicon glyphicon-minus"  title="decrease font size"  onClick="Func('decreaseFontSize','1px')"></span>
-<span class="glyphicon glyphicon-plus" title="incrise font size" onClick="Func('increaseFontSize','1px')"></span>
- <span class="glyphicon glyphicon-remove-sign" title="clear all applied styles" onClick="Func('removeFormat','')"></span>
-    </span>
-  </span>
-  
-  <span id="functions">
-  
-  <span class="fas fa-undo" title="undo" onClick="Func('undo','')"></span>
- <span class=" 	fas fa-redo" title="redo" onClick="Func('redo','')"></span>
- <span  onclick="vanish('textEditor')" class="glyphicon glyphicon-floppy-remove" title="cancle"></span>
-<span onclick="share()" class="glyphicon glyphicon-send"></span>
-</span>
+		
+		<div id="new_in_page_post">
+			<span id="controls" style="float: left">
+		
+				<span id="visual_tools">
+						<span class="glyphicon glyphicon-bold" title="make selected text bold"  onClick="Func('bold','')"></span>
+						<span class="glyphicon glyphicon-italic"  title="make selected text italic"  onClick="Func('italic','')"></span>
+						  <button onClick="Func('underline','')"><u>U</u></button>
+						  <button onClick="Func('strikethrough','')"><del><s>Z</s></del></button>
+						<span class="glyphicon glyphicon-resize-horizontal" title="insertHorizontalRule" onClick="Func('insertHorizontalRule','')"></span>
+						<span class="glyphicon glyphicon-font"  onClick="select_font_style(event)"></span>
+						<span class="glyphicon glyphicon-text-color"  onClick="text_color_select(event)"></span>
+						<span class="glyphicon glyphicon-text-background" onClick="bg_color_select(event)"></span>
+						<span class="fas fa-link" title="add hyperlink to selected text" onClick="editor_link_adder(event)"></span>
+						<span class="fas fa-unlink"  title="remove hyperlink of selected text"  onClick="Func('unlink','')"></span>
+						<span class="glyphicon glyphicon-picture" onClick="setimg(event)"></span>
+						<span class="fas fa-paragraph" title="new paragraph" onClick="Func('insertParagraph','')"></span>
+						 <span class="glyphicon glyphicon-align-right" onClick="Func('justifyRight','')"></span>
+						 <span class="glyphicon glyphicon-align-left" title="justify left"  onClick="Func('justifyLeft','')"></span>
+						 <span class="glyphicon glyphicon-align-justify"  onClick="Func('justifyFull','')"></span>
+						 <span class="glyphicon glyphicon-align-center"  onClick="Func('justifyCenter','')"></span>
+						<span class="fas fa-list-ol" title="ordred list"  onClick="Func('insertOrderedList','')"></span>
+						<span title="unorderd list"  class="fas fa-list-ul" onClick="Func('insertUnorderedList','')"></span>
+						 <span class="glyphicon glyphicon-subscript"  onClick="Func('subscript','')"></span>
+						 <span class="glyphicon glyphicon-superscript" onClick="Func('superscript','')"></span>
+						<span  class="glyphicon glyphicon-text-size" onClick="Func('fontSize',5)"></span><!--int 1-7-->
+						<span class="fas fa-indent"  onClick="Func('indent','')"></span>
+						<span class="fas fa-outdent" onClick="Func('outdent','')"></span>
+						<!--document.execCommand("strikethrough", false, null);---????-->
+						<span class="glyphicon glyphicon-minus"  title="decrease font size"  onClick="Func('decreaseFontSize','1px')"></span>
+						<span class="glyphicon glyphicon-plus" title="incrise font size" onClick="Func('increaseFontSize','1px')"></span>
+						 <span class="glyphicon glyphicon-remove-sign" title="clear all applied styles" onClick="Func('removeFormat','')"></span>
+				</span>
+			</span>
+						  
+			<span id="functions">
+						  
+						  <span class="fas fa-undo" title="undo" onClick="Func('undo','')"></span>
+						 <span class=" 	fas fa-redo" title="redo" onClick="Func('redo','')"></span>
+						 <span  onclick="vanish('textEditor')" class="glyphicon glyphicon-floppy-remove" title="cancle"></span>
+						<span onclick="share()" class="glyphicon glyphicon-send"></span>
+			</span>
 
-  <form id="myForm" enctype="multipart/form-data" style="position:absolute;background-color:gray;padding:5px;color:white;overflow:hidden;width:150px;text-align:center;display:none" >
-  <input type="file" name="fileToUpload" id="fileToUpload"><br>
-  <div id="image_upload_error" style="color:red"></div>
-<br>  <input type="submit"  id="image_add_butt" value="ADD IMAGE">
-</form>
+			<form id="myForm" enctype="multipart/form-data" style="position:absolute;background-color:gray;padding:5px;color:white;overflow:hidden;width:150px;text-align:center;display:none" >
+				<input type="file" name="fileToUpload" id="fileToUpload"><br>
+				<div id="image_upload_error" style="color:red"></div>
+				<br>  <input type="submit"  id="image_add_butt" value="ADD IMAGE">
+			</form>
 
-<div id="img2" style="position:absolute;background-color:gray;padding:5px;color:white;overflow:hidden;width:150px;text-align:center;display:none">
-	<button id="image_sub_butt" onClick="setimgagain()">ADD ANOTHER</button>
-	<div id="image_viewer"></div>
-	<button id="image_sub_butt" onClick="insert_edit_image()" >INSERT IT</button>
-</div>
+			<div id="img2" style="position:absolute;background-color:gray;padding:5px;color:white;overflow:hidden;width:150px;text-align:center;display:none">
+				<button id="image_sub_butt" onClick="setimgagain()">ADD ANOTHER</button>
+				<div id="image_viewer"></div>
+				<button id="image_sub_butt" onClick="insert_edit_image()" >INSERT IT</button>
+			</div>
 
-<div id="textEditor" contenteditable="true"></div>
+			<div id="textEditor" contenteditable="true"></div>
+		</div>
 
-
-<!--here all posts are coming-->
-
-</div>
+		<!--here all posts are coming-->
+		
+		<!--here all posts are coming-->
+		
+		</div>
 		<script src="{% static 'js/blogi5_lib.js' %}"></script>
 		<script src="{% static 'js/find_friend.js' %}"></script>	
 		<script src="{% static 'js/add_friend.js' %}"></script>
 		<script src="{% static 'js/editor1.js' %}"></script>		
-		 <div id="tost_div">
-			<span id="tost"></span>
+		<div id="tost_div" style=" position: fixed;
+ z-index: 5000;
+ font-size: 18px;
+ border-radius: 3px;
+ right:5px;
+  bottom: 5px;">
+				<span id="tost" style="    padding: 5px 10px;
+  min-width: 200px;
+  color:white;
+  display: block;
+  text-align: center;
+  border-radius: 5px;"></span>
 		</div>
     </body> 
 </html>  

@@ -444,14 +444,13 @@ function post()
 
 function put_posts(data)
 {
-	//6 fn 7ln  8 pic url
 	
 	data=JSON.parse(data);
 	var i;
 	for (i=0;i<(data.length/2);i++)
 	{
 		var temp=document.createElement("div");
-		temp.innerHTML='<span class="post_" title="click to expand">\
+		temp.innerHTML='<span class="post_">\
 							<span class="post_head">\
 								<span class="post_user">\
 									<span class="post_user_icon">\
@@ -461,11 +460,11 @@ function put_posts(data)
 								</span>\
 								<span class="date">'+data[i][3]+'</span>\
 							</span>\
-							<span class="cont" onclick="expand_me(this)" >'+data[i][2]+'</span>\
+							<span class="cont" onclick="expand_me(this)" title="click to expand">'+data[i][2]+'</span>\
 							<span class="post_footer">\
-								<span><span class="no_of_likes">'+data[i][9]+'</span><span class="fa fa-thumbs-up" onclick="like_this_post('+data[i][0]+')"></span></span>\
-								<span><span class="no_of_dis_likes">'+data[i][9]+'</span><span class="fa fa-thumbs-down" onclick="like_this_post('+data[i][0]+')"></span></span>\
-								<span><span class="no_of_comments">'+data[i][9]+'</span><span class="fa fa-comment"></span></span>\
+								<span><span class="no_of_likes">'+data[i][9]+' </span><span class="fa fa-thumbs-up" onclick="like_this_post('+data[i][0]+')"></span></span>\
+								<span><span class="no_of_dis_likes">'+data[i][10]+' </span><span class="fa fa-thumbs-down" onclick="dis_like_this_post('+data[i][0]+')"></span></span>\
+								<span><span class="no_of_comments">'+data[i][11]+' </span><span class="fa fa-comment"></span></span>\
 								<span class="fa fa-share-alt" onclick="share_this_post('+data[i][0]+')"></span>\
 							</span>\
 						</span>';
@@ -474,7 +473,7 @@ function put_posts(data)
 	//first half posts
 	
 	var temp=document.createElement("div");
-		temp.innerHTML='<span class="post_" title="click to expand">\
+		temp.innerHTML='<span class="post_">\
 							<span class="post_head">\
 								<span class="post_user">\
 									<span class="post_user_icon">\
@@ -484,11 +483,11 @@ function put_posts(data)
 								</span>\
 								<span class="date">'+data[i][3]+'</span>\
 							</span>\
-							<span class="cont" onclick="expand_me(this)" >'+data[i][2]+'</span>\
+							<span class="cont" onclick="expand_me(this)" title="click to expand">'+data[i][2]+'</span>\
 							<span class="post_footer">\
-								<span><span class="no_of_likes">'+data[i][9]+'</span><span class="fa fa-thumbs-up" onclick="like_this_post('+data[i][0]+')"></span></span>\
-								<span><span class="no_of_dis_likes">'+data[i][9]+'</span><span class="fa fa-thumbs-down" onclick="like_this_post('+data[i][0]+')"></span></span>\
-								<span><span class="no_of_comments">'+data[i][9]+'</span><span class="fa fa-comment"></span></span>\
+								<span><span class="no_of_likes">'+data[i][9]+' </span><span class="fa fa-thumbs-up" onclick="like_this_post('+data[i][0]+')"></span></span>\
+								<span><span class="no_of_dis_likes">'+data[i][10]+' </span><span class="fa fa-thumbs-down" onclick="dis_like_this_post('+data[i][0]+')"></span></span>\
+								<span><span class="no_of_comments">'+data[i][11]+' </span><span class="fa fa-comment"></span></span>\
 								<span class="fa fa-share-alt" onclick="share_this_post('+data[i][0]+')"></span>\
 							</span>\
 						</span>';
@@ -498,7 +497,7 @@ function put_posts(data)
 	for (i;i<(data.length);i++)
 	{
 		var temp=document.createElement("div");
-				temp.innerHTML='<span class="post_" title="click to expand">\
+				temp.innerHTML='<span class="post_">\
 							<span class="post_head">\
 								<span class="post_user">\
 									<span class="post_user_icon">\
@@ -508,11 +507,11 @@ function put_posts(data)
 								</span>\
 								<span class="date">'+data[i][3]+'</span>\
 							</span>\
-							<span class="cont"  onclick="expand_me(this)" >'+data[i][2]+'</span>\
+							<span class="cont"  onclick="expand_me(this)" title="click to expand">'+data[i][2]+'</span>\
 							<span class="post_footer">\
-								<span><span class="no_of_likes">'+data[i][9]+'</span><span class="fa fa-thumbs-up" onclick="like_this_post('+data[i][0]+')"></span></span>\
-								<span><span class="no_of_dis_likes">'+data[i][10]+'</span><span class="fa fa-thumbs-down" onclick="dis_like_this_post('+data[i][0]+')"></span></span>\
-								<span><span class="no_of_comments">'+data[i][11]+'</span><span class="fa fa-comment"></span></span>\
+								<span><span class="no_of_likes">'+data[i][9]+' </span><span class="fa fa-thumbs-up" onclick="like_this_post('+data[i][0]+')"></span></span>\
+								<span><span class="no_of_dis_likes">'+data[i][10]+' </span><span class="fa fa-thumbs-down" onclick="dis_like_this_post('+data[i][0]+')"></span></span>\
+								<span><span class="no_of_comments">'+data[i][11]+' </span><span class="fa fa-comment"></span></span>\
 								<span class="fa fa-share-alt" onclick="share_this_post('+data[i][0]+')"></span>\
 							</span>\
 						</span>';		
@@ -527,14 +526,22 @@ function share_this_post(p_id)
 }
 function dis_like_this_post(p_id)
 {
-	
+	xhr("/post/dis_like_this?id="+p_id,"get",null,dis_like_this_ok,0);
+}
+function dis_like_this_ok(data)
+{
+	//logik after dislike is done at server side and has to show changes at client side
+
 }
 
 function like_this_post(p_id)
 {
-	
+	xhr("/post/like_this?id="+p_id,"get",null,like_this_ok,0);
 }
-
+function like_this_ok(data)
+{
+	//logik after like is done at server side and has to show changes at client side
+}
 
 function expand_me(post)
 {

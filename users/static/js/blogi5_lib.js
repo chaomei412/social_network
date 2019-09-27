@@ -44,7 +44,7 @@ function urlsplit()
     return b;
 }
 
-function xhr(url,method="get",data=null,callback,retry=0)
+function xhr(url=null,method="get",data=null,callback=null,retry=0)
 {
     if(retry===1)
     {
@@ -75,9 +75,15 @@ function xhr(url,method="get",data=null,callback,retry=0)
         if(this.readyState===4&&this.status!==200)
         {
             clearTimeout(tmr);
+			if(retry>50)
+			{
+				alert("faild to reach server please reload page or check your network connection");
+				return 0;
+			}
             tost("bad response reconnecting..");
-            xhr(url,method,data,callback);
+            xhr(url,method,data,callback,++retry);
         }
+		
     };
     XHR.open(method,url); 
     XHR.send(data);
