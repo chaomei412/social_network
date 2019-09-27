@@ -12,82 +12,89 @@ from django.shortcuts import render
 
 
 def initiate(request):
-	my_id=request.session['u_id']
+    my_id=request.session['u_id']
 
-	conn=db.connect('sqlite3_manager/db')	
-	c = conn.cursor()
-	c2 = conn.cursor()
+    conn=db.connect('sqlite3_manager/db')	
+    c = conn.cursor()
+    c2 = conn.cursor()
 
-	q1="select u.id from users u,friend f  where ((u.id=f.f_id and f.t_id="+str(my_id)+") or (u.id=f.t_id and f.f_id="+str(my_id)+")) and status = 1 order by f.id desc" #from others to me
-	friend=[]
-	for i in c.execute(q1):
-		friend.append(str(i[0]))
-	friend.append(str(my_id))	
-	request.session['friends']=','.join(friend)	
-	data=[]
-	q="select * from post where u_id in ("+request.session['friends']+") order by id desc limit 25"
-	for row in c.execute(q):
-		data2=list(row)
-		u=str(data2[1])
-		frnd="select u.fname,u.lname,pc.pic_url from users u,pics pc where u.id="+u+" and u.id=pc.u_id"
-		for frnd_i in c2.execute(frnd):
-			data2=data2+list(frnd_i)
-		
-		#add no of likes
-		lks="select count(id) from like_dislike where p_id="+str(data2[0])+" and action=0"
-		for lkss in c2.execute(lks):
-			data2=data2+list(lkss)
+    q1="select u.id from users u,friend f  where ((u.id=f.f_id and f.t_id="+str(my_id)+") or (u.id=f.t_id and f.f_id="+str(my_id)+")) and status = 1 order by f.id desc" #from others to me
+    friend=[]
+    for i in c.execute(q1):
+        friend.append(str(i[0]))
+    friend.append(str(my_id))	
+    request.session['friends']=','.join(friend)	
+    data=[]
+    q="select * from post where u_id in ("+request.session['friends']+") order by id desc limit 25"
+    for row in c.execute(q):
+        data2=list(row)
+        u=str(data2[1])
+        frnd="select u.fname,u.lname,pc.pic_url from users u,pics pc where u.id="+u+" and u.id=pc.u_id"
+        for frnd_i in c2.execute(frnd):
+            data2=data2+list(frnd_i)
+        
+        #add no of likes
+        lks="select count(id) from like_dislike where p_id="+str(data2[0])+" and action=0"
+        for lkss in c2.execute(lks):
+            data2=data2+list(lkss)
 
-		#add no of dis_likes
-		lks="select count(id) from like_dislike where p_id="+str(data2[0])+" and action=1"
-		for lkss in c2.execute(lks):
-			data2=data2+list(lkss)
+        #check is any entry present of same user for same post if yes which is it like
+        q="select action from like_dislike where u_id="+str(my_id)+" and p_id="+str(data2[0])
+        status=-1
+        for row in c2.execute(q):
+            status=row[0]
+        data2.append(status)
 
-		#add no of comments
-		lks="select count(id) from comment where p_p_id="+str(data2[0])
-		for lkss in c2.execute(lks):
-			data2=data2+list(lkss)
-		
-			
-		data.append(data2)
-	conn.close()
-	if(len(data)!=0):
-		request.session['last_fetch_post_id']=data[-1][0]	
-	return HttpResponse(json.dumps(data), content_type="application/json")
+        #add no of comments
+        lks="select count(id) from comment where p_p_id="+str(data2[0])
+        for lkss in c2.execute(lks):
+            data2=data2+list(lkss)
+        
+            
+        data.append(data2)
+    conn.close()
+    if(len(data)!=0):
+        request.session['last_fetch_post_id']=data[-1][0]	
+    return HttpResponse(json.dumps(data), content_type="application/json")
 	
 def post(request):
-	conn=db.connect('sqlite3_manager/db')	
-	c = conn.cursor()
-	c2 = conn.cursor()
-	q="select * from post where u_id in ("+request.session['friends']+") and id <"+str(request.session['last_fetch_post_id'])+" order by id desc limit 250"
-	data=[]
-	for row in c.execute(q):
-		data2=list(row)
-		u=str(data2[1])
-		frnd="select u.fname,u.lname,pc.pic_url from users u,pics pc where u.id="+u+" and u.id=pc.u_id"
-		for frnd_i in c2.execute(frnd):
-			data2=data2+list(frnd_i)
-			
-		#add no of likes
-		lks="select count(id) from like_dislike where p_id="+str(data2[0])+" and action=0"
-		for lkss in c2.execute(lks):
-			data2=data2+list(lkss)
+    my_id=request.session['u_id']
+    conn=db.connect('sqlite3_manager/db')	
+    c = conn.cursor()
+    c2 = conn.cursor()
+    q="select * from post where u_id in ("+request.session['friends']+") and id <"+str(request.session['last_fetch_post_id'])+" order by id desc limit 250"
+    data=[]
+    for row in c.execute(q):
+        data2=list(row)
+        u=str(data2[1])
+        frnd="select u.fname,u.lname,pc.pic_url from users u,pics pc where u.id="+u+" and u.id=pc.u_id"
+        for frnd_i in c2.execute(frnd):
+            data2=data2+list(frnd_i)
+            
+        #add no of likes
+        lks="select count(id) from like_dislike where p_id="+str(data2[0])+" and action=0"
+        for lkss in c2.execute(lks):
+            data2=data2+list(lkss)
 
-		#add no of dis_likes
-		lks="select count(id) from like_dislike where p_id="+str(data2[0])+" and action=1"
-		for lkss in c2.execute(lks):
-			data2=data2+list(lkss)
-
-		#add no of comments
-		lks="select count(id) from comment where p_p_id="+str(data2[0])
-		for lkss in c2.execute(lks):
-			data2=data2+list(lkss)
-			
-		data.append(data2)
-	if(len(data)!=0):
-		request.session['last_fetch_post_id']=data[-1][0]
-	conn.close()
-	return HttpResponse(json.dumps(data), content_type="application/json")
+        #check is any entry present of same user for same post if yes which is it like
+        q="select action from like_dislike where u_id="+str(my_id)+" and p_id="+str(data2[0])
+        status=-1
+        for row in c2.execute(q):
+            status=row[0]
+        data2.append(status)
+        
+        
+        
+        #add no of comments
+        lks="select count(id) from comment where p_p_id="+str(data2[0])
+        for lkss in c2.execute(lks):
+            data2=data2+list(lkss)
+            
+        data.append(data2)
+    if(len(data)!=0):
+        request.session['last_fetch_post_id']=data[-1][0]
+    conn.close()
+    return HttpResponse(json.dumps(data), content_type="application/json")
 def dis_like_this(request):
     my_id=request.session['u_id']
     post_id=request.GET.get('id')

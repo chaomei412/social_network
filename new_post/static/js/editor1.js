@@ -439,8 +439,8 @@ function put_posts(data)
 	var i;
 	for (i=0;i<(data.length/2);i++)
 	{
-		var temp=document.createElement("div");
-		temp.innerHTML='<span class="post_" id="post_'+data[i][0]+'">\
+		var temp1=document.createElement("div");
+		var temp='<span class="post_" id="post_'+data[i][0]+'">\
 							<span class="post_head">\
 								<span class="post_user">\
 									<span class="post_user_icon">\
@@ -451,20 +451,25 @@ function put_posts(data)
 								<span class="date">'+data[i][3]+'</span>\
 							</span>\
 							<span class="cont" onclick="expand_me(this)" title="click to expand">'+data[i][2]+'</span>\
-							<span class="post_footer">\
-								<span><span class="no_of_likes">'+data[i][9]+' </span><span class="fa fa-thumbs-up" onclick="like_this_post(this,'+data[i][0]+')"></span></span>\
-								<span><span class="no_of_dis_likes">'+data[i][10]+' </span><span class="fa fa-thumbs-down" onclick="dis_like_this_post('+data[i][0]+')"></span></span>\
+							<span class="post_footer">';
+								temp+='<span><span class="no_of_likes">'+data[i][9]+' </span>';
+								if(data[i][10]==-1)
+									temp+='<span class="glyphicon glyphicon-heart-empty" onclick="like_this_post(this,'+data[i][0]+')">';
+								else
+									temp+='<span class="glyphicon glyphicon-heart" onclick="unlike(this,'+data[i][0]+')">';
+								temp+='</span></span>\
 								<span><span class="no_of_comments">'+data[i][11]+' </span><span class="fa fa-comment"></span></span>\
 								<span class="fa fa-share-alt" onclick="share_this_post('+data[i][0]+')"></span>\
 							</span>\
 							<input type="text" class="comment_"/>\
 						</span>';
-		document.getElementById("body").appendChild(temp);
+			temp1.innerHTML=temp;			
+		document.getElementById("body").appendChild(temp1);
 	}
 	//first half posts
 	
-	var temp=document.createElement("div");
-		temp.innerHTML='<span class="post_" id="post_'+data[i][0]+'">\
+	var temp1=document.createElement("div");
+		var temp='<span class="post_" id="post_'+data[i][0]+'">\
 							<span class="post_head">\
 								<span class="post_user">\
 									<span class="post_user_icon">\
@@ -475,21 +480,26 @@ function put_posts(data)
 								<span class="date">'+data[i][3]+'</span>\
 							</span>\
 							<span class="cont" onclick="expand_me(this)" title="click to expand">'+data[i][2]+'</span>\
-							<span class="post_footer">\
-								<span><span class="no_of_likes">'+data[i][9]+' </span><span class="fa fa-thumbs-up" onclick="like_this_post(this,'+data[i][0]+')"></span></span>\
-								<span><span class="no_of_dis_likes">'+data[i][10]+' </span><span class="fa fa-thumbs-down" onclick="dis_like_this_post('+data[i][0]+')"></span></span>\
+							<span class="post_footer">';
+								temp+='<span><span class="no_of_likes">'+data[i][9]+' </span>';
+								if(data[i][10]==-1)
+									temp+='<span class="glyphicon glyphicon-heart-empty" onclick="like_this_post(this,'+data[i][0]+')">';
+								else
+									temp+='<span class="glyphicon glyphicon-heart" onclick="unlike(this,'+data[i][0]+')">';
+								temp+='</span></span>\
 								<span><span class="no_of_comments">'+data[i][11]+' </span><span class="fa fa-comment"></span></span>\
 								<span class="fa fa-share-alt" onclick="share_this_post('+data[i][0]+')"></span>\
 							</span>\
 							<input type="text" class="comment_"/>\
 						</span>';
-		temp.onfocus=post();
-		document.getElementById("body").appendChild(temp);
+		temp1.innerHTML=temp;
+		temp1.onfocus=post();
+		document.getElementById("body").appendChild(temp1);
 //add event to this to load more 
 	for (i;i<(data.length);i++)
 	{
-		var temp=document.createElement("div");
-				temp.innerHTML='<span class="post_" id="post_'+data[i][0]+'">\
+		var temp1=document.createElement("div");
+			var temp='<span class="post_" id="post_'+data[i][0]+'">\
 							<span class="post_head">\
 								<span class="post_user">\
 									<span class="post_user_icon">\
@@ -500,15 +510,20 @@ function put_posts(data)
 								<span class="date">'+data[i][3]+'</span>\
 							</span>\
 							<span class="cont"  onclick="expand_me(this)" title="click to expand">'+data[i][2]+'</span>\
-							<span class="post_footer">\
-								<span><span class="no_of_likes">'+data[i][9]+' </span><span class="fa fa-thumbs-up" onclick="like_this_post(this,'+data[i][0]+')"></span></span>\
-								<span><span class="no_of_dis_likes">'+data[i][10]+' </span><span class="fa fa-thumbs-down" onclick="dis_like_this_post('+data[i][0]+')"></span></span>\
+							<span class="post_footer">';
+								temp+='<span><span class="no_of_likes">'+data[i][9]+' </span>';
+								if(data[i][10]==-1)
+									temp+='<span class="glyphicon glyphicon-heart-empty" onclick="like_this_post(this,'+data[i][0]+')">';
+								else
+									temp+='<span class="glyphicon glyphicon-heart" onclick="unlike(this,'+data[i][0]+')">';
+								temp+='</span></span>\
 								<span><span class="no_of_comments">'+data[i][11]+' </span><span class="fa fa-comment"></span></span>\
 								<span class="fa fa-share-alt" onclick="share_this_post('+data[i][0]+')"></span>\
 							</span>\
 							<input type="text" class="comment_"/>\
-						</span>';		
-		document.getElementById("body").appendChild(temp);
+						</span>';	
+temp1.innerHTML=temp;						
+		document.getElementById("body").appendChild(temp1);
 	}
 //reemaining poists
 }
@@ -517,8 +532,13 @@ function share_this_post(p_id)
 {
 	
 }
-function dis_like_this_post(p_id)
+function dis_like_this_post(ths,p_id)
 {
+			ths.removeAttribute("onclick");
+		//ths.setAttribute("onclick","f"); add another click event
+	ths.style.opacity="1";
+	var lks=parseInt(ths.parentElement.firstChild.innerHTML);
+	ths.parentElement.firstChild.innerHTML=++lks+" ";
 	xhr("/post/dis_like_this?id="+p_id,"get",null,dis_like_this_ok,0);
 }
 function dis_like_this_ok(data)
@@ -532,14 +552,33 @@ function like_this_post(ths,p_id)
 	
 		
 		ths.removeAttribute("onclick");
-		//ths.setAttribute("onclick","Func_it2()"); add another click event
+		ths.removeAttribute("class");
 		
-	ths.removeEventListener("click",like_this_post,true);
+		ths.setAttribute("class","glyphicon glyphicon-heart");// add another click event
+		
+		ths.setAttribute("onclick","unlike(this,"+p_id+")");// add another click event
+		
 	ths.style.opacity="1";
 	var lks=parseInt(ths.parentElement.firstChild.innerHTML);
-	ths.parentElement.firstChild.innerHTML=++lks;
+	ths.parentElement.firstChild.innerHTML=++lks+" ";
 	xhr("/post/like_this?id="+p_id,"get",null,like_this_ok,0);
 }
+function unlike(ths,p_id)
+{
+		ths.removeAttribute("onclick");
+		ths.removeAttribute("class");
+		
+		ths.setAttribute("class","glyphicon glyphicon-heart-empty");// add another click event
+		
+		ths.setAttribute("onclick","like_this_post(this,"+p_id+")");// add another click event
+
+	var lks=parseInt(ths.parentElement.firstChild.innerHTML);
+	ths.parentElement.firstChild.innerHTML=--lks+" ";
+	xhr("/post/like_this?id="+p_id,"get",null,like_this_ok,0);
+}
+
+
+
 function like_this_ok(data)
 {
 	//logik after like is done at server side and has to show changes at client side
