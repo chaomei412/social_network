@@ -17,10 +17,10 @@ function setimg(e)
 document.getElementById("img2").style.display="none";
 if(e!=null)
 {
-img_edit_x=e.pageX;
-img_edit_y=e.pageY;
-document.getElementById("myForm").style.top=e.pageY+'px';
-document.getElementById("myForm").style.left=e.pageX+'px';
+	img_edit_x=e.pageX;
+	img_edit_y=e.pageY;
+	document.getElementById("myForm").style.top=e.pageY+'px';
+	document.getElementById("myForm").style.left=e.pageX+'px';
 }
 document.getElementById("myForm").style.display="block";
 }
@@ -401,16 +401,6 @@ editor1=1;
 
 
 
-
-
-
-
-
-
-
-
-
-
 function share()
 {
 	var content=get("textEditor").innerHTML;
@@ -467,6 +457,7 @@ function put_posts(data)
 								<span><span class="no_of_comments">'+data[i][11]+' </span><span class="fa fa-comment"></span></span>\
 								<span class="fa fa-share-alt" onclick="share_this_post('+data[i][0]+')"></span>\
 							</span>\
+							<input type="text" class="comment_"/>\
 						</span>';
 		document.getElementById("body").appendChild(temp);
 	}
@@ -490,6 +481,7 @@ function put_posts(data)
 								<span><span class="no_of_comments">'+data[i][11]+' </span><span class="fa fa-comment"></span></span>\
 								<span class="fa fa-share-alt" onclick="share_this_post('+data[i][0]+')"></span>\
 							</span>\
+							<input type="text" class="comment_"/>\
 						</span>';
 		temp.onfocus=post();
 		document.getElementById("body").appendChild(temp);
@@ -537,6 +529,13 @@ function dis_like_this_ok(data)
 
 function like_this_post(ths,p_id)
 {
+	
+		
+		ths.removeAttribute("onclick");
+		//ths.setAttribute("onclick","Func_it2()"); add another click event
+		
+	ths.removeEventListener("click",like_this_post,true);
+	ths.style.opacity="1";
 	var lks=parseInt(ths.parentElement.firstChild.innerHTML);
 	ths.parentElement.firstChild.innerHTML=++lks;
 	xhr("/post/like_this?id="+p_id,"get",null,like_this_ok,0);
