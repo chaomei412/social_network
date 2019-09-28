@@ -461,11 +461,15 @@ function put_posts(data)
 								else
 									temp+='<span class="glyphicon glyphicon-heart" onclick="unlike(this,'+data[i][0]+')">';
 								temp+='</span></span>\
-								<span><span class="no_of_comments">'+data[i][11]+' </span><span class="glyphicon glyphicon-comment"></span></span>\
+								<span onclick="load_comments('+data[i][0]+')">\
+									<span class="no_of_comments">'+data[i][11]+' </span>\
+									<span class="glyphicon glyphicon-comment"></span>\
+								</span>\
 								<span class="fa fa-share-alt" onclick="share_this_post('+data[i][0]+')"></span>\
 							</span>\
 							<input type="text" class="comment_" id="comment_'+data[i][0]+'"/>\
 							<span class="glyphicon glyphicon-comment"  onclick="comment('+data[i][0]+')"></span>\
+							<span id="comments_'+data[i][0]+'"></span>\
 						</span>';
 			temp1.innerHTML=temp;			
 		document.getElementById("body").appendChild(temp1);
@@ -510,7 +514,7 @@ function put_posts(data)
 									<span class="post_user_icon">\
 										<img src="/media/'+data[i][8]+'"/>\
 									</span>\
-									<span class="post_user_name">'+data[i][7]+' '+data[i][6]+'</span>\
+									<span class="post_user_name">'+data[i][7]	+' '+data[i][6]+'</span>\
 								</span>\
 								<span class="date">'+data[i][3]+'</span>\
 							</span>\
@@ -533,14 +537,22 @@ temp1.innerHTML=temp;
 	}
 //reemaining poists
 }
+function load_comments (id)
+{
+	xhr("/post/load_comments?p_id="+id,"get",null,put_comments,0);
+}
+	
+}
 
-
+function put_comments(data)
+{
+	
+}
 var gid;
 function comment(id)
 {
 	var comment=valueof("comment_"+id);
 	valueas("comment_"+id,"");
-	
 	var crf=document.getElementsByName("csrfmiddlewaretoken")[0].value;
 	var fd=new FormData();
 	fd.append("csrfmiddlewaretoken",crf);
@@ -551,10 +563,22 @@ function comment(id)
 }
 function commented(data)
 {
+	data=JSON.parse(data)
+	console.log(data);
 	//data={"post_id": "1", "comment": "test"}
-//after commented at server append it at clienside	
+	//after commented at server append it at clienside	
 	var temp=document.createElement("span");
-	temp.innerHTML
+	var t2='<div class="commented">\
+				<div class="comment_head">\
+					<span  class="commenter">'+data['commenter']+'</span>\
+					<span  class="comment_date">'+data['date']+'</span>\
+				</div>\
+				<div  class="comment_content">'+data['comment']+'</div>\
+			</div>';
+		temp.innerHTML=t2;	
+	var id="comments_"+data['post_id'];
+	get(id).insertBefore(temp,get(id).firstChild);
+	
 }
 
 
@@ -565,8 +589,8 @@ function share_this_post(p_id)
 }
 function dis_like_this_post(ths,p_id)
 {
-			ths.removeAttribute("onclick");
-		//ths.setAttribute("onclick","f"); add another click event
+	ths.removeAttribute("onclick");
+	//ths.setAttribute("onclick","f"); add another click event
 	ths.style.opacity="1";
 	var lks=parseInt(ths.parentElement.firstChild.innerHTML);
 	ths.parentElement.firstChild.innerHTML=++lks+" ";
@@ -580,15 +604,10 @@ function dis_like_this_ok(data)
 
 function like_this_post(ths,p_id)
 {
-	
-		
-		ths.removeAttribute("onclick");
-		ths.removeAttribute("class");
-		
-		ths.setAttribute("class","glyphicon glyphicon-heart");// add another click event
-		
-		ths.setAttribute("onclick","unlike(this,"+p_id+")");// add another click event
-		
+	ths.removeAttribute("onclick");
+	ths.removeAttribute("class");
+	ths.setAttribute("class","glyphicon glyphicon-heart");// add another click event
+	ths.setAttribute("onclick","unlike(this,"+p_id+")");// add another click event
 	ths.style.opacity="1";
 	var lks=parseInt(ths.parentElement.firstChild.innerHTML);
 	ths.parentElement.firstChild.innerHTML=++lks+" ";

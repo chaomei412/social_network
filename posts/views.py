@@ -181,9 +181,9 @@ def like_this(request):
     
     
 def comment(request):
+    my_id=request.session['u_id']
     conn=db.connect('sqlite3_manager/db')	
     c = conn.cursor()
-
     post_id=request.POST.get("p_id")
 
     #check is request is valid means is that post is of that person who is in current users friend list or not he can only able to like or comment post if he bellong as a friend
@@ -211,8 +211,14 @@ def comment(request):
     q="insert into comment values (null,"+str(my_id)+","+str(post_id)+",0,'"+comment+"','"+date+"')"
     c.execute(q)
     conn.commit()
-    conn.close()
+    
     data={}
+    
+    q="select fname,lname from users where id="+str(my_id)
+    
+    for i in c.execute(q):
+        data['commenter']=i[0]+i[1]
+    conn.close()
     data['post_id']=post_id
     data['comment']=comment
     data['date']=date
