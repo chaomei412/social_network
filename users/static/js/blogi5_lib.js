@@ -75,7 +75,7 @@ function xhr(url=null,method="get",data=null,callback=null,retry=0)
         if(this.readyState===4&&this.status!==200)
         {
             clearTimeout(tmr);
-			if(retry>50)
+			if(retry>5)
 			{
 				alert("faild to reach server please reload page or check your network connection");
 				return 0;
@@ -224,6 +224,7 @@ function new_input(id,Type,placeholder,dflt_value,Where)
 
 
 /*return value of input*/
+
 function valueof(id)
 {
     /*return value of input which id give*/
@@ -232,6 +233,17 @@ function valueof(id)
 	}
 	catch(e){return 0;}
 }
+
+/*set another value to input */
+function valueas(id,val)
+{
+	/*set another value to input */
+	try{
+	get(id).value=val;
+	}
+	catch(e){return 0;}	
+}
+
 
 function title(value)
 {

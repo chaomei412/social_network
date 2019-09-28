@@ -56,22 +56,25 @@ def upload_post_image(request):
 
 
 def share(request):
-	my_id=request.session['u_id']
-	
-	date=request.POST.get("date");
-	content=request.POST.get("content")
-	
-	conn=db.connect('sqlite3_manager/db')	
-	c = conn.cursor()
-	
-	q="insert into post values(null,"+str(my_id)+",'"+content+"','"+date+"',0,0)"
-	c.execute(q)
-	conn.commit()
-	conn.close()
-	data={}
-	data['date']=date
-	data['content']=content
-	return HttpResponse(json.dumps(data), content_type="application/json")
+    my_id=request.session['u_id']
+
+    date=request.POST.get("date");
+    content=request.POST.get("content")
+    print(content)
+    content=content.replace("'","''");
+    print(content)
+    conn=db.connect('sqlite3_manager/db')	
+    c = conn.cursor()
+
+    q="insert into post values(null,"+str(my_id)+",'"+content+"','"+date+"',0,0)"
+    print(q)
+    c.execute(q)
+    conn.commit()
+    conn.close()
+    data={}
+    data['date']=date
+    data['content']=content
+    return HttpResponse(json.dumps(data), content_type="application/json")
 
 
 

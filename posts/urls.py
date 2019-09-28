@@ -23,6 +23,7 @@ urlpatterns = [
 	path('get_next',views.post),
     path('like_this',views.like_this),
     path('dis_like_this',views.dis_like_this),
+    path('comment',views.comment),
 ]
 
 

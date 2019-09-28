@@ -409,15 +409,18 @@ function share()
 	fd.append("csrfmiddlewaretoken",crf);
 	fd.append("date",date());
 	fd.append("content",content);
-	
 	xhr("/new_post/share","post",fd,shared,0);	
 	console.log("sharing");
+	tost("sharing","blue",10);
 }
 
 function shared(data)
 {
 	console.log(data);
+	vanish("textEditor");
 	alert("post shared successfully");
+	tost("post shared successfully","green",3);
+
 }
 
 
@@ -458,10 +461,11 @@ function put_posts(data)
 								else
 									temp+='<span class="glyphicon glyphicon-heart" onclick="unlike(this,'+data[i][0]+')">';
 								temp+='</span></span>\
-								<span><span class="no_of_comments">'+data[i][11]+' </span><span class="fa fa-comment"></span></span>\
+								<span><span class="no_of_comments">'+data[i][11]+' </span><span class="glyphicon glyphicon-comment"></span></span>\
 								<span class="fa fa-share-alt" onclick="share_this_post('+data[i][0]+')"></span>\
 							</span>\
-							<input type="text" class="comment_"/>\
+							<input type="text" class="comment_" id="comment_'+data[i][0]+'"/>\
+							<span class="glyphicon glyphicon-comment"  onclick="comment('+data[i][0]+')"></span>\
 						</span>';
 			temp1.innerHTML=temp;			
 		document.getElementById("body").appendChild(temp1);
@@ -487,10 +491,11 @@ function put_posts(data)
 								else
 									temp+='<span class="glyphicon glyphicon-heart" onclick="unlike(this,'+data[i][0]+')">';
 								temp+='</span></span>\
-								<span><span class="no_of_comments">'+data[i][11]+' </span><span class="fa fa-comment"></span></span>\
+								<span><span class="no_of_comments">'+data[i][11]+' </span><span class="glyphicon glyphicon-comment"></span></span>\
 								<span class="fa fa-share-alt" onclick="share_this_post('+data[i][0]+')"></span>\
 							</span>\
-							<input type="text" class="comment_"/>\
+							<input type="text" class="comment_" id="comment_'+data[i][0]+'"/>\
+							<span class="glyphicon glyphicon-comment"  onclick="comment('+data[i][0]+')"></span>\
 						</span>';
 		temp1.innerHTML=temp;
 		temp1.onfocus=post();
@@ -517,16 +522,42 @@ function put_posts(data)
 								else
 									temp+='<span class="glyphicon glyphicon-heart" onclick="unlike(this,'+data[i][0]+')">';
 								temp+='</span></span>\
-								<span><span class="no_of_comments">'+data[i][11]+' </span><span class="fa fa-comment"></span></span>\
+								<span><span class="no_of_comments">'+data[i][11]+' </span><span class="glyphicon glyphicon-comment"></span></span>\
 								<span class="fa fa-share-alt" onclick="share_this_post('+data[i][0]+')"></span>\
 							</span>\
-							<input type="text" class="comment_"/>\
+							<input type="text" class="comment_" id="comment_'+data[i][0]+'"/>\
+							<span class="glyphicon glyphicon-comment"  onclick="comment('+data[i][0]+')"></span>\
 						</span>';	
 temp1.innerHTML=temp;						
 		document.getElementById("body").appendChild(temp1);
 	}
 //reemaining poists
 }
+
+
+var gid;
+function comment(id)
+{
+	var comment=valueof("comment_"+id);
+	valueas("comment_"+id,"");
+	
+	var crf=document.getElementsByName("csrfmiddlewaretoken")[0].value;
+	var fd=new FormData();
+	fd.append("csrfmiddlewaretoken",crf);
+	fd.append("date",date());
+	fd.append("p_id",id);
+	fd.append("comment",comment);	
+	xhr("/post/comment","post",fd,commented,0);
+}
+function commented(data)
+{
+	//data={"post_id": "1", "comment": "test"}
+//after commented at server append it at clienside	
+	var temp=document.createElement("span");
+	temp.innerHTML
+}
+
+
 
 function share_this_post(p_id)
 {

@@ -1,31 +1,46 @@
 body{
   margin: 0;
   padding: 0;
+  background-image: url("/static/img/lands1.jpg");
+   background-repeat: repeat;
+ background-color: #cccccc;
+   background-position: center; 
+  background-repeat: no-repeat; 
+  background-size: cover; 
+    background-attachment: fixed;
 }
 #titles>span,#titles>.unactive
 {
   text-align: center;
 }
+#login_box>form>#step1>span,#login_box>form>#step2>span
+{
+  color: black;
+  font-size: 18px;
+}
 #login_box
 {
   display: block;
-  background-color: #ddd;
+  background-color: #fff;
+  opacity: 0.6;
   width: 400px;
   margin: auto;
   margin-top:10%;
   padding: 25px;
   font-size:25px;
+  color: white;
 }
-input,button
+#login_box>form>#step1>input,#login_box>form>#step2>input,button
 {
+    color: #111;
 font-size:20px;
-  color: black;
+
   padding: 5px;
   border:none;
   margin: 10px 5px;
   width:80%;
   background-color: transparent;
-  border-bottom: solid 1px gray;
+  border-bottom: solid 1px black;
 }
 button:hover
 {
@@ -96,7 +111,14 @@ button
   display:inline;
   float: left;
   width: 100px;
+  cursor:pointer;
   
+}
+#logout>input
+{
+	
+	cursor: auto;
+	
 }
 #logout>a:hover
 {
@@ -158,10 +180,12 @@ opacity: 0.9;
 #search_result
 {
   border: solid 1px black;
-  background-color:white;
+  background-color: white;
+  margin: 0px -5px;
  }
 .search_result
 {
+  opacity: 0.7;
   padding: 5px;
   border-bottom: solid 1px gray;
 }
@@ -200,7 +224,7 @@ opacity: 0.9;
 	width: 200px;
 	height: 40px;
 	border-radius: 5px;
-  margin:0px  5px;
+  margin: 5px;
 }
 .success,.error
 {
@@ -221,12 +245,13 @@ opacity: 0.9;
  }
 .search_result
 {
+  opacity: 0.7;
   padding: 5px;
   border-bottom: solid 1px gray;
 }
-.search_result:hover 
+.search_result:hover
 {
-  opacity: 0.7;
+  opacity: 1.0;
   cursor: pointer;
 }
 
@@ -267,3 +292,50 @@ opacity: 0.9;
   width: 200px;
 }
 
+
+
+#tost_div {
+ display: none;
+ color:white;
+ position: fixed;
+ z-index: 5000;
+ font-size: 18px;
+ border-radius: 3px;
+ right:5px;
+  bottom: 5px;
+}
+#tost
+{
+    padding: 5px 10px;
+  min-width: 200px;
+  display: block;
+  text-align: center;
+  border-radius: 5px;
+}
+#tost_div>div
+{
+	padding: 5px;
+	display: inline-block;
+	padding-left: 5px;
+}
+#tost_close
+{
+	cursor: pointer;
+}
+
+
+
+.comment_
+{
+  width: 290px;
+  padding: 5px;
+  border: solid 1px black;
+  border-radius: 9px;
+margin: 1px;
+}
+.glyphicon-comment
+{
+  font-size: 22px;
+  padding-top: 5px;
+
+}

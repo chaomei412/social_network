@@ -25,11 +25,11 @@
 			<img id="prof_pic" src="/media/{{data.2}}"/>
 			<span id="logout">
 				<input type="text" id="search" placeholder="Search" onkeyup="search()"></input>
-				<span class="glyphicon glyphicon-search" onclick="find_it()"></span>
-				<a href="/"><span class="glyphicon glyphicon-home"></span></a>
-				<a href="/new_post"><span class="glyphicon glyphicon-edit"></span></a>
-				<a onclick="my_friends()"><span class="fas fa-user-friends"></span></a>
-				<a href="/logout/">logout</a>
+				<span class="glyphicon glyphicon-search" title="search friends" onclick="find_it()"></span>
+				<a href="/"><span class="glyphicon glyphicon-home" title="nevigate to home"></span></a>
+				<!--<a href="/new_post"><span class="glyphicon glyphicon-edit"></span></a>-->
+				<a onclick="my_friends()"><span class="fas fa-user-friends" title="your frinds, request, conform ..etc"></span></a>
+				<a href="/logout/"><span class="glyphicon glyphicon-log-out" title="Logout your account"></span></a>
 			</span>	
 		</div>
 		<div id="search_result">

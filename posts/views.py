@@ -23,6 +23,7 @@ def initiate(request):
     for i in c.execute(q1):
         friend.append(str(i[0]))
     friend.append(str(my_id))	
+    
     request.session['friends']=','.join(friend)	
     data=[]
     q="select * from post where u_id in ("+request.session['friends']+") order by id desc limit 25"
@@ -132,11 +133,28 @@ def like_this(request):
     my_id=request.session['u_id']
     post_id=request.GET.get('id')
     print(post_id)
+    
+
+
+
 
     conn=db.connect('sqlite3_manager/db')	
     c = conn.cursor()
     c2 = conn.cursor()
 
+    #check is request is valid means is that post is of that person who is in current users friend list or not he can only able to like or comment post if he bellong as a friend
+    valid=-1
+    q="select u_id from post where id="+str(post_id)
+    for row in c.execute(q):
+        valid=row[0]
+    if(valid==-1):
+        #invalid attempt to like 
+        return HttpResponse(json.dumps({"action":"invalid post"}), content_type="application/json")
+    frnds=request.session['friends'].split(",")
+    if(valid not in frnds):
+        return HttpResponse(json.dumps({"error":"not a friend"}), content_type="application/json")
+        
+        
     #check is any entry present of same user for same post if yes which is it like or dislike
     q="select action from like_dislike where u_id="+str(my_id)+" and p_id="+str(post_id)
     status=-1
@@ -160,3 +178,49 @@ def like_this(request):
         conn.commit()
     conn.close()
     return HttpResponse(json.dumps({"key":"ok"}), content_type="application/json")
+    
+    
+def comment(request):
+    conn=db.connect('sqlite3_manager/db')	
+    c = conn.cursor()
+
+    post_id=request.POST.get("p_id")
+
+    #check is request is valid means is that post is of that person who is in current users friend list or not he can only able to like or comment post if he bellong as a friend
+    valid=-1
+    q="select u_id from post where id="+str(post_id)
+    for row in c.execute(q):
+        valid=row[0]
+    if(valid==-1):
+        #invalid attempt to like 
+        return HttpResponse(json.dumps({"action":"invalid post"}), content_type="application/json")
+    frnds=request.session['friends'].split(",")
+    print(valid)
+    print(frnds)
+    if(str(valid) not in frnds):
+        return HttpResponse(json.dumps({"error":"not a friend"}), content_type="application/json")
+
+
+    
+
+        
+    comment=request.POST.get("comment")
+    date=request.POST.get("date")
+    my_id=request.session['u_id']
+    #create table comment(id integer primary key,u_id integer,p_p_id,p_c_id,comment text,date text)
+    q="insert into comment values (null,"+str(my_id)+","+str(post_id)+",0,'"+comment+"','"+date+"')"
+    c.execute(q)
+    conn.commit()
+    conn.close()
+    data={}
+    data['post_id']=post_id
+    data['comment']=comment
+    data['date']=date
+    return HttpResponse(json.dumps(data), content_type="application/json")
+     
+     
+     
+     
+     
+     
+     
