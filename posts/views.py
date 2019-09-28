@@ -151,8 +151,11 @@ def like_this(request):
         #invalid attempt to like 
         return HttpResponse(json.dumps({"action":"invalid post"}), content_type="application/json")
     frnds=request.session['friends'].split(",")
-    if(valid not in frnds):
-        return HttpResponse(json.dumps({"error":"not a friend"}), content_type="application/json")
+    print("valid ",valid)
+    print("friends",frnds)
+    if(str(valid) not in frnds):
+        if(valid!=my_id):#even if this is not own post
+            return HttpResponse(json.dumps({"error":"not a friend"}), content_type="application/json")
         
         
     #check is any entry present of same user for same post if yes which is it like or dislike
@@ -225,8 +228,40 @@ def comment(request):
     return HttpResponse(json.dumps(data), content_type="application/json")
      
      
-     
-     
-     
-     
+def load_comments(request):
+    my_id=request.session['u_id']
+    conn=db.connect('sqlite3_manager/db')	
+    c = conn.cursor()
+    c2=conn.cursor()
+    post_id=request.GET.get("p_id")
+
+    #check is request is valid means is that post is of that person who is in current users friend list or not he can only able to like or comment post if he bellong as a friend
+    valid=-1
+    q="select u_id from post where id="+str(post_id)
+    for row in c.execute(q):
+        valid=row[0]
+    if(valid==-1):
+        #invalid attempt to comment 
+        return HttpResponse(json.dumps({"action":"invalid post"}), content_type="application/json")
+    frnds=request.session['friends'].split(",")
+    print(valid)
+    print(frnds)
+    if(str(valid) not in frnds):
+        return HttpResponse(json.dumps({"error":"not a friend"}), content_type="application/json")
+
+
+    my_id=request.session['u_id']
+    #create table comment(id integer primary key,u_id integer,p_p_id,p_c_id,comment text,date text)
+    q="select u_id,comment,date from comment where p_p_id="+str(post_id)+" order by id desc"
+    comments=[]
+    for row in c.execute(q):
+        data={}
+        q="select fname,lname from users where id="+str(row[0])    
+        for j in c2.execute(q):
+            data['commenter']=j[0]+j[1]
+        data['post_id']=post_id
+        data['comment']=row[1]
+        data['date']=row[2]
+        comments.append(data)    
+    return HttpResponse(json.dumps(comments), content_type="application/json")
      

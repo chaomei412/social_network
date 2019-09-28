@@ -30,6 +30,8 @@ urlpatterns = [
 	path('add_friend',views.add_friend),
 	path('cancle_frindship',views.cancle_frindship),
 	path('accept_frindship',views.accept_frindship),
+    path('profile',views.profile),
+        path('account',views.account),
 ]
 
 

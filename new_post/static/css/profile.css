@@ -1,0 +1,36 @@
+#profile
+{
+margin: 10px;
+}
+#profile>#pic>img
+{
+	width: 30%;
+	display: inline-block;
+	float: left;
+}
+
+#profile>#meta,#profile>#intro
+{
+  margin-bottom: 15px;
+  font-size: 18px;
+  opacity: 0.8;
+  background-color: white;
+  display: block;
+  width: 100%;
+  min-height: 100%;
+  padding: 25px;
+  display: inline-block;
+  width:70%;
+  float: left; 
+}
+#profile>#meta>div
+{
+  padding: 10px;
+}
+
+
+#profile>#meta>#u_name
+{
+  font-size: 45px;
+  text-transform: uppercase;
+}

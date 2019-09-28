@@ -1,11 +1,10 @@
 var tost_timer;
 
-function change_url(url)
+function change_url(url,title)
 {
 	try
 	{
-            h_title('BLOGi5 ek blog site');
-            title("BLOGi5");
+            title(title);
 		window.scrollByPages(-100);
 	}
 	catch(e)
@@ -19,7 +18,6 @@ function change_url(url)
 		}
 	}
     /* it change url without refresh or click */
-    loading();
 	try
 	{
 		if(window.history.pushState)

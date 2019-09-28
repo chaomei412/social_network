@@ -22,6 +22,14 @@
 	display:block;
 }
 
+.post_user
+{
+  cursor: pointer;
+}
+.post_user:hover
+{
+  opacity:0.8;
+}
 .post_user_icon>img
 {
 
@@ -48,8 +56,13 @@
 	max-height: 250px;
 	font-size: 18px; 
 }
-
-
+.commentras
+{
+	display:block;
+	overflow: hidden;
+	max-height: 250px;
+	font-size: 18px; 
+}
 
 
 
@@ -79,6 +92,29 @@
 
 
 
+.commented
+{
+	margin: 2px;
+	padding: 4px;
+	border-bottom: solid 1px black;
+	opacity:0.8;
+}
+
+.commented>.comment_head
+{
+	font-size: 12px;
+}
+.commented>.comment_head>.comment_date
+{
+float: right;
+}
+
+.commented>.comment_content
+{
+	font-size: 17px;
+	text-transform: capitalize;
+	padding-left: 10px;
+}
 
 
 

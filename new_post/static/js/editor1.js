@@ -26,7 +26,7 @@ document.getElementById("myForm").style.display="block";
 }
 
 window.addEventListener("load", function () {
-  function sendData() {
+  function sendData(){
     var XHR = new XMLHttpRequest();
 
     // Bind the FormData object and the form element
@@ -440,12 +440,12 @@ function put_posts(data)
 	
 	data=JSON.parse(data);
 	var i;
-	for (i=0;i<(data.length/2);i++)
+	for (var i=0;i<(data.length-1);i++)
 	{
 		var temp1=document.createElement("div");
 		var temp='<span class="post_" id="post_'+data[i][0]+'">\
 							<span class="post_head">\
-								<span class="post_user">\
+								<span class="post_user" title="view prifile of '+data[i][7]+' '+data[i][6]+'"  onclick="user('+data[i][1]+')">\
 									<span class="post_user_icon">\
 										<img src="/media/'+data[i][8]+'"/>\
 									</span>\
@@ -461,15 +461,15 @@ function put_posts(data)
 								else
 									temp+='<span class="glyphicon glyphicon-heart" onclick="unlike(this,'+data[i][0]+')">';
 								temp+='</span></span>\
-								<span onclick="load_comments('+data[i][0]+')">\
+								<span onclick="load_comments(this,'+data[i][0]+')" >\
 									<span class="no_of_comments">'+data[i][11]+' </span>\
 									<span class="glyphicon glyphicon-comment"></span>\
 								</span>\
 								<span class="fa fa-share-alt" onclick="share_this_post('+data[i][0]+')"></span>\
 							</span>\
-							<input type="text" class="comment_" id="comment_'+data[i][0]+'"/>\
+							<input type="text" class="comment_" id="comment_'+data[i][0]+'" placeholder="say something about this post"/>\
 							<span class="glyphicon glyphicon-comment"  onclick="comment('+data[i][0]+')"></span>\
-							<span id="comments_'+data[i][0]+'"></span>\
+							<span class="commentras" id="comments_'+data[i][0]+'" onclick="expand_me(this)" title="click to expand"></span>\
 						</span>';
 			temp1.innerHTML=temp;			
 		document.getElementById("body").appendChild(temp1);
@@ -479,7 +479,7 @@ function put_posts(data)
 	var temp1=document.createElement("div");
 		var temp='<span class="post_" id="post_'+data[i][0]+'">\
 							<span class="post_head">\
-								<span class="post_user">\
+								<span class="post_user" title="view prifile of '+data[i][7]+' '+data[i][6]+'"  onclick="user('+data[i][1]+')">\
 									<span class="post_user_icon">\
 										<img src="/media/'+data[i][8]+'"/>\
 									</span>\
@@ -495,57 +495,63 @@ function put_posts(data)
 								else
 									temp+='<span class="glyphicon glyphicon-heart" onclick="unlike(this,'+data[i][0]+')">';
 								temp+='</span></span>\
-								<span><span class="no_of_comments">'+data[i][11]+' </span><span class="glyphicon glyphicon-comment"></span></span>\
+								<span onclick="load_comments(this,'+data[i][0]+')" >\
+									<span class="no_of_comments">'+data[i][11]+' </span>\
+									<span class="glyphicon glyphicon-comment"></span>\
+								</span>\
 								<span class="fa fa-share-alt" onclick="share_this_post('+data[i][0]+')"></span>\
 							</span>\
-							<input type="text" class="comment_" id="comment_'+data[i][0]+'"/>\
+							<input type="text" class="comment_" id="comment_'+data[i][0]+'" placeholder="say something about this post"/>\
 							<span class="glyphicon glyphicon-comment"  onclick="comment('+data[i][0]+')"></span>\
+							<span class="commentras" id="comments_'+data[i][0]+'" onclick="expand_me(this)" title="click to expand"></span>\
 						</span>';
 		temp1.innerHTML=temp;
 		temp1.onfocus=post();
 		document.getElementById("body").appendChild(temp1);
 //add event to this to load more 
-	for (i;i<(data.length);i++)
-	{
-		var temp1=document.createElement("div");
-			var temp='<span class="post_" id="post_'+data[i][0]+'">\
-							<span class="post_head">\
-								<span class="post_user">\
-									<span class="post_user_icon">\
-										<img src="/media/'+data[i][8]+'"/>\
-									</span>\
-									<span class="post_user_name">'+data[i][7]	+' '+data[i][6]+'</span>\
-								</span>\
-								<span class="date">'+data[i][3]+'</span>\
-							</span>\
-							<span class="cont"  onclick="expand_me(this)" title="click to expand">'+data[i][2]+'</span>\
-							<span class="post_footer">';
-								temp+='<span><span class="no_of_likes">'+data[i][9]+' </span>';
-								if(data[i][10]==-1)
-									temp+='<span class="glyphicon glyphicon-heart-empty" onclick="like_this_post(this,'+data[i][0]+')">';
-								else
-									temp+='<span class="glyphicon glyphicon-heart" onclick="unlike(this,'+data[i][0]+')">';
-								temp+='</span></span>\
-								<span><span class="no_of_comments">'+data[i][11]+' </span><span class="glyphicon glyphicon-comment"></span></span>\
-								<span class="fa fa-share-alt" onclick="share_this_post('+data[i][0]+')"></span>\
-							</span>\
-							<input type="text" class="comment_" id="comment_'+data[i][0]+'"/>\
-							<span class="glyphicon glyphicon-comment"  onclick="comment('+data[i][0]+')"></span>\
-						</span>';	
-temp1.innerHTML=temp;						
-		document.getElementById("body").appendChild(temp1);
-	}
-//reemaining poists
 }
-function load_comments (id)
+
+function profile()
 {
-	xhr("/post/load_comments?p_id="+id,"get",null,put_comments,0);
+	change_url("/account");
+	xhr("/account","get",null,account,0);
 }
+
+function account(data)
+{
+	document.write(data);	
+}
+
+function user(id)
+{
+	// view user profile ater click on icon or nAME
+	change_url("/profile?id="+id);
+	xhr("/profile?id="+id,"get",null,show_user,0);
+}
+
+function show_user(data)
+{
+	document.write(data);
+}
+function load_comments(ths,id)
+{
+		ths.removeAttribute("onclick");
+		ths.setAttribute("onclick","get('comments_"+id+"').click()");
+		get("comments_"+id).style.maxHeight="unset";
+	xhr("/post/load_comments?p_id="+id,"get",null,put_comments,0);
 	
 }
 
 function put_comments(data)
 {
+
+	data=JSON.parse(data)
+		console.log(data);
+	for(var i=0;i<data.length;i++)
+	{
+		console.log(data[i]);
+		commented(data[i]);
+	}
 	
 }
 var gid;
@@ -563,7 +569,11 @@ function comment(id)
 }
 function commented(data)
 {
+	try
+	{
 	data=JSON.parse(data)
+	}
+	catch(e){}
 	console.log(data);
 	//data={"post_id": "1", "comment": "test"}
 	//after commented at server append it at clienside	

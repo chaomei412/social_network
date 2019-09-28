@@ -1,5 +1,7 @@
 from users.find_search_friend import *
 from users.login_dignups import *
+from users.profile import *
+from users.account import *
 from django.shortcuts import render, redirect  
 import os
 from django.contrib.staticfiles.storage import staticfiles_storage
