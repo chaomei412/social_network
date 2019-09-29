@@ -1,4 +1,4 @@
-this ptoject is devoloped by mr mahajan nilesh navnath as a first round of coding challenge given by causecode for placement.
+this project is devoloped by mr mahajan nilesh navnath as a first round of coding challenge given by causecode for placement.
 for any query contact on nileshnmahajan@gmail.com or 9975720525.
 
 
@@ -42,4 +42,4 @@ and fire command as python manage.py runserver ip:port
       currently share is not activated yet 
    
    
- thsi project tested on windows 10 ,i3 ,python 3.7.4
+ this project tested on windows 10, i3 processor, python 3.7.4
