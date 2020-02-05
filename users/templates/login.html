@@ -27,14 +27,23 @@
 			<span class="alert-success">you have created account successfuly now you can login</span>
 	   {% endif %}
 		<div id="login_box">
-			  <form method="POST" class="post-form" action="/login/">  
+			  <form method="POST" onsubmit="login_me()" class="post-form" action="/login/">  
 					{% csrf_token %}
 					<input type = "text" style = "margin-left:5%;"  placeholder = "Username" name = "username" />
 				  <input type = "password" style = "margin-left:5%;" placeholder = "Password" name = "password"/></br>
-					<br/><button type="submit" id="login_button">Login </button>
+					<br/><button type="submit" id="login_button">Login1</button>
 				</form>
 		</div>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+		<script>
+			function login_me(this)			
+			{
+				alert(1);
+				this.preventDefault();
+				return false;
+			}
+			
+		</script>
    </body>
 </html>
