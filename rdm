@@ -42,4 +42,4 @@ and fire command as python manage.py runserver ip:port
       currently share is not activated yet 
    
    
- thsi project tested on windows 10 ,i3 ,python 3.7.4
+ thsi project tested on windows 10 ,i3 ,python 3.6.8
