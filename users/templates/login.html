@@ -1,13 +1,12 @@
 <html>
 	<head>  
-<meta charset="utf-8">
+	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<title>Login</title>  
-		 {% load staticfiles %}  
+		{% load staticfiles %}  
 		<link rel="stylesheet" href="{% static 'css/style.css' %}"/> 
 		<link rel="stylesheet" href="{% static 'css/main.css' %}"/> 	
 		<link rel="stylesheet" href="{% static 'css/bs.css' %}"/>	
-
 	</head>  
 	<body>
 	<div id="titles">
@@ -27,23 +26,38 @@
 			<span class="alert-success">you have created account successfuly now you can login</span>
 	   {% endif %}
 		<div id="login_box">
-			  <form method="POST" onsubmit="login_me()" class="post-form" action="/login/">  
+			  <form method="POST" id="login_box" class="post-form" action="/login/">  
 					{% csrf_token %}
 					<input type = "text" style = "margin-left:5%;"  placeholder = "Username" name = "username" />
 				  <input type = "password" style = "margin-left:5%;" placeholder = "Password" name = "password"/></br>
-					<br/><button type="submit" id="login_button">Login1</button>
+					<br/><button type="submit" id="login_button">Login</button>
 				</form>
 		</div>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+		
 		<script>
-			function login_me(this)			
-			{
-				alert(1);
-				this.preventDefault();
-				return false;
-			}
+		
+		document.getElementById("login_box").onsubmit=login_me;
+		var ws='';
+		function login_me(obj)
+		{
+		return true;
+			obj.preventDefault();
 			
+			ws = new WebSocket("ws://192.168.48.75:8765/"),
+            messages = document.createElement('ul');
+            ws.onmessage = function (event) 
+			{
+                var messages = document.getElementsByTagName('ul')[0],
+				message = document.createElement('li'),
+				content = document.createTextNode(event.data);
+                message.appendChild(content);
+                messages.appendChild(message);
+            };
+            document.body.appendChild(messages);
+		}
 		</script>
+		
    </body>
 </html>

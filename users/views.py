@@ -168,3 +168,18 @@ def is_login(request):
 		
 		#not login
 		return 0
+		
+def brodcast(request):
+	if (not is_login(request)):#is user not login
+		return render(request, 'login.html', {"username" : 0})
+	id = request.session['u_id']
+	conn=db.connect('sqlite3_manager/db')	
+	c = conn.cursor()	
+	q="select u.fname,u.lname,pc.pic_url from users u,passwords p,pics pc where u.id='"+str(id)+"' and u.id=p.u_id and u.id=pc.u_id"
+	data=-1
+	for i in c.execute(q):
+		data=list(i)
+	conn.close()
+	return render(request,'brodcast.html',{"data":data})	
+	#return HttpResponse("hi"+str(username))
+	

@@ -1,0 +1,156 @@
+    <!DOCTYPE html>  
+    <html lang="en">  
+    <head>  
+			<script>
+			
+			
+			
+		var ws;
+		function onloads()
+		{
+			ws = new WebSocket("ws://192.168.48.75:8765/");
+            
+            ws.onmessage = function (event) 
+			{
+			
+				var res=event.data;
+				res=res.split("$");
+				switch(res[0])
+				{
+				case 'message':
+				
+								var el=document.createElement("span");
+				el.className="right_mess";
+				el.innerHTML=res[1];
+				document.getElementById("messages").appendChild(el);
+              document.getElementById("message").scrollIntoView();
+					break;
+					case 'typing':
+							tost(res[1]+" is typing");
+					break;
+				}
+ 
+            };
+			ws.onopen = function(e) 
+			{
+				console.log("Connection open...", e);
+				ws.send("user${{data.0}} {{data.1}}");//user details
+			};
+		}
+		function  send_it()
+		{
+			var mess=document.getElementById("message").value;
+			document.getElementById("message").value="";
+			ws.send("message$"+mess);
+			var el=document.createElement("span");
+			el.className="left_mess";
+			el.innerHTML=mess;
+			document.getElementById("messages").appendChild(el);
+		  document.getElementById("message").scrollIntoView();
+		}
+		
+		
+		
+		function i_am_typing()
+		{
+			ws.send("typing$");
+		}
+	
+		</script>
+        <meta charset="UTF-8"/>  
+        <title>Index</title>
+        {% load staticfiles %}  
+		 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+		 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
+		 <script src="{%static 'js/jquery.min.js' %}"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+          <link rel="stylesheet" href="{% static 'css/style.css' %}"/>  
+		<link rel="stylesheet" href="{% static 'css/main.css' %}"/>
+		<link rel="stylesheet" href="{% static 'css/brodcast.css' %}"/>		
+			<link rel="stylesheet" href="{% static 'css/editor.css' %}"/> 
+							<link rel="stylesheet" href="{% static 'css/profile.css' %}"/>
+						<link rel="stylesheet" href="{% static 'css/post.css' %}"/> 
+			<script src="{% static 'js/a076d05399.js' %}"></script>
+	</head>  
+    <body onload="onloads()">  
+		
+		{% csrf_token %}
+		<div id="body" class="container-fluid">
+		<div id="header">
+			<span id="name">
+				<!--welcome mr. {{data.0}} {{data.1}}-->
+			</span>
+			<img id="prof_pic" src="/media/{{data.2}}" onClick="profile()"/>
+			<span id="logout">
+				<input type="text" id="search" placeholder="Search" onkeyup="search()"></input>
+				<span class="glyphicon glyphicon-search" title="search friends" onclick="find_it()"></span>
+				<a href="/"><span class="glyphicon glyphicon-home" title="nevigate to home"></span></a>
+				<!--<a href="/new_post"><span class="glyphicon glyphicon-edit"></span></a>-->
+				<a onclick="my_friends()"><span class="fas fa-user-friends" title="your frinds, request, conform ..etc"></span></a>
+				<a href="/logout/"><span class="glyphicon glyphicon-log-out" title="Logout your account"></span></a>
+			</span>	
+		</div>
+		<div id="search_result">
+		
+		</div>
+
+		<!--here all posts are coming-->
+		
+		<!--here all posts are coming-->
+			<div id="brodcast">
+				<div id="online_users">0</div>
+				<div id="messages">
+					<span class="left_mess">hi</span>
+					<span class="left_mess">gm</span>
+					<span class="right_mess">gm</span>
+					<span class="left_mess">??</span>
+					<span class="right_mess">what abt you?</span>
+					
+					<span class="left_mess">hi</span>
+					<span class="left_mess">gm</span>
+					<span class="right_mess">gm</span>
+
+					
+				</div>
+				<div id="options">
+					<input type="text" id="message"></input>
+					<button onclick="send_it()">Send</button>
+				</div>
+			</div>
+		</div>
+		<script>
+		const node = document.getElementById("message");
+		node.addEventListener("keyup", function(event) {
+    if (event.key === "Enter") 
+	{
+        // Do work
+		send_it();
+    }
+	else
+	i_am_typing();
+});
+		
+		</script>
+		<script src="{% static 'js/blogi5_lib.js' %}"></script>
+		<script src="{% static 'js/find_friend.js' %}"></script>	
+		<script src="{% static 'js/add_friend.js' %}"></script>
+		<script src="{% static 'js/editor1.js' %}"></script>		
+		<div id="tost_div" style=" position: fixed;
+ z-index: 5000;
+ font-size: 18px;
+ border-radius: 3px;
+ right:5px;
+  bottom: 5px;">
+				<span id="tost" style="    padding: 5px 10px;
+  min-width: 200px;
+  color:white;
+  display: block;
+  text-align: center;
+  border-radius: 5px;"></span>
+		</div>
+		
+		
+		
+    </body> 
+</html>  
+
