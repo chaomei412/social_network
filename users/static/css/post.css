@@ -28,14 +28,19 @@
 }
 .post_user:hover
 {
-  opacity:0.8;
+  opacity:0.7;
 }
 .post_user_icon>img
 {
 
-	width: 40px;
-	height: 40px;
-	border-radius: 40px;
+	width: 50px;
+	height: 50px;
+	border: solid 1px black;
+	border-radius: 50%;
+}
+.post_user_icon>img:hover
+{
+		border-radius: 0;
 }
 .post_user_name
 {
@@ -87,7 +92,12 @@
 	cursor:pointer;
 }
 
+.post_>.cont>img
+{
 
+	margin: auto;
+	max-width: 70%;
+}
 
 
 

@@ -1,6 +1,9 @@
     <!DOCTYPE html>  
     <html lang="en">  
     <head>  
+	<style>
+
+</style>
         <meta charset="UTF-8"/>  
         <title>Index</title>
         {% load staticfiles %}  
@@ -19,24 +22,23 @@
 		
 		{% csrf_token %}  
 		<div id="body" class="container-fluid">
-		<div id="header">
-			<span id="name">
-				<!--welcome mr. {{data.0}} {{data.1}}-->
+		<div id="header" class="noselect">
+			<span id="left_header">S N</span>
+			<span id="right_header">
+				<span onclick="togle_menu()" id="right_menu_toggle" class="glyphicon glyphicon-menu-hamburger"></span>
+				<span id="right_header_menus">
+					<a><img id="prof_pic" src="/media/{{data.2}}" onClick="togle_menu();profile();"/></a>			
+					<input type="text" id="search" placeholder="Search" onkeyup="search()"></input>
+					<span id="search_friend" class="glyphicon glyphicon-search" title="search friends" onclick="togle_menu();find_it();"></span>
+					<a href="/" onClick="togle_menu()"><span class="glyphicon glyphicon-home" title="nevigate to home"></span></a>
+					<a onclick="togle_menu();my_friends();"><span class="fas fa-user-friends" title="your frinds, request, conform ..etc"></span></a>
+					<a href="/logout/" onclick="togle_menu()"><span class="glyphicon glyphicon-log-out" title="Logout your account"></span></a>
+				</span>
+					
+					
 			</span>
-			<img id="prof_pic" src="/media/{{data.2}}" onClick="profile()"/>
-			<span id="logout">
-				<input type="text" id="search" placeholder="Search" onkeyup="search()"></input>
-				<span class="glyphicon glyphicon-search" title="search friends" onclick="find_it()"></span>
-				<a href="/"><span class="glyphicon glyphicon-home" title="nevigate to home"></span></a>
-				<!--<a href="/new_post"><span class="glyphicon glyphicon-edit"></span></a>-->
-				<a onclick="my_friends()"><span class="fas fa-user-friends" title="your frinds, request, conform ..etc"></span></a>
-				<a href="/logout/"><span class="glyphicon glyphicon-log-out" title="Logout your account"></span></a>
-			</span>	
 		</div>
-		<div id="search_result">
-		
-		</div>
-		
+		<div id="search_result"></div>
 		<div id="new_in_page_post">
 			<span id="controls" style="float: left">
 		
@@ -116,5 +118,26 @@
   text-align: center;
   border-radius: 5px;"></span>
 		</div>
+		
+		
+		<script>
+		
+function togle_menu()
+{
+    if(window.innerWidth>500)
+        return 0;
+    if(document.getElementById("right_header_menus").style.display=="none"||document.getElementById("right_header_menus").style.display=="")
+	{
+		document.getElementById("right_menu_toggle").className="glyphicon glyphicon-remove";
+		document.getElementById("right_header_menus").style.display="block";
+	}
+    else
+    {
+        document.getElementById("right_header_menus").style.display="none";
+        document.getElementById("right_menu_toggle").className="glyphicon glyphicon-menu-hamburger";
+    }
+}
+
+		</script>
     </body> 
 </html>  

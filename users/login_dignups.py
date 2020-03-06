@@ -29,6 +29,7 @@ def is_email_avail(request):
 	response_data = {}
 	response_data['count'] = count
 	return HttpResponse(json.dumps(response_data), content_type="application/json")	
+'''
 def signup(request):  
 	if request.method == "POST":
 		u_name=request.POST.get('username')
@@ -37,11 +38,14 @@ def signup(request):
 		f_name=request.POST.get('f_name')
 		l_name=request.POST.get('l_name')
 		dob=request.POST.get('dob')
+
+
 		conn=db.connect('sqlite3_manager/db')	
 		c = conn.cursor()
 		q="insert into users values(?,?,?,?,?,?,?,?,?)"
 		q2=(None,u_name,"".join(dob.split("-")),f_name,l_name,'',1,0,0)
 		print("values: ",q2)
+
 		#pic varchar(25),gender integer,religion_id integer,address_id integer)
 		c.execute(q,q2)
 		conn.commit()
@@ -61,7 +65,8 @@ def signup(request):
 		#handle pic
 		pic=request.FILES['pic']
 		fs = FileSystemStorage()
-		pic_name=str(u_id)+"."+pic.name.split(".")[-1]
+		print("$$$")
+		pic_name="users/"+str(u_id)+"."+pic.name.split(".")[-1]
 		filename = fs.save(pic_name, pic)
 		uploaded_file_url = fs.url(filename)
 		print(uploaded_file_url)
@@ -78,7 +83,7 @@ def signup(request):
         
 		return render(request,'login.html',{'error':0,'signup_ok':1})
 	return render(request,'signup.html',{'error':1,'signup_ok':0})  
-
+'''
 def get_id(request):
 	return request.session['u_id']
 def login_check(request):
