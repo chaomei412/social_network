@@ -30,11 +30,10 @@ body
   font-size:25px;
   color: white;
 }
-#login_box>form>#step1>input,#login_box>form>#step2>input,button
+#login_box>form>#step1>input,#login_box>form>#step2>input,button,#login_box>form>input
 {
     color: #111;
-font-size:20px;
-
+	font-size:20px;
   padding: 5px;
   border:none;
   margin: 10px 5px;
@@ -452,9 +451,20 @@ opacity: 0.9;
   border-radius: 9px;
 margin: 1px;
 }
+
 .glyphicon-comment
 {
   font-size: 22px;
   padding-top: 5px;
+}
 
+#loading
+{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background-color: gray;
+  z-index:100;
 }

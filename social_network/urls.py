@@ -22,6 +22,7 @@ urlpatterns = [
 #    path('admin/', admin.site.urls),
 	path('new_post/',include('new_post.urls')),
 	path('post/',include('posts.urls')),
+    path("chats/",include('chats.urls')),
 	path('',include('users.urls')),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

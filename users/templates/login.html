@@ -1,75 +1,25 @@
-<html>
-	<head>  
-	<meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<title>Login</title>  
-		{% load staticfiles %}  
-		<link rel="stylesheet" href="{% static 'css/style.css' %}"/> 
-		<link rel="stylesheet" href="{% static 'css/main.css' %}"/> 	
-		<link rel="stylesheet" href="{% static 'css/bs.css' %}"/>	
-	</head>  
-	<body>
-	<div id="titles">
-		<span class="active">Login</span>
-		<span class="unactive">	<a href="/signup/">Signup</a></span>
-	</div>
-	<div id="body" class="container-fluid">
-	   {% if invalid == 1 %}
-	   <div class="alert-danger">invalid login details</div>
-	   {% endif %}
-	   {% if logout == 1 %}
-	   <div class="alert-success">Logout successfuly :)</div>
-	   	   <div class="alert-success">you can login again</div>
-	   {% endif %}
-	   {% if signup_ok == 1 %}
-			<span class="alert-success">you have created account successfuly now you can login</span>
-	   {% endif %}
-		<div id="login_box">
-			  <form method="POST" id="login_box" class="post-form" action="/login/">  
+
+
+		   <center>
+			   {% if invalid == 1 %}
+					<div class="alert-danger">invalid login details</div>
+			   {% endif %}
+			   {% if logout == 1 %}
+					<div class="alert-success">Logout successfuly :)</div>
+					<div class="alert-success">you can login again</div>
+				{% endif %}
+				{% if signup_ok == 1 %}
+					<span class="alert-success">you have created account successfuly now you can login</span>
+				{% endif %}
+			</center>
+			<div id="login_box">
+				<form method="POST" class="post-form"  action="/login/">  
 					{% csrf_token %}
-					<input type = "text" style = "margin-left:5%;"  placeholder = "Username" id = "username" />
-					<input type = "password" style = "margin-left:5%;" placeholder = "Password" id = "password"/></br>
+					<input type = "text"   placeholder = "Username" id = "username" />
+					<input type = "password"  placeholder = "Password" id = "password"/></br>
 					<br/><button type="submit" id="login_button">Login</button>
 				</form>
-		</div>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-		<script src="{% static 'js/blogi5_lib.js' %}"></script>
+			</div>
 		
-		<script>
 		
-		document.getElementById("login_box").onsubmit=login_me;
-		var ws='';
-		function login_me(obj)
-		{
-				obj.preventDefault();
-				var fd=new FormData();
-				fd.append("csrfmiddlewaretoken",document.getElementsByName("csrfmiddlewaretoken")[0].value);
-				fd.append("username",get("username").value);
-				fd.append("password",get("password").value);
-				fd.append("time_stamp",date());
-				xhr("/login/","post",fd,logged_in,0);
-		}
-	function logged_in(data)
-	{
-		data=JSON.parse(data)
-		console.log(data);
-		ws = new WebSocket("ws://127.0.0.1:8765/"),
-          
-            ws.onmessage = function (event) 
-			{
-				content = event.data;
-            };			
-			ws.onopen = function(e) 
-			{
-			var d={};
-			d["type"]="login";
-			d["secret"]=data[4];
-				console.log("Connection open...", e);
-				ws.send(JSON.stringify(d));//user details				
-			};
-	}	
-		</script>
-		
-   </body>
-</html>
+

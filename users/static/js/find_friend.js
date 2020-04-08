@@ -18,8 +18,7 @@ function search_friend(data)
 		temp+='<div class="search_result">No Sugestion found</div>';
 	for(let i=0;i<data.length;i++)
 	{
-		console.log(data[i][0]+" "+data[i][1]);
-		let name=data[i][0]+" "+data[i][1];
+		let name=data[i]["f_name"]+" "+data[i]["l_name"];
 		temp+='<div class="search_result" onclick="find_it(\''+name+'\')">'+name+'</div>';
 	}
 	insert("search_result",temp);
@@ -56,7 +55,7 @@ function show_friends(data)
 	{
 		var action="ADD Friend",evt="add_friend";
 		
-		switch(data[i][4])
+		switch(data[i]["status"])
 		{
 			case 0:				action="cancle request",evt="cancle_frindship";
 			break;
@@ -79,10 +78,19 @@ function show_friends(data)
 
 
 
-
+var my_friend_visible=0;
 function my_friends()
 {
-	xhr("/friends","get",null,put_my_friends,0);	
+	if(my_friend_visible==0)
+	{	
+		my_friend_visible=1;
+		xhr("/friends","get",null,put_my_friends,0);	
+	}
+	else
+	{
+		my_friend_visible=0;
+		insert("search_result",'');
+	}
 }
 
 
@@ -94,7 +102,7 @@ function put_my_friends(data)
 	console.log(data);
 	var temp='';
 	if(data.length==0)
-		temp+='<div class="search_result">you don;t have any friends :(</div>';
+		temp+='<div class="search_result">you dont have any friends :(</div>';
 	for(let i=0;i<data.length;i++)
 	{
 		var x=data[i][4];

@@ -105,13 +105,13 @@ function remove(id)
 
 function hide_tost()
 {
- get("tost_div").style.display='none' ;  
+	get("tost_div").style.display='none' ;  
 }
 function tost(data="hey buddy not getting anythinh :)",time=2,color="#666")
 {
     try
     {
-        clearTimeout(tost_timer);
+		clearTimeout(tost_timer);
     }
     catch(e){}
     insert("tost",data);
@@ -300,11 +300,6 @@ function date()
 }
 
 
-
-
-
-
-
 function get(id)
 {
     /*return object of pass id*/
@@ -313,6 +308,12 @@ function get(id)
 }
 
 
+/* ask user before leave page*/
+window.onbeforeunload = function() 
+{
+    xhr("/logout/","GET","",null);
+    return(" are you sure to leave this site :) "); 
+};
 
 
 
@@ -324,3 +325,101 @@ function get(id)
 
 
 
+
+
+
+
+function error(err)
+{
+    current_open=6;
+    var temp;
+    err=parseInt(err);
+    switch(err)
+    {
+        case 403:	temp="	403 Forbidden', 'The server has refused to fulfill your request.";
+            break;
+        case 404:	 temp="	'404 Not Found', 'The requested file was not found on this server.'";
+            break;
+        case 405:	    temp="	405 Method Not Allowed', 'The method specified in the Request-Line is not allowed for the specified resource.";
+            break;
+        case 408:	temp="	   408 Request Timeout', 'Your browser failed to send a request in the time allowed by the server. ";
+            break;
+        case 500:	  temp="	 500 Internal Server Error', 'The request was unsuccessful due to an unexpected condition encountered by the server.  "; 
+            break;
+        case 502:	  temp="	 502 Bad Gateway', 'The server received an invalid response from the upstream server while trying to fulfill the request.";
+            break;
+        case 504:	 temp="	  504 Gateway Timeout', 'The upstream server failed to send a request in the time allowed by the server.";
+            break;
+        default:  temp="	 That’s an error.The requested URL  was not identify on this server. That’s all we know. ', ";
+    }
+
+    finish_loading();
+}
+
+
+
+function is_small()
+{
+    /*it return if device width is samaller*/
+    if(window.innerWidth<=630)
+        return 1;
+    return 0;
+}
+
+
+
+window.onpopstate = function(){pop1();};
+window.addEventListener("onpopstate",pop1);
+
+
+function wait()
+{
+    loading();
+    if(localStorage.getItem("quata")!==null)
+        insert("body","<span class=\"reqst\"> plase wait it loading soon ... :)</span><span class=\"quata\">\" " +localStorage.getItem("quata")+" \"</span>");/* set quata that present*/
+    else
+        insert("body","<span class=\"reqst\"> plase wait it loading soon.... :)</span><span class=\"quata\">\" keep loving BLOGi5 \"</span>");/*if not present quata*/
+}
+function ready()
+{
+    finish_loading();
+    var current_quata=0;   
+    if(localStorage.getItem("quata_id")!==null)
+       current_quata=localStorage.getItem("quata_id");/* present quata id */
+    	vanish("body");
+        let link="/assets/blog/php/next_quata.php?id="+current_quata;/*request for next quata*/
+        let method="GET",data="";
+        xhr(link,method,data,next_quata);
+}
+
+
+
+var ppp=0;
+
+function loading()
+{
+    loaded=0;
+    ppp=0;
+    loading_loop();
+}
+var loaded=0;
+
+function loading_loop()
+{
+    ppp++;
+    try
+    {
+        if(ppp<96&&loaded!==1)
+        {
+            get("loading").style.width=ppp+"%";
+            setTimeout(loading_loop,10); 
+        }
+    }
+    catch(e){}
+}
+
+function finish_loading()
+{
+    loaded=1;
+    get("loading").style.width="0%";
+}

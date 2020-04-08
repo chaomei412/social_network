@@ -1,0 +1,130 @@
+
+#chat_box
+{
+
+  background-color: #dddd;
+  width: 95%;
+  height: 95%;
+  margin:auto;
+  border-radius: 3px;
+  padding: 5px;
+}
+
+#chat_box>tbody>tr
+{
+
+  background-color: white;
+
+}
+#chat_types>td>button
+{
+  border: solid 0px black;
+  font-size: 20px;
+  margin: 0px 0px;
+  padding: 11px;
+  background-color: #ddddd;
+  border-radius: 2px;
+}
+.user
+{
+  display: block;
+  border-bottom: solid 1px black;
+  font-size: 20px;
+  margin: 1px 0px;
+  padding: 11px;
+  background-color: #ddddd;
+  border-radius: 2px;
+}
+
+#message_body
+{
+  font-size: 20px;
+}
+
+#message_body>table>tbody>tr>td
+{
+  width: 107%;
+  padding: 5px 35px;
+}
+#messages
+{
+  overflow-y: scroll;
+}
+#active_entity_meta
+{
+ 
+  
+}
+
+#message
+{
+  width: 100%;
+  bottom: :0px;
+
+  border: solid 1px black;
+  border-radius: 15px;  
+  padding: 8px;
+  font-size: 15px;
+  background-color: #eee;
+
+}
+
+
+#mdg_send
+{
+  background-color: #dddddd;
+  border: none;
+  width: 100%;
+  border-radius: 5px;  
+  padding: 7px 10px;
+  font-size: 20px;
+
+  
+}
+#mdg_send:hover
+{
+  background-color: #dddddd;
+  cursor:pointer;
+}
+
+#messages
+{
+display: block;
+height: 8%
+overflow:scroll;
+}
+
+
+#online_users
+{
+  border-bottom: solid 1px black;
+  
+}
+
+
+
+
+.left_mess,.right_mess
+{
+  padding: 10px;
+  display: block;
+  border:solid 1px gray;
+  margin: 4px;
+  border-radius:3px; 
+}
+.left_mess
+{
+  background-color: gray;
+  color: white;
+
+margin-right: 45%;
+
+}
+.right_mess
+{
+
+  background-color: powderblue;
+  color: black;
+    margin-left: 45%;
+}
+

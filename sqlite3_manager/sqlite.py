@@ -23,14 +23,4 @@ while(1):
 		fo.write("sql error:"+str(s)+"\n")
 	except Exception as e:
 		print("error "+e)
-fo.close()	
-
-
-
-
-
-
-
-
-
-
+fo.close()

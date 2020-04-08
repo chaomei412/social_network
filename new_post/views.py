@@ -2,8 +2,10 @@ from users.find_search_friend import *
 from users.login_dignups import *
 from django.shortcuts import render
 import sqlite3 as db
+import time
 import os
 import json
+import pymongo
 # Create your views here.
 from django.http import HttpResponse , HttpResponseRedirect
 
@@ -56,26 +58,28 @@ def upload_post_image(request):
 
 
 def share(request):
-    my_id=request.session['u_id']
+	
+	myclient = pymongo.MongoClient('mongodb://localhost:27017/')
+	mydb = myclient['social_network']
+	mycol = mydb["post"]
+	q={}
+	q['user_id']=request.session['u_id']
+	q['server_time_stamp']=time.asctime(time.localtime(time.time()))
+	q['content']=request.POST.get("content").replace("'","''")
+	q['user_time_stamp']=request.POST.get("date")
+	q['privacy']=0 #currently temp later on 
+	q['status']=0 #published not published block
+	q['category']={}
 
-    date=request.POST.get("date");
-    content=request.POST.get("content")
-    print(content)
-    content=content.replace("'","''");
-    print(content)
-    conn=db.connect('sqlite3_manager/db')	
-    c = conn.cursor()
+	mycol.insert_one(q)
+	post_class={"id":mycol.find_one(q)["_id"],"content":mycol.find_one(q)["content"]}
+	cat_col=mydb["post_category"]
+	cat_col.insert_one(post_class)
 
-    q="insert into post values(null,"+str(my_id)+",'"+content+"','"+date+"',0,0)"
-    print(q)
-    c.execute(q)
-    conn.commit()
-    conn.close()
-    data={}
-    data['date']=date
-    data['content']=content
-    return HttpResponse(json.dumps(data), content_type="application/json")
-
+	data={}
+	data['date']=time.asctime(time.localtime(time.time()))
+	data['content']=request.POST.get("content").replace("'","''")
+	return HttpResponse(json.dumps(data), content_type="application/json")
 
 
 
