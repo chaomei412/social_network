@@ -359,77 +359,46 @@ function post() {
 function put_posts(data) {
 
     data = JSON.parse(data);
-    //console.log(data);
+    console.log(data);
     var i;
-    for (var i = 0; i < (data.length - 1); i++) {
+    for (var i = 0; i < data.length; i++) {
         var temp1 = document.createElement("div");
-        var temp = '<span class="post_" id="post_' + data[i][0]["_id"] + '">\
+        var temp = '<span class="post_" id="post_' + data[i]["_id"] + '">\
 							<span class="post_head">\
-								<span class="post_user" title="view prifile of ' + data[i][1] + ' ' + data[i][2] + '"  onclick="user(' + data[i][0]["user_id"] + ')">\
+								<span class="post_user" title="view prifile of ' + data[i]["f_name"] + ' ' + data[i]["l_name"] + '"  onclick="user(\'' + data[i]["user_id"] + '\')">\
 									<span class="post_user_icon">\
-										<img src="/media/' + data[i][3] + '"/>\
+										<img src="/media/' + data[i]["pic_url"] + '"/>\
 									</span>\
-                                    <span class="post_user_name">' + data[i][2] + ' ' + data[i][1] + '</span>\
-                                    <span class="post_cats">' + JSON.stringify(data[i][0]["category"]) + '</span>\
+                                    <span class="post_user_name">' + data[i]["l_name"] + ' ' + data[i]["f_name"] + '</span>\
+                                    <span class="post_cats">' + JSON.stringify(data[i]["category"]) + '</span>\
 								</span>\
-								<span class="date">' + data[i][0]["user_time_stamp"] + '</span>\
+								<span class="date">' + data[i]["user_time_stamp"] + '</span>\
 							</span>\
-							<span class="cont" onclick="expand_me(this)" title="click to expand">' + data[i][0]["content"] + '</span>\
+							<span class="cont" onclick="expand_me(this)" title="click to expand">' + data[i]["content"] + '</span>\
 							<span class="post_footer">';
-        temp += '<span><span class="no_of_likes">' + data[i][4] + ' </span>';
-        if (data[i][5] == -1)
-            temp += '<span class="glyphicon glyphicon-heart-empty" onclick="like_this_post(this,\'' + data[i][0]["_id"] + '\')">';
+        temp += '<span><span class="no_of_likes">' + data[i]["likes_count"] + ' </span>';
+        if (data[i]["am_i"] == null)
+            temp += '<span class="glyphicon glyphicon-heart-empty" onclick="like_this_post(this,\'' + data[i]["_id"] + '\')">';
         else
-            temp += '<span class="glyphicon glyphicon-heart" onclick="unlike(this,\'' + data[i][0]["_id"] + '\')">';
+            temp += '<span class="glyphicon glyphicon-heart" onclick="unlike(this,\'' + data[i]["_id"] + '\')">';
         temp += '</span></span>\
-								<span onclick="load_comments(this,\'' + data[i][0]["_id"] + '\')" >\
-									<span class="no_of_comments">' + data[i][6] + ' </span>\
+								<span onclick="load_comments(this,\'' + data[i]["_id"] + '\')" >\
+									<span class="no_of_comments">' + data[i]["comments_count"] + ' </span>\
 									<span class="glyphicon glyphicon-comment"></span>\
 								</span>\
-								<span class="fa fa-share-alt" onclick="share_this_post(\'' + data[i][0]["_id"] + '\')"></span>\
+								<span class="fa fa-share-alt" onclick="share_this_post(\'' + data[i]["_id"] + '\')"></span>\
 							</span>\
-							<input type="text" class="comment_" id="comment_' + data[i][0]["_id"] + '" placeholder="say something about this post"/>\
-							<span class="glyphicon glyphicon-comment"  onclick="comment(\'' + data[i][0]["_id"] + '\')"></span>\
-							<span class="commentras" id="comments_' + data[i][0]["_id"] + '" onclick="expand_me(this)" title="click to expand"></span>\
+							<input type="text" class="comment_" id="comment_' + data[i]["_id"] + '" placeholder="say something about this post"/>\
+							<span class="glyphicon glyphicon-comment"  onclick="comment(\'' + data[i]["_id"] + '\')"></span>\
+							<span class="commentras" id="comments_' + data[i]["_id"] + '" onclick="expand_me(this)" title="click to expand"></span>\
 						</span>';
         temp1.innerHTML = temp;
         get("body").appendChild(temp1);
     }
     //first half posts
 
-    var temp1 = document.createElement("div");
-    var temp = '<span class="post_" id="post_' + data[i][0] + '">\
-							<span class="post_head">\
-								<span class="post_user" title="view prifile of ' + data[i][7] + ' ' + data[i][6] + '"  onclick="user(' + data[i][1] + ')">\
-									<span class="post_user_icon">\
-										<img src="/media/' + data[i][8] + '"/>\
-									</span>\
-                                    <span class="post_user_name">' + data[i][7] + ' ' + data[i][6] + '</span>\
-                                    <span class="post_cats">' + JSON.stringify(data[i][0]["category"]) + '</span>\
-								</span>\
-								<span class="date">' + data[i][3] + '</span>\
-							</span>\
-							<span class="cont" onclick="expand_me(this)" title="click to expand">' + data[i][2] + '</span>\
-							<span class="post_footer">';
-    temp += '<span><span class="no_of_likes">' + data[i][9] + ' </span>';
-    if (data[i][10] == -1)
-        temp += '<span class="glyphicon glyphicon-heart-empty" onclick="like_this_post(this,' + data[i][0] + ')">';
-    else
-        temp += '<span class="glyphicon glyphicon-heart" onclick="unlike(this,' + data[i][0] + ')">';
-    temp += '</span></span>\
-								<span onclick="load_comments(this,' + data[i][0] + ')" >\
-									<span class="no_of_comments">' + data[i][11] + ' </span>\
-									<span class="glyphicon glyphicon-comment"></span>\
-								</span>\
-								<span class="fa fa-share-alt" onclick="share_this_post(' + data[i][0] + ')"></span>\
-							</span>\
-							<input type="text" class="comment_" id="comment_' + data[i][0] + '" placeholder="say something about this post"/>\
-							<span class="glyphicon glyphicon-comment"  onclick="comment(' + data[i][0] + ')"></span>\
-							<span class="commentras" id="comments_' + data[i][0] + '" onclick="expand_me(this)" title="click to expand"></span>\
-						</span>';
-    temp1.innerHTML = temp;
-    temp1.onfocus = post();
-    get("body").appendChild(temp1);
+
+    //temp1.onfocus = post();  on last post view load next posts currently loading all posts at time
     //add event to this to load more 
 }
 
@@ -529,7 +498,7 @@ function like_this_post(ths, p_id) {
     ths.removeAttribute("onclick");
     ths.removeAttribute("class");
     ths.setAttribute("class", "glyphicon glyphicon-heart"); // add another click event
-    ths.setAttribute("onclick", "unlike(this," + p_id + ")"); // add another click event
+    ths.setAttribute("onclick", "unlike(this,'" + p_id + "')"); // add another click event
     ths.style.opacity = "1";
     var lks = parseInt(ths.parentElement.firstChild.innerHTML);
     ths.parentElement.firstChild.innerHTML = ++lks + " ";
@@ -542,7 +511,7 @@ function unlike(ths, p_id) {
 
     ths.setAttribute("class", "glyphicon glyphicon-heart-empty"); // add another click event
 
-    ths.setAttribute("onclick", "like_this_post(this," + p_id + ")"); // add another click event
+    ths.setAttribute("onclick", "like_this_post(this,'" + p_id + "')"); // add another click event
 
     var lks = parseInt(ths.parentElement.firstChild.innerHTML);
     ths.parentElement.firstChild.innerHTML = --lks + " ";

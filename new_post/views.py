@@ -24,37 +24,37 @@ def new_post(request):
 	conn.close()
 	return render(request,'controls.html',{"data":data})	
 	#return HttpResponse("ok new post")
+import uuid
 def upload_post_image(request):
 	my_id=request.session['u_id']
 	pic=request.FILES['fileToUpload']
-	
-	conn=db.connect('sqlite3_manager/db')	
-	c = conn.cursor()
+
+	myclient = pymongo.MongoClient('mongodb://localhost:27017/')
+	mydb = myclient['social_network']
+	mycol = mydb["images"]
+
+
 
 	#save image with user id in db so we can identify which image is of witch user
-	q="insert into ppics values(null,"+str(my_id)+",'"+pic.name.split(".")[-1]+"')"
-	c.execute(q)
-	conn.commit()
 
-	qq="select last_insert_rowid()"
-	id=0
-	for row in c.execute(qq):
-		id=row[0]
+	extension=pic.name.split(".")[-1]
+	img_id=uuid.uuid1().hex #it can be int bytes to
+
+	img_url=img_id+"."+extension
+
+	q={"user_id":my_id,"pic_url":img_url}
+	mycol.insert_one(q)
+
 
 	#handle pic
 
 	fs = FileSystemStorage()
-	pic_name=str(id)+str(my_id)+"."+pic.name.split(".")[-1]
-	filename = fs.save(pic_name, pic)
+	filename = fs.save(img_url, pic)
 	uploaded_file_url = fs.url(filename)
 	print(uploaded_file_url)
-	print("pic new name",pic_name)
-	
-	conn.commit()
-	conn.close()
-	return HttpResponse("/media/"+pic_name)
+	print("pic new name",img_url)
 
-
+	return HttpResponse("/media/"+img_url)
 
 
 def share(request):
@@ -63,7 +63,7 @@ def share(request):
 	mydb = myclient['social_network']
 	mycol = mydb["post"]
 	q={}
-	q['user_id']=request.session['u_id']
+	q['user_id']=request.session['u_id'] #str ob user _id
 	q['server_time_stamp']=time.asctime(time.localtime(time.time()))
 	q['content']=request.POST.get("content").replace("'","''")
 	q['user_time_stamp']=request.POST.get("date")

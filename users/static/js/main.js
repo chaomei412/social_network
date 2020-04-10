@@ -76,6 +76,7 @@ function go_to_home() {
 
 function logout() {
     change_url("/logout/");
+    ws.close();
     xhr("/logout/", "get", null, pop1, 0);
 }
 

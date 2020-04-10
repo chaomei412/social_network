@@ -53,7 +53,7 @@ function show_friends(data)
 		temp+='<div class="search_result">No Result found</div>';
 	for(let i=0;i<data.length;i++)
 	{
-		var action="ADD Friend",evt="add_friend";
+		var action="ADD Friend",evt="add_friend";//default  at that situation status value is 4
 		
 		switch(data[i]["status"])
 		{
@@ -66,9 +66,9 @@ function show_friends(data)
 			case 3:				action="accept",evt="accept";
 			break;			
 		}
-		console.log(data[i][0]+" "+data[i][1]+data[i][2]+" "+data[i][3]);
-		let name=data[i][1]+" "+data[i][2];
-		temp+='<div class="search_result"><img src="/media/'+data[i][3]+'"/><span class="search_result_name">'+name+'</span><button  onclick="'+evt+'(this,'+data[i][0]+')">'+action+'</button></div>';
+
+		let name=data[i]["f_name"]+" "+data[i]["l_name"];
+		temp+='<div class="search_result"><img src="/media/'+data[i]["pic_url"]+'"/><span class="search_result_name">'+name+'</span><button  onclick="'+evt+'(this,\''+data[i]["_id"]+'\')">'+action+'</button></div>';
 	}
 	insert("search_result",temp);	
 }
@@ -99,13 +99,12 @@ function put_my_friends(data)
 {
 	//sow actual search results
 	data=JSON.parse(data);
-	console.log(data);
 	var temp='';
 	if(data.length==0)
 		temp+='<div class="search_result">you dont have any friends :(</div>';
 	for(let i=0;i<data.length;i++)
 	{
-		var x=data[i][4];
+		var x=data[i]["status"],action,evt;
 		switch(x)
 		{
 			case 0:				action="cancle request",evt="cancle_frindship";
@@ -117,9 +116,8 @@ function put_my_friends(data)
 			case 3:				action="accept",evt="accept";
 			break;			
 		}
-		console.log(data[i][0]+" "+data[i][1]+data[i][2]+" "+data[i][3]);
-		let name=data[i][1]+" "+data[i][2];
-		temp+='<div class="search_result"><img src="/media/'+data[i][3]+'"/><span class="search_result_name">'+name+'</span><button onclick="'+evt+'(this,'+data[i][0]+')">'+action+'</button></div>';
+		let name=data[i]["f_name"]+" "+data[i]["l_name"];
+		temp+='<div class="search_result"><img src="/media/'+data[i]["pic_url"]+'"/><span class="search_result_name">'+name+'</span><button onclick="'+evt+'(this,\''+data[i]["friend_id"]+'\')">'+action+'</button></div>';
 	}
 	insert("search_result",temp);	
 }

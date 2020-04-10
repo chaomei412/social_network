@@ -5,16 +5,16 @@ function add_friend(e,id)
 	console.log(e);
 	e.innerHTML="cancle request";
 	e.removeAttribute("onclick")
-	e.setAttribute("onclick","cancle_frindship(this,"+id+")");
+	e.setAttribute("onclick","cancle_frindship(this,'"+id+"')");
 	var crf=document.getElementsByName("csrfmiddlewaretoken")[0].value;
 	var fd=new FormData();
 	fd.append("csrfmiddlewaretoken",crf);
 	fd.append("id",id);
 	xhr("/add_friend","post",fd,friend_added,0);
-	
 }
 function friend_added(data)
 {
+	friend_collection_id
 	
 }	
 
@@ -24,7 +24,7 @@ function cancle_frindship(e,id)
 {
 	e.innerHTML="add Friend";
 	e.removeAttribute("onclick")
-	e.setAttribute("onclick","add_friend(this,"+id+")");
+	e.setAttribute("onclick","add_friend(this,'"+id+"')");
 	var crf=document.getElementsByName("csrfmiddlewaretoken")[0].value;
 	var fd=new FormData();
 	fd.append("csrfmiddlewaretoken",crf);
@@ -47,7 +47,7 @@ function accept(e,id)
 {
 	e.innerHTML="remove";
 	e.removeAttribute("onclick")
-	e.setAttribute("onclick","cancle_frindship(this,"+id+")");
+	e.setAttribute("onclick","cancle_frindship(this,'"+id+"')");
 	var crf=document.getElementsByName("csrfmiddlewaretoken")[0].value;
 	var fd=new FormData();
 	fd.append("csrfmiddlewaretoken",crf);

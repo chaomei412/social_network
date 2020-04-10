@@ -20,65 +20,85 @@ def initiate(request):
     mycol = mydb["users"]
     friends=mydb["friends"]
 
-    q1={"$or":[{"frend_id":my_id,"status":1},{"user_id":my_id,"status":1}]}
+
+
 
     friend=[]
     friend_int=[]
 
     print("F.R.I.E.N.D.S.: ",friend)
+
+    q1={"friend_id":my_id,"status":1}
+
+    print("friens query: ",q1)
     for i in friends.find(q1):
-        friend.append(str(i["_id"]))
-        friend_int.append(str(i["_id"]))
+        friend.append(i["user_id"])
+        friend_int.append(i["user_id"])
+    print("F.R.I.E.N.D.S.: ",friend)
+
+    q2={"user_id":my_id,"status":1}
+    print("friens query: ",q2)    
+    for i in friends.find(q2):
+        friend.append(i["friend_id"])
+        friend_int.append(i["friend_id"])
+    print("F.R.I.E.N.D.S.: ",friend)
+
     friend.append(my_id)	
     friend_int.append(my_id)
+
+    print("F.R.I.E.N.D.S.: ",friend)
+
     request.session['friends']=','.join(friend)	
     data=[]
 
     mycol = mydb["post"]
+    users=mydb["users"]
+    like_dislike=mydb["like_dislike"]
+    comments=mydb["comments"]
 
 
     q={"user_id":{"$in":friend_int}}
     x = mycol.find(q)#all post loaded directly we can use .limit()  insted to use next post function to load posts in bunch
 
-    for row in x:
-        data2=[row]#add document of post details in list
-        
-        #u=str(data2[1])
-        frnd={"select u.fname,u.lname,pc.pic_url from users u,pics pc where u.id="+str(row['user_id'])+" and u.id=pc.u_id"
-        for frnd_i in c2.execute(frnd):
-            data2=data2+list(frnd_i)
+    for row in x: 
+        frnd={"_id":object_id(row["user_id"])}#need to focus here later on pastly it save int of autoincrement of sqlite now on it has to save user _id
+        select={"f_name":1,"l_name":1,"pic_url":1}
+        xxx=users.find_one(frnd,select)
+        row["f_name"]=xxx["f_name"]
+        row["l_name"]=xxx["l_name"]
+        row["pic_url"]=xxx["pic_url"]
+
         #add no of likes
-        lks="select count(id) from like_dislike where p_id='"+str(row['_id'])+"' and action=0"
+        lks={"post_id":str(row["_id"]),"action":1}
+        row["likes_count"]=like_dislike.find(lks).count()
         
-        for lkss in c2.execute(lks):
-            data2=data2+list(lkss)
-        #check is any entry present of same user for same post if yes which is it like
-        q="select action from like_dislike where u_id="+str(my_id)+" and p_id='"+str(row['_id'])+"'"
-        print("???????",q)
-
-        status=-1
-        for row in c2.execute(q):
-            status=row[0]
-        data2.append(status)
-
+        #no of dislike
+        dslks={"post_id":str(row["_id"]),"action":1}
+        row["dislikes_count"]=like_dislike.find(dslks).count()
+        
+        #am i like/dislike this ?
+        ami={"post_id":str(row["_id"]),"user_id":my_id}
+        select={"action":1}
+        row["am_i"]=like_dislike.find_one(ami,select)
         #add no of comments
-        lks="select count(id) from comment where p_p_id='"+str(row['_id'])+"'"
-        for lkss in c2.execute(lks):
-            data2=data2+list(lkss)    
-        data.append(data2)
+        cmnts={"post_id":str(row["_id"])}
+        row["comments_count"]=comments.find(cmnts).count()
+        row["_id"]=str(row["_id"])
+        data.append(row)
 
-    if(len(data)!=0):
+    #below use for load n post at time
+    '''if(len(data)!=0):
         request.session['last_fetch_post_id']=data[-1][0]
     print(data)
     for i in range(len(data)):
         data[i][0]["_id"]=str(data[i][0]["_id"])
-    print(data)    
+    print(data)'''    
     return HttpResponse(json.dumps(data, default=str), content_type="application/json")
 
 
 def post(request):
     my_id=request.session['u_id']
-    conn=db.connect('sqlite3_manager/db')	
+    conn=db.connect('sqlite3_manager/db')
     c = conn.cursor()
     c2 = conn.cursor()
     q="select * from post where u_id in ("+request.session['friends']+") and id <"+str(request.session['last_fetch_post_id'])+" order by id desc limit 250"
@@ -125,92 +145,116 @@ from bson.json_util import dumps
 
 
 def dis_like_this(request):
+    myclient = pymongo.MongoClient('mongodb://localhost:27017/')
+    mydb = myclient['social_network']
+    mycol = mydb["like_dislike"]
+    post=mydb["post"]
+    like_dislike=mydb["like_dislike"]
     my_id=request.session['u_id']
-    post_id=request.GET.get('id')
-    print(post_id)
+    post_id=request.GET.get('id') #str of posts._id
+    post_user_id=post.find_one({"_id":object_id(post_id)},{"user_id":1})["user_id"]
 
-    conn=db.connect('sqlite3_manager/db')	
-    c = conn.cursor()
-    c2 = conn.cursor()
+    #constrents:
+    #1. is the post owner is my friend
+    #check is request is valid means is that post is of that person who is in current users friend list or not he can only able to like or comment post if he bellong as a friend
+   
+    if( is_my_friend(my_id,post_user_id)==0):
+        return HttpResponse(json.dumps({"action":"not a friend"}), content_type="application/json")                  
+      
+    if(is_post_exist(post_id)==0):
+        return HttpResponse(json.dumps({"action":"invalid post"}), content_type="application/json")
 
+    
+        
+        
     #check is any entry present of same user for same post if yes which is it like or dislike
-    q="select action from like_dislike where u_id="+str(my_id)+" and p_id="+str(post_id)
-    status=-1
-    for row in c.execute(q):
-        status=row[0]
-    if(status==-1):
-        #user has no entry for that post
-        #add entry as dislike
-        q="insert into like_dislike values(null,"+str(my_id)+","+str(post_id)+",1,'20-08-1997')"
-        c.execute(q)
-        conn.commit()
-    elif(status==1):
-        #user allready dis_likes this post remove dislikes entry
-        q="delete from like_dislike where u_id="+str(my_id)+" and p_id="+str(post_id)
-        c.execute(q)
-        conn.commit()
+    q={"user_id":my_id,"post_id":post_id}
+    if(like_dislike.find_one(q,{"action"})!=None):
+        status=like_dislike.find_one(q,{"action"})["action"]
+
+        if(status==0):
+            #user allready dislike this post remove like entry {acction:0}
+            like_dislike.remove(q)
+        else:
+            #user like this post at past update as dislike:{action:1}
+            q2={"$set":{"action":0}}
+            like_dislike.update_one(q,q2)
     else:
-        #user dislike this post update as dislike
-        q="update like_dislike set action=1 where u_id="+str(my_id)+" and p_id="+str(post_id)
-        c.execute(q)
-        conn.commit()
-    conn.close()
-    return HttpResponse(json.dumps({"key":"disllikeok"}), content_type="application/json")
+        #addnew entry
+        q["action"]=1        
+        like_dislike.insert_one(q)
+
+    return HttpResponse(json.dumps({"key":"ok"}), content_type="application/json") 
+
+def is_my_friend(my_id,friend_id):
+    print("my id: ",my_id)
+    print("friend_id: ",friend_id)
+    myclient = pymongo.MongoClient('mongodb://localhost:27017/')
+    mydb = myclient['social_network']
+    friends=mydb["friends"]
+    q={"$or":[{"user_id":my_id,"friend_id":friend_id,"status":1},{"user_id":friend_id,"friend_id":my_id,"status":1}]}
+    if(friends.find(q).count()>0):
+        return 1
+    else:
+        return 0
+
+
+def is_post_exist(post_id):
+    myclient = pymongo.MongoClient('mongodb://localhost:27017/')
+    mydb = myclient['social_network']
+    friends=mydb["post"]
+    q={"_id":object_id(post_id)}
+    if(friends.find(q).count()>0):
+        return 1
+    else:
+        return 0
 
 def like_this(request):
+    myclient = pymongo.MongoClient('mongodb://localhost:27017/')
+    mydb = myclient['social_network']
+    mycol = mydb["like_dislike"]
+    post=mydb["post"]
+    like_dislike=mydb["like_dislike"]
     my_id=request.session['u_id']
-    post_id=request.GET.get('id')
-    print(post_id)
-    
+    post_id=request.GET.get('id') #str of posts._id
+    post_user_id=post.find_one({"_id":object_id(post_id)},{"user_id":1})["user_id"]
 
-
-
-
-    conn=db.connect('sqlite3_manager/db')	
-    c = conn.cursor()
-    c2 = conn.cursor()
-
+    #constrents:
+    #1. is the post owner is my friend
     #check is request is valid means is that post is of that person who is in current users friend list or not he can only able to like or comment post if he bellong as a friend
-    valid=-1
-    q="select u_id from post where id="+str(post_id)
-    for row in c.execute(q):
-        valid=row[0]
-    if(valid==-1):
-        #invalid attempt to like 
+   
+
+
+    if( is_my_friend(my_id,post_user_id)==0):
+        if((my_id!=post_user_id)):
+             #second is also not own post
+            return HttpResponse(json.dumps({"action":"not a friend"}), content_type="application/json")                  
+      
+    if(is_post_exist(post_id)==0):
         return HttpResponse(json.dumps({"action":"invalid post"}), content_type="application/json")
-    frnds=request.session['friends'].split(",")
-    print("valid ",valid)
-    print("friends",frnds)
-    if(str(valid) not in frnds):
-        if(valid!=my_id):#even if this is not own post
-            return HttpResponse(json.dumps({"error":"not a friend"}), content_type="application/json")
+
+    
         
         
     #check is any entry present of same user for same post if yes which is it like or dislike
-    q="select action from like_dislike where u_id="+str(my_id)+" and p_id="+str(post_id)
-    status=-1
-    for row in c.execute(q):
-        status=row[0]
-    if(status==-1):
-        #user has no entry for that post
-        #add entry as like
-        q="insert into like_dislike values(null,"+str(my_id)+","+str(post_id)+",0,'20-08-1997')"
-        c.execute(q)
-        conn.commit()
-    elif(status==0):
-        #user allready like this post remove like entry
-        q="delete from like_dislike where u_id="+str(my_id)+" and p_id="+str(post_id)
-        c.execute(q)
-        conn.commit()
+    q={"user_id":my_id,"post_id":post_id}
+    if(like_dislike.find_one(q,{"action"})!=None):
+        status=like_dislike.find_one(q,{"action"})["action"]
+
+        if(status==1):
+            #user allready like this post remove like entry {acction:0}
+            like_dislike.remove(q)
+        else:
+            #user dislike at pats this post update as like:{action:1}
+            q2={"$set":{"action":1}}
+            like_dislike.update_one(q,q2)
     else:
-        #user dislike this post update as like
-        q="update like_dislike set action=0 where u_id="+str(my_id)+" and p_id="+str(post_id)
-        c.execute(q)
-        conn.commit()
-    conn.close()
-    return HttpResponse(json.dumps({"key":"ok"}), content_type="application/json")
-    
-    
+        #no entry add new
+        q["action"]=1        
+        like_dislike.insert_one(q)
+
+    return HttpResponse(json.dumps({"key":"ok"}), content_type="application/json") 
+
 def comment(request):
     my_id=request.session['u_id']
     conn=db.connect('sqlite3_manager/db')	
