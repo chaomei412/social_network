@@ -30,28 +30,5 @@ function onloads()
 		ws.send("user${{data.0}} {{data.1}}");//user details
 	};
 }
-function  send_it()
-{
-
-	var d={};
-	d["type"]="public_brodcost_message";
-	d["content"]=document.getElementById("message").value;
-	document.getElementById("message").value="";
-	ws.send(JSON.stringify(d)); 
-	var el=document.createElement("span");
-	el.className="left_mess";
-	el.innerHTML=d["content"];
-	document.getElementById("messages").appendChild(el);
-	get("messages").scrollTop = get("messages").scrollHeight;
-}
-
-
-
-function i_am_typing()
-{
-	var d={};
-	d["type"]="typing";
-	ws.send(JSON.stringify(d));
-}
 
 

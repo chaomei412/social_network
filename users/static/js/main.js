@@ -43,25 +43,15 @@ function show_chats(data)
 
 
 
-    const node = document.getElementById("message");
-    node.addEventListener("keyup", function(event) {
-        if (event.key === "Enter") {
-            // Do work
-            send_it();
-        } else
-            i_am_typing();
-    });
+    get("message_entity").style.width=(get("message_box").clientWidth/100)*20-5+"px";
+    get("message_body").style.width=(get("message_box").clientWidth/100)*80-5+"px"
+   
 
 }
 
 
 
-function punlic_brodcast()
-{
-    var d={};
-    d["type"]="members";
-    ws.send(JSON.stringify(d));
-}
+
 
 function signup(data) {
     insert("body", data);
@@ -126,8 +116,6 @@ function brodcast()
 function put_brodcast(data) {
     insert("body", data);
     finish_loading();
-
-
     const node = document.getElementById("message");
     node.addEventListener("keyup", function(event) {
         if (event.key === "Enter") {
@@ -158,8 +146,8 @@ function login_me(obj) {
 
 var ws = '';
 
-function logged_in(temp) {
-
+function logged_in(temp) 
+{
     var data = JSON.parse(temp);
 
     if (data["_id"]==-1)
@@ -179,6 +167,7 @@ function logged_in(temp) {
         ws.onmessage = message_received;
         
     ws.onopen = function(e) {
+        alert("conetion opend");
         var d = {};
         d["type"] = "login";
         d["key"] = data["_id"];
@@ -191,37 +180,7 @@ function logged_in(temp) {
      
 }
 
-function wsclose()
-     {
-       alert("connection has been closed ");
-    }
 
-function message_received(event) 
-        {
-        var res=event.data;
-        console.log("res: "+res);
-		res=JSON.parse(res);
-		switch(res["type"])
-		{
-		case 'public_brodcost_message':
-            var el=document.createElement("span");
-            el.className="right_mess";
-            el.innerHTML=res["content"];
-            get("messages").appendChild(el);
-            get("messages").scrollTop = get("messages").scrollHeight;
-			break;
-        case 'typing':
-            tost(res["content"]+" is typing");
-            break;
-        case 'meta':
-            insert("active_entity_meta",res["count"]+" members online in this room");
-            vanish("message_entity");
-            for(var i=0;i<res["members"].length;i++)
-                append("message_entity",'<span class="user">'+res["members"][i]+'</span>');    
-		}
-
-
-        };
 
 function home_page(data) 
 {

@@ -257,43 +257,51 @@ def like_this(request):
 
 def comment(request):
     my_id=request.session['u_id']
-    conn=db.connect('sqlite3_manager/db')	
-    c = conn.cursor()
+
     post_id=request.POST.get("p_id")
 
+
+
+
+    myclient = pymongo.MongoClient('mongodb://localhost:27017/')
+    mydb = myclient['social_network']
+
+    post=mydb["post"]
+    comments=mydb["comments"]
+    post_user_id=post.find_one({"_id":object_id(post_id)},{"user_id":1})["user_id"]
+
+    #constrents:
+    #1. is the post owner is my friend
     #check is request is valid means is that post is of that person who is in current users friend list or not he can only able to like or comment post if he bellong as a friend
-    valid=-1
-    q="select u_id from post where id="+str(post_id)
-    for row in c.execute(q):
-        valid=row[0]
-    if(valid==-1):
-        #invalid attempt to like 
+   
+
+
+    if( is_my_friend(my_id,post_user_id)==0):
+        if((my_id!=post_user_id)):
+             #second is also not own post
+            return HttpResponse(json.dumps({"action":"not a friend"}), content_type="application/json")                  
+      
+    if(is_post_exist(post_id)==0):
         return HttpResponse(json.dumps({"action":"invalid post"}), content_type="application/json")
-    frnds=request.session['friends'].split(",")
-    print(valid)
-    print(frnds)
-    if(str(valid) not in frnds):
-        return HttpResponse(json.dumps({"error":"not a friend"}), content_type="application/json")
-
-
-    
 
         
     comment=request.POST.get("comment")
     date=request.POST.get("date")
-    my_id=request.session['u_id']
+    
     #create table comment(id integer primary key,u_id integer,p_p_id,p_c_id,comment text,date text)
-    q="insert into comment values (null,"+str(my_id)+","+str(post_id)+",0,'"+comment+"','"+date+"')"
-    c.execute(q)
-    conn.commit()
+    q={"post_id":post_id,"date_time":date,"user_id":my_id,"comm_content":comment}
+    comments.insert_one(q)
+
     
     data={}
+    users=mydb["users"]
+    q={"_id":object_id(my_id)}
+    select={"f_name":1,"l_name":1}
+     
     
-    q="select fname,lname from users where id="+str(my_id)
-    
-    for i in c.execute(q):
-        data['commenter']=i[0]+i[1]
-    conn.close()
+    i=users.find_one(q,select)
+    data['commenter']=i["f_name"]+" "+i["l_name"]
+
     data['post_id']=post_id
     data['comment']=comment
     data['date']=date
@@ -302,38 +310,48 @@ def comment(request):
      
 def load_comments(request):
     my_id=request.session['u_id']
-    conn=db.connect('sqlite3_manager/db')	
-    c = conn.cursor()
-    c2=conn.cursor()
+
+
+    myclient = pymongo.MongoClient('mongodb://localhost:27017/')
+    mydb = myclient['social_network']
+
+    post=mydb["post"]
+    comments=mydb["comments"]
+    users=mydb["users"]
+
     post_id=request.GET.get("p_id")
 
     #check is request is valid means is that post is of that person who is in current users friend list or not he can only able to like or comment post if he bellong as a friend
-    valid=-1
-    q="select u_id from post where id="+str(post_id)
-    for row in c.execute(q):
-        valid=row[0]
-    if(valid==-1):
-        #invalid attempt to comment 
+    post_user_id=post.find_one({"_id":object_id(post_id)},{"user_id":1})["user_id"]
+
+    #constrents:
+    #1. is the post owner is my friend
+    #check is request is valid means is that post is of that person who is in current users friend list or not he can only able to like or comment post if he bellong as a friend
+   
+
+
+    if( is_my_friend(my_id,post_user_id)==0):
+        if((my_id!=post_user_id)):
+             #second is also not own post
+            return HttpResponse(json.dumps({"action":"not a friend"}), content_type="application/json")                  
+      
+    if(is_post_exist(post_id)==0):
         return HttpResponse(json.dumps({"action":"invalid post"}), content_type="application/json")
-    frnds=request.session['friends'].split(",")
-    print(valid)
-    print(frnds)
-    if(str(valid) not in frnds):
-        return HttpResponse(json.dumps({"error":"not a friend"}), content_type="application/json")
 
-
-    my_id=request.session['u_id']
     #create table comment(id integer primary key,u_id integer,p_p_id,p_c_id,comment text,date text)
-    q="select u_id,comment,date from comment where p_p_id="+str(post_id)+" order by id desc"
-    comments=[]
-    for row in c.execute(q):
+    q={"post_id":post_id}
+    select={"user_id":1,"comm_content":1,"date_time":1}
+
+    Comments=[]
+    for row in comments.find(q,select).sort("_id", pymongo.DESCENDING):
         data={}
-        q="select fname,lname from users where id="+str(row[0])    
-        for j in c2.execute(q):
-            data['commenter']=j[0]+j[1]
+        q={"_id":object_id(row["user_id"])}
+        select={"f_name":1,"l_name":1}
+        i=users.find_one(q,select)
+        data['commenter']=i["f_name"]+" "+i["l_name"]
         data['post_id']=post_id
-        data['comment']=row[1]
-        data['date']=row[2]
-        comments.append(data)    
-    return HttpResponse(json.dumps(comments), content_type="application/json")
+        data['comment']=row["comm_content"]
+        data['date']=row["date_time"]
+        Comments.append(data)    
+    return HttpResponse(json.dumps(Comments), content_type="application/json")
      

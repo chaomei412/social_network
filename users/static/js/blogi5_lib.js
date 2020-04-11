@@ -272,7 +272,14 @@ function Evt(id,evt,funct)
 {/* for adding event with call function using id*/
     get(id).addEventListener(evt,funct);
 }
-
+function ratr(id,event)
+{
+    get(id).removeAttribute(event)
+}
+function satr(id,key,value)
+{
+    get(id).setAttribute(key,value)
+}
 
 function date()
 {

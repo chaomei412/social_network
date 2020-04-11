@@ -10,11 +10,20 @@
   padding: 5px;
 }
 
-#chat_box>tbody>tr
+#chat_box>tbody>tr>#message_body,#chat_box>tbody>tr>#message_entity
 {
-
+  display: inline-block;
   background-color: white;
+}
 
+#chat_box>tbody>tr>#message_entity
+{
+ width:20%; 
+  height: 100%;
+}
+#chat_box>tbody>tr>#message_body
+{
+  width: 78%;
 }
 #chat_types>td>button
 {

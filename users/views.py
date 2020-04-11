@@ -54,11 +54,11 @@ def logout(request):
 	mydb = myclient['social_network']
 	users=mydb["users"]
 	session = mydb["session"]
-	websocket=mydb["websocket"]
+	#websocket=mydb["websocket"]    removed websocket entry by websocket connection 
 
 	query={"username":users.find_one({"_id":object_id(request.session['u_id'])})["u_name"]}
 	session.remove(query)#delete session
-	websocket.remove(query)#clear from websocket objects
+	#websocket.remove(query)#clear from websocket objects
 	request.session['u_id']=0#reset session variable
 	return render(request, 'main.html', {"username" : 0})
 
