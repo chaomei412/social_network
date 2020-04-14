@@ -63,6 +63,7 @@ function send_p2p_msg_keyup(event) {
 function p2p()
 {
     current_open="p2p";
+    h_title(current_open);
     vanish("messages");
     var d={};
     d["type"]="p2p";
@@ -76,6 +77,7 @@ function p2p()
 
 function p2p_active(us)
 {
+    h_title(p2p_current_open);
     p2p_current_open=us;
     insert("active_entity_meta",p2p_current_open);
     
@@ -94,6 +96,14 @@ function p2p_active(us)
 var p2p_current_open="";
 function p2p_send()
 {
+    if(current_open!="p2p")
+        return 0;
+    
+    if(p2p_current_open=="")
+        {
+            tost("please select user",2,"red");
+            return 0;
+        }
 	var d={};
     d["type"]="p2p_message";
     d["friend"]=p2p_current_open;
@@ -135,9 +145,9 @@ function message_received(event)
 			break;
         case 'typing':
             console.log("typimg: ",res);
-            if(res["section"]=="punlic_brodcast")
-                tost(res["content"]+" is typing");
-            else if(res["section"]=="p2p")
+            if(res["section"]=="punlic_brodcast" &&(current_open=="p2p"))
+                tost(res["content"]+" is typing in public brodcost");
+            else if(res["section"]=="p2p" && p2p_current_open==res["friend"])
             {
                 if(res["friend"]==p2p_current_open)
                     tost("typing");
@@ -165,6 +175,8 @@ function message_received(event)
                 }
             for (var i=0;i<res["onlines"].length;i++)
             {
+                if(online_users.includes(res["friends"][i])==false)
+                    online_users.push(res["friends"][i]);
                 var id="user_list_"+res["friends"][i];
                 get("user_list_"+res["onlines"][i]).style.color="green";
             }
@@ -188,6 +200,7 @@ function message_received(event)
             if(current_open!="p2p")            
             {
                 tost("new message from "+res["sender"]);
+                h_title("new message from "+res["sender"]);
                 break;
             }
 
@@ -202,6 +215,7 @@ function message_received(event)
             else
             {
                 get("user_list_"+res["sender"]).style.color="pink";
+                h_title("unread message of "+res["sender"]);
             }
             break;
         case 'p2p_message_load':

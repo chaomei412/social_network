@@ -79,7 +79,7 @@ button
 {
 	display: block;
 	height: 60px;
-	background-color: black;
+	background-color: rgba(46, 48, 46, 0.37);
 }
 
 

@@ -23,6 +23,10 @@ function pop1() {
             current_open = 'signup';
             xhr("/fsignup/", "get", null, signup, 0);
             break;
+        case 'lets_chat':
+            current_open = 'login';
+            xhr("/main/", "get", null, home, 0);
+            break;
         default:
     }
 }

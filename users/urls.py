@@ -40,6 +40,7 @@ urlpatterns = [
 	path('fprofile',views.profile),
 	path('account',views.account),
 	path('faccount',views.account),
+	path("lets_chat",views.index)
 ]
 
 '''
