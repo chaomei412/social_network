@@ -1,6 +1,7 @@
 function punlic_brodcast()
 {
     current_open="punlic_brodcast";
+    vanish("messages");
     ratr("mdg_send","onclick");
     satr("mdg_send","onclick","send_it()");
     
@@ -14,18 +15,26 @@ function punlic_brodcast()
     ws.send(JSON.stringify(d));
 }
 
-function send_publick_msg_keyup(event) {
+function send_publick_msg_keyup(event) 
+{
     if (event.key === "Enter") {
         // Do work
         send_it();
     } else
-        i_am_typing();
+        i_am_typing(current_open,null);
+     //   #this typing show only if user has active publick section 
 }  
-
+function i_am_typing(section,friend)
+{
+	var d={};
+    d["type"]="typing";
+    d["section"]=section
+    d["friend"]=friend
+	ws.send(JSON.stringify(d));
+}
 
 function  send_it()
 {
-
 	var d={};
 	d["type"]="public_brodcost_message";
 	d["content"]=document.getElementById("message").value;
@@ -40,12 +49,7 @@ function  send_it()
 
 
 
-function i_am_typing()
-{
-	var d={};
-	d["type"]="typing";
-	ws.send(JSON.stringify(d));
-}
+
 
 
 function send_p2p_msg_keyup(event) {
@@ -53,12 +57,13 @@ function send_p2p_msg_keyup(event) {
         // Do work
         p2p_send();
     } else
-        i_am_typing();
+        i_am_typing(current_open,p2p_current_open);
 } 
 
 function p2p()
 {
     current_open="p2p";
+    vanish("messages");
     var d={};
     d["type"]="p2p";
     ws.send(JSON.stringify(d));
@@ -72,19 +77,31 @@ function p2p()
 function p2p_active(us)
 {
     p2p_current_open=us;
+    insert("active_entity_meta",p2p_current_open);
+    
+    if(online_users.includes(us)==true)
+        get("user_list_"+us).style.color="green";
+    else
+        get("user_list_"+us).style.color="blue";
+    
+    var data={"type":"load_messages","friend":p2p_current_open}
+    ws.send(JSON.stringify(data))
+    vanish("messages");    
 }
+
+
 
 var p2p_current_open="";
 function p2p_send()
 {
 	var d={};
     d["type"]="p2p_message";
-    d["friend"]=current_open;
+    d["friend"]=p2p_current_open;
 	d["content"]=document.getElementById("message").value;
 	valueas("message","");
 	ws.send(JSON.stringify(d)); 
 	var el=document.createElement("span");
-	el.className="left_mess";
+	el.className="right_mess";
 	el.innerHTML=d["content"];
 	document.getElementById("messages").appendChild(el);
 	get("messages").scrollTop = get("messages").scrollHeight;
@@ -92,7 +109,7 @@ function p2p_send()
 
 function wsclose()
      {
-       alert("connection has been closed ");
+       tost("messaging server connection has been closed ");
        logout();
     }
 var online_users=[];
@@ -117,7 +134,14 @@ function message_received(event)
             get("messages").scrollTop = get("messages").scrollHeight;
 			break;
         case 'typing':
-            tost(res["content"]+" is typing");
+            console.log("typimg: ",res);
+            if(res["section"]=="punlic_brodcast")
+                tost(res["content"]+" is typing");
+            else if(res["section"]=="p2p")
+            {
+                if(res["friend"]==p2p_current_open)
+                    tost("typing");
+            }   
             break;
         case 'meta':
             if(current_open!="punlic_brodcast")
@@ -160,7 +184,7 @@ function message_received(event)
             insert("active_entity_meta",online_users.length+" friends online");
                 break
         case 'p2p_message':
-            console.log(res);
+                    //data={"type":"p2p_message","friend":"admin96","content"hi","sender":"Admin"}
             if(current_open!="p2p")            
             {
                 tost("new message from "+res["sender"]);
@@ -179,12 +203,38 @@ function message_received(event)
             {
                 get("user_list_"+res["sender"]).style.color="pink";
             }
-			break;
-                            //data={"type":"p2p_message","friend":"admin96","content"hi","sender":"Admin"}
+            break;
+        case 'p2p_message_load':
+            console.log(res);
+                if(current_open!="p2p")
+                    return 0;
+                if(p2p_current_open!=res["friend"])
+                    return 0;
+
+                for(var i=0;i<res["content"].length;i++)
+                {
+                    var el=document.createElement("span");
+
+                    if(res["content"][i]["type"]=="send")
+                        el.className="right_mess";
+                    else
+                        el.className="left_mess";
+
+                    el.innerHTML=res["content"][i]["message_content"];
+                    get("messages").appendChild(el);
+
+                }
+                get("messages").scrollTop = get("messages").scrollHeight;
+            break;
+
+
 		}
 
 
         }
+
+
+        alert("v6");
 
 
 

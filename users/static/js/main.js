@@ -90,7 +90,7 @@ function set_home_gui(data)
     Evt("textEditor","click", hide_all);
     Evt("myForm","submit", function (event) {
           event.preventDefault();//STOP submitting form 
-          alert("event added");
+          
           sendData();
         });
         xhr("/post","get",null,put_posts,0);
@@ -152,12 +152,12 @@ function logged_in(temp)
 
     if (data["_id"]==-1)
     {
-        tost("invalid login details");
+        tost("invalid login details",2,"red");
         return 0;
     } 
     else if (data["_id"]==-2)
     {
-        tost("you are allready logged in in another device allready");
+        tost("you are allready logged in in another device allready",2,"blue");
         return 0;
     } 
     xhr("/main/", "get", null, home, 0);
@@ -167,19 +167,15 @@ function logged_in(temp)
         ws.onmessage = message_received;
         
     ws.onopen = function(e) {
-        alert("conetion opend");
+        tost("connected to messeging server",2,"violet");
         var d = {};
         d["type"] = "login";
         d["key"] = data["_id"];
         d["user"] = data["username"];
-        console.log("Connection open...", e);
         ws.send(JSON.stringify(d)); //user details				
     };
-
     ws.onclose=wsclose;
-     
 }
-
 
 
 function home_page(data) 

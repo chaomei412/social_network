@@ -4,9 +4,21 @@ import websockets
 import json
 import pymongo
 from bson.objectid import ObjectId as object_id
+import time
 objs={}
-#{"obj":obj,"obj2":obj2}
 from cryptography.fernet import Fernet
+
+def is_my_friend(my_id,friend_id):
+    myclient = pymongo.MongoClient('mongodb://localhost:27017/')
+    mydb = myclient['social_network']
+    friends=mydb["friends"]
+    q={"$or":[{"user_id":my_id,"friend_id":friend_id,"status":1},{"user_id":friend_id,"friend_id":my_id,"status":1}]}
+    if(friends.find(q).count()>0):
+        return 1
+    else:
+        return 0
+
+
 def decode(data,key):
 	cipher_suite = Fernet(key)
 	return cipher_suite.decrypt(data)	
@@ -46,20 +58,33 @@ def unregiter(obj):
 	objs.pop(str(obj))
 	print("\n",len(objs), " users online as per objs ")
 
-async def typing(obj):
+async def typing(obj,data):
 	global objs
 	myclient = pymongo.MongoClient('mongodb://localhost:27017/')
 	mydb = myclient['social_network']
 	websocket=mydb["websocket"]
 
-	data={}
-	data["type"]="typing"
-	data["content"]=websocket.find_one({"websocket":str(obj)})["username"]
-	data=json.dumps(data)
-	for usr in objs:
-		if usr==str(obj):
-			continue
-		await objs[usr].send(data)
+
+	if(data["section"]=="punlic_brodcast"):
+		data["type"]="typing"
+		data["content"]=websocket.find_one({"websocket":str(obj)})["username"]
+		data=json.dumps(data)
+
+		for usr in objs:
+			if usr==str(obj):
+				continue
+			await objs[usr].send(json.dumps(data))
+
+	elif(data["section"]=="p2p"):
+		friend_user_name=data["friend"]	
+		if(websocket.find_one({"username":friend_user_name})!=None):
+			#send typing status if friend is online		
+			data["friend"]=websocket.find_one({"websocket":str(obj)})["username"]
+			#get only his object
+			obj_key=websocket.find_one({"username":friend_user_name})["websocket"]
+			await objs[obj_key].send(json.dumps(data))
+
+
 async def brodcost(obj,message):
 	print("brodcost")
 	global objs
@@ -107,20 +132,16 @@ async def  p2p(obj):
 
 	friend=[]
 
-	print("F.R.I.E.N.D.S.: ",friend)
 
 	q1={"friend_id":my_id,"status":1}
 
-	print("friens query: ",q1)
 	for i in friends.find(q1):
 		friend.append(users.find_one({"_id":object_id(i["user_id"])})["u_name"])
-	print("F.R.I.E.N.D.S.: ",friend)
 
 	q2={"user_id":my_id,"status":1}
-	print("friens query: ",q2)    
 	for i in friends.find(q2):
 		friend.append(users.find_one({"_id":object_id(i["friend_id"])})["u_name"])
-	print("F.R.I.E.N.D.S.: ",friend)
+
 
 	q={"username":{"$in":friend}}
 	select={"username":1}
@@ -145,29 +166,97 @@ async def  update_meta(obj):
 		
 	for i in websocket.find():
 		data["members"].append(i["username"])
-	print("meta: ",data)
 	data=json.dumps(data)
 	for key in objs:
 		try:
 			await objs[key].send(data)
 		except:
-			pass	
-async def p2p_msg_send(obj,data):
+			pass
+
+
+async def p2p_msg_load(obj,data):
 	global objs
 	#data={"type":"p2p_message","friend":"admin96","content"hi"}
 	myclient = pymongo.MongoClient('mongodb://localhost:27017/')
 	mydb = myclient['social_network']
 	websocket=mydb["websocket"]
-	friends=mydb["friends"]
+	
+	#friends=mydb["friends"]
 	users=mydb["users"]
+	chats=mydb["chat_message"]
+	#here my is a message sender
+	#friend is message receiver
 
 	my_user_name=websocket.find_one({"websocket":str(obj)})["username"]
+	my_id=str(users.find_one({"u_name":my_user_name},{"_id":1})["_id"])
+	friend_user_name=data["friend"]
+	friend_id=str(users.find_one({"u_name":friend_user_name},{"_id":1})["_id"])
+
+
+	print("loading messages of ",my_user_name," ",friend_user_name)
+	if(is_my_friend(my_id,friend_id)==0):
+		#the receiver is not a friend just skip the processes
+		print("not a friend")
+		return 0
+
+	chat_data={}
+	chat_data["type"]="p2p_message_load"
+	chat_data["friend"]=data["friend"]
+	chat_data["content"]=[]
+	for row in chats.find({"$or":[{"sender_id":my_id,"receiver_id":friend_id},{"sender_id":friend_id,"receiver_id":my_id}]}):
+		row["_id"]=str(row["_id"])
+
+		if(row["sender_id"]==my_id):
+			row["type"]="send"
+		else:
+			row["type"]="get"	
+
+		chat_data["content"].append(row)
+	#print("found chats data and sending as ",chat_data)	
+	await obj.send(json.dumps(chat_data))	
+
+
+async def p2p_msg_send(obj,data):
+	#currently loading old messges using websocket it can loaded using ajax too if websocket gives
+	global objs
+	#data={"type":"p2p_message","friend":"admin96","content"hi"}
+	myclient = pymongo.MongoClient('mongodb://localhost:27017/')
+	mydb = myclient['social_network']
+	websocket=mydb["websocket"]
 	
+	#friends=mydb["friends"]
+	users=mydb["users"]
+	chats=mydb["chat_message"]
+	#here my is a message sender
+	#friend is message receiver
+
+	my_user_name=websocket.find_one({"websocket":str(obj)})["username"]
+	my_id=str(users.find_one({"u_name":my_user_name},{"_id":1})["_id"])
+	friend_user_name=data["friend"]
+	friend_id=str(users.find_one({"u_name":friend_user_name},{"_id":1})["_id"])
+	if(is_my_friend(my_id,friend_id)==0):
+		#the receiver is not a friend just skip the processes
+		print("not a friend")
+		return 0
+	chat_save_data={}
+	chat_save_data["sender_id"]=my_id
+	chat_save_data["receiver_id"]=friend_id
+	chat_save_data["message_content"]=data["content"]
+	chat_save_data["send_time"]=time.asctime(time.localtime(time.time()))
+	
+	chat_save_data
+	chat_save_data
 	data["sender"]=my_user_name
 	#we found object only if friend is online
 	if(websocket.find({"username":data["friend"]}).count()==1):
-		user_websocket_object_key=websocket.find_one({"username":data["friend"]}["websocket"])
-		await objs["user_websocket_object_key"].send(json.dumps(data))
+		chat_save_data["deliver_time"]=time.asctime(time.localtime(time.time()))
+		chat_save_data["status"]=1 #received by friend he is online
+		user_websocket_object_key=websocket.find_one({"username":data["friend"]})["websocket"]
+		await objs[user_websocket_object_key].send(json.dumps(data))
+		print("sending message ",data["content"]," from ",my_user_name," to ",data["friend"])
+	else:
+		chat_save_data["status"]=0 #send to friend he is not online
+	chats.insert_one(chat_save_data)
 
 async def update_p2p_offline(obj):
 	global objs
@@ -204,7 +293,6 @@ async def update_p2p_offline(obj):
 
 async def update_p2p_online(obj):
 	global objs
-	print("objs:",objs)
 	myclient = pymongo.MongoClient('mongodb://localhost:27017/')
 	mydb = myclient['social_network']
 	websocket=mydb["websocket"]
@@ -212,9 +300,8 @@ async def update_p2p_online(obj):
 	users=mydb["users"]
 
 	user_name=websocket.find_one({"websocket":str(obj)})["username"]
-	print("current_login_user: ",user_name)	
 	my_id=str(users.find_one({"u_name":user_name})["_id"])
-	print("id: ",my_id)
+
 
 	friend=[]
 
@@ -254,13 +341,15 @@ async def handler(websocket, path, extra_argument):
 				if(data["type"]=="public_brodcost_message"):
 					await brodcost(websocket,data)
 				elif(data["type"]=="typing"):
-					await typing(websocket)
+					await typing(websocket,data)
 				elif(data["type"]=="members"):
 					await meta(websocket)
 				elif(data["type"]=="p2p"):
 					await p2p(websocket)
 				elif(data["type"]=="p2p_message"):
 					await p2p_msg_send(websocket,data)
+				elif(data["type"]=="load_messages"):
+					await p2p_msg_load(websocket,data)
 	except websockets.exceptions.ConnectionClosed as e:
 		await update_p2p_offline(websocket)
 		unregiter(websocket)#remove from object
