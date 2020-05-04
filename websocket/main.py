@@ -132,15 +132,24 @@ async def  p2p(obj):
 
 	friend=[]
 
+	#ind({"$or":[{"sender_id":my_id,"receiver_id"
 
-	q1={"friend_id":my_id,"status":1}
-
+	q1={"$or":[{"friend_id":my_id,"status":1},{"friend_id":my_id,"status":2}]}
+	print("#0q ",q1)
 	for i in friends.find(q1):
+		print("#0 ",i)
+		#check is that friend block by me
+		if(friends.find_one({"user_id":my_id,"status":2,"friend_id":i["user_id"]})!= None):
+			continue
 		friend.append(users.find_one({"_id":object_id(i["user_id"])})["u_name"])
 
 	q2={"user_id":my_id,"status":1}
 	for i in friends.find(q2):
-		friend.append(users.find_one({"_id":object_id(i["friend_id"])})["u_name"])
+		print("#2 ",i)
+		
+		uname=users.find_one({"_id":object_id(i["friend_id"])})["u_name"]
+		if(uname not in friend):
+			friend.append()
 
 
 	q={"username":{"$in":friend}}
@@ -151,6 +160,36 @@ async def  p2p(obj):
 	data={"type":"p2p_users_meta","friends":friend,"onlines":onlines}
 	data=json.dumps(data)	
 	await obj.send(data)
+
+
+
+
+
+
+async def  blocked(obj,data):
+	global objs
+	myclient = pymongo.MongoClient('mongodb://localhost:27017/')
+	mydb = myclient['social_network']
+	websocket=mydb["websocket"]
+	friends=mydb["friends"]
+	users=mydb["users"]
+	user_name=websocket.find_one({"websocket":str(obj)})["username"]
+	my_id=str(users.find_one({"u_name":user_name})["_id"])
+
+	friend=[]
+
+
+	
+
+	q2={"user_id":my_id,"status":2}
+	for i in friends.find(q2):
+		friend.append(users.find_one({"_id":object_id(i["friend_id"])})["u_name"])
+
+
+	data={"type":"blocked","blocked":friend}
+	data=json.dumps(data)
+	await obj.send(data)
+
 
 
 async def  update_meta(obj):
@@ -290,6 +329,58 @@ async def update_p2p_offline(obj):
 			await objs[u["websocket"]].send(json.dumps(data))
 		except :
 			pass
+async def block(obj,data):
+	global objs
+	#data={"type":"p2p_message","friend":"admin96","content"hi"}
+	myclient = pymongo.MongoClient('mongodb://localhost:27017/')
+	mydb = myclient['social_network']
+	websocket=mydb["websocket"]
+	
+	#friends=mydb["friends"]
+	users=mydb["users"]
+	friends=mydb["friends"]
+	#here my is a message sender
+	#friend is message receiver
+
+	my_user_name=websocket.find_one({"websocket":str(obj)})["username"]
+	my_id=str(users.find_one({"u_name":my_user_name},{"_id":1})["_id"])
+	friend_user_name=data["friend"]
+	friend_id=str(users.find_one({"u_name":friend_user_name},{"_id":1})["_id"])
+	
+	q={"user_id":my_id,"friend_id":friend_id}
+	if(friends.find(q).count()>0):
+		friends.find_one_and_update(q,{"$set":{"status":2}})
+	else:
+		q["status"]=2
+		friends.insert_one(q)
+
+
+
+async def unblock(obj,data):
+	global objs
+	#data={"type":"p2p_message","friend":"admin96","content"hi"}
+	myclient = pymongo.MongoClient('mongodb://localhost:27017/')
+	mydb = myclient['social_network']
+	websocket=mydb["websocket"]
+	
+	#friends=mydb["friends"]
+	users=mydb["users"]
+	friends=mydb["friends"]
+	#here my is a message sender
+	#friend is message receiver
+
+	my_user_name=websocket.find_one({"websocket":str(obj)})["username"]
+	my_id=str(users.find_one({"u_name":my_user_name},{"_id":1})["_id"])
+	friend_user_name=data["friend"]
+	friend_id=str(users.find_one({"u_name":friend_user_name},{"_id":1})["_id"])
+	
+	q={"user_id":my_id,"friend_id":friend_id}
+	if(friends.find(q).count()>0):
+		friends.find_one_and_update(q,{"$set":{"status":1}})
+	else:
+		q["status"]=1
+		friends.insert_one(q)
+
 
 async def update_p2p_online(obj):
 	global objs
@@ -350,6 +441,14 @@ async def handler(websocket, path, extra_argument):
 					await p2p_msg_send(websocket,data)
 				elif(data["type"]=="load_messages"):
 					await p2p_msg_load(websocket,data)
+				elif(data["type"]=="block"):
+					await block(websocket,data)
+				elif(data["type"]=="blocked"):
+					await blocked(websocket,data)
+				elif(data["type"]=="unblock"):
+					await unblock(websocket,data)
+
+
 	except websockets.exceptions.ConnectionClosed as e:
 		await update_p2p_offline(websocket)
 		unregiter(websocket)#remove from object

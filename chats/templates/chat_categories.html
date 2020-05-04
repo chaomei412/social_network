@@ -3,12 +3,13 @@
     <tbody>
         <tr id="chat_types">
           <td colspan="2">
-            <button onclick="p2p()">P2P</button>
-            <button>group</button>
-            <button onclick="punlic_brodcast()">public brodcast</button>
-            <button>Brodcost</button>
-            <button>Encrypted</button>
-            <button>Instant</button>
+            <button class="chat_types" id="p2p" onclick="p2p();chat_types_active()">P2P</button>
+            <button class="chat_types" id="group" onclick="group();chat_types_active()">group</button>
+            <button class="chat_types" id="punlic_brodcast"  onclick="punlic_brodcast();chat_types_active()">public brodcast</button>
+            <button class="chat_types" id="brodcasr" onclick="brodcast();chat_types_active()">Brodcost</button>
+            <button class="chat_types" id="encrypted" onclick="encrypted();chat_types_active()">Encrypted</button>
+            <button class="chat_types" id="instant" onclick="instant();chat_types_active()">Instant</button>
+            <button class="chat_types" id="blocked" onclick="blocked();chat_types_active()">Blocked</button>
           </td>
         </tr>
         <tr id="message_box">
@@ -61,3 +62,9 @@
         </tr>
     </tbody>
 </table>
+
+
+
+
+<div id="p2p_option" style="display: none;">
+</div>

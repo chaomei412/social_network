@@ -8,12 +8,14 @@
 
 
 
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js" async></script>
+ 
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="{% static 'bs/css/bootstrap-glyphicons.css' %}"/>
     <link rel="stylesheet" href="{% static 'css/bs.css' %}" />
+    <link rel="stylesheet" href="{% static 'bs/css/bootstrap.min.css' %}" media="screen">
+    <link rel="stylesheet" href="{% static 'fa/css/font-awesome.css' %}">    
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
     <link rel="stylesheet" href="{% static 'css/main.css' %}" />
     <link rel="stylesheet" href="{% static 'css/editor.css' %}" />
@@ -21,12 +23,15 @@
     <link rel="stylesheet" href="{% static 'css/post.css' %}" />
     <link rel="stylesheet" href="{% static 'css/chats.css' %}" />
     <link rel="stylesheet" href="{% static 'css/brodcast.css' %}" />
-
+    <link rel="stylesheet" href="{% static 'fa/css/all.css' %}" /> <!--load all styles -->
+ 
     <script src="{% static 'js/signup.js' %}"></script>
     <script src="{% static 'js/chats.js' %}"></script>
     <script src="{%static 'js/jquery.min.js' %}"></script>
     <script src="{% static 'js/a076d05399.js' %}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
+    <script defer src="{% static 'fa/js/all.js' %}"></script> <!--load all styles -->
+     <script src="{% static 'fa/js/all.min.js' %}" async></script>
+     <script src="{% static 'bs/js/bootstrap.min.js' %}" async></script>    
 </head>
 
 <body onload="pop1()">

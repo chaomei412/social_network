@@ -35,14 +35,16 @@ function cancle_frindship(e,id)
 function rejected(data)
 {
 	
-	
+			
 }
 
+/*
 function unblock(e,id)
 {
 	//currently not implimented
-	
-}
+	//now implemented on chats,js
+}*/
+
 function accept(e,id)
 {
 	e.innerHTML="remove";

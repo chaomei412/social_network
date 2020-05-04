@@ -1,5 +1,8 @@
 function punlic_brodcast()
 {
+
+
+    hide_options();
     current_open="punlic_brodcast";
     vanish("messages");
     ratr("mdg_send","onclick");
@@ -50,7 +53,43 @@ function  send_it()
 
 
 
+function group()
+{
+    current_open="group";
+}
+function brodcast()
+{
+    current_open="brodcast";
+}
+function encrypted()
+{
+    current_open="encrypted";
+}
+function instant()
+{
+    current_open="instant";
+}
 
+function chat_types_active()
+{
+
+    var chat_types=["group","instant","encrypted","brodcast","p2p","punlic_brodcast","blocked"];
+    if((chat_types.includes(current_open))==false)
+    {
+        return 0;
+    }
+
+    var chttyps=document.getElementsByClassName("chat_types");
+    for(var i=0;i<chttyps.length;i++)
+    {
+        var cur=chttyps[i];
+        if(cur.id==current_open)
+            cur.style.backgroundColor="black";
+        else
+            cur.style.backgroundColor="gray";   
+    }
+
+}
 
 function send_p2p_msg_keyup(event) {
     if (event.key === "Enter") {
@@ -62,7 +101,9 @@ function send_p2p_msg_keyup(event) {
 
 function p2p()
 {
+    hide_options();
     current_open="p2p";
+    p2p_current_open="";
     h_title(current_open);
     vanish("messages");
     var d={};
@@ -75,20 +116,50 @@ function p2p()
 
 }
 
+
+function blocked()
+{
+    hide_options();
+    current_open="blocked";
+    p2p_current_open="";
+    h_title(current_open);
+    vanish("messages");
+    var d={};
+    d["type"]="blocked";
+    ws.send(JSON.stringify(d));
+    ratr("mdg_send","onclick");
+    ratr("message","onkeyup");
+}
+
 function p2p_active(us)
 {
-    h_title(p2p_current_open);
-    p2p_current_open=us;
-    insert("active_entity_meta",p2p_current_open);
-    
-    if(online_users.includes(us)==true)
-        get("user_list_"+us).style.color="green";
-    else
-        get("user_list_"+us).style.color="blue";
-    
-    var data={"type":"load_messages","friend":p2p_current_open}
-    ws.send(JSON.stringify(data))
-    vanish("messages");    
+    if(p2p_current_open!=us)
+    {
+
+        vanish("messages");
+        h_title(p2p_current_open);
+        p2p_current_open=us;
+
+        var usrs=document.getElementsByClassName("user");
+        for(var i=0;i<usrs.length;i++)
+        {
+            var cur=document.getElementsByClassName("user")[i];
+            if(cur.id.split("_")[2]==us)
+                cur.style.backgroundColor="orange";
+            else
+                cur.style.backgroundColor="white";   
+        }
+
+        insert("active_entity_meta",p2p_current_open);
+
+        if(online_users.includes(us)==true)
+            get("user_list_"+us).style.color="green";
+        else
+            get("user_list_"+us).style.color="blue";
+
+        var data={"type":"load_messages","friend":p2p_current_open}
+        ws.send(JSON.stringify(data))
+    }    
 }
 
 
@@ -169,7 +240,8 @@ function message_received(event)
             vanish("messages");
             for(var i=0;i<res["friends"].length;i++)
                 {
-                    append("message_entity",'<span class="user" id="user_list_'+res["friends"][i]+'" onclick="p2p_active(\''+res["friends"][i]+'\')">'+res["friends"][i]+'</span>');
+                    console.log(1);
+                    append("message_entity",'<span class="user" id="user_list_'+res["friends"][i]+'" onclick="p2p_active(\''+res["friends"][i]+'\')">'+res["friends"][i]+'<i class="down" onclick="p2p_option(\''+res["friends"][i]+'\',this)"></i></span>');
                     var id="user_list_"+res["friends"][i];
                     get(id).style.color="blue";
                 }
@@ -220,35 +292,194 @@ function message_received(event)
             break;
         case 'p2p_message_load':
             console.log(res);
-                if(current_open!="p2p")
-                    return 0;
-                if(p2p_current_open!=res["friend"])
-                    return 0;
-
-                for(var i=0;i<res["content"].length;i++)
+                if(current_open=="p2p" || current_open=="blocked")
                 {
-                    var el=document.createElement("span");
+                    if(p2p_current_open!=res["friend"])
+                        return 0;
 
-                    if(res["content"][i]["type"]=="send")
-                        el.className="right_mess";
-                    else
-                        el.className="left_mess";
+                    for(var i=0;i<res["content"].length;i++)
+                    {
+                        var el=document.createElement("span");
 
-                    el.innerHTML=res["content"][i]["message_content"];
-                    get("messages").appendChild(el);
-
+                        if(res["content"][i]["type"]=="send")
+                            el.className="right_mess";
+                        else
+                            el.className="left_mess";
+                        
+                        el.innerHTML=res["content"][i]["message_content"];
+                        get("messages").appendChild(el);
+                    }
+                    get("messages").scrollTop = get("messages").scrollHeight;
                 }
-                get("messages").scrollTop = get("messages").scrollHeight;
             break;
+        case 'blocked':
+                //	data={"type":"blocked","blocked":friend}
+                if(current_open!="blocked")
+                    break;
+                insert("active_entity_meta",res["blocked"].length+" friends block");
+                vanish("message_entity");
+                vanish("messages");
+                for(var i=0;i<res["blocked"].length;i++)
+                    {
+                        console.log(1);
+                        append("message_entity",'<span class="user" id="user_list_'+res["blocked"][i]+'" onclick="p2p_active(\''+res["blocked"][i]+'\')">'+res["blocked"][i]+'<i class="down" onclick="block_option(\''+res["blocked"][i]+'\',this)"></i></span>');
+                        var id="user_list_"+res["blocked"][i];
+                        get(id).style.color="blue";
+                    }
+            break;
+    }
+}
 
 
-		}
 
 
+function block_option(friend,ths)
+{
+    //temp+='<div onclick="'+menu[i]["function"]+'(\''+menu[i]["parameters"]+'\')" class="p2p_options">'+menu[i]["function_name"]+'</div>';
+
+    var menu=[{"function":"unblock","parameters":friend,"function_name":"Unblock"},{"function":"block","parameters":friend,"function_name":"Block again"},{"function":"block_info","parameters":friend,"function_name":"Block info"}]
+    if(ths.className=="up")
+    {
+        p2p_option_open.pop(ths);
+        ths.className="down";
+        vanish("p2p_option");
+        get("p2p_option").style.display="none";
+        return 0;
+        //close
+    }
+        //close if anothers option is open
+    if(p2p_option_open.length>0)
+    {
+        for(var i=0;i<p2p_option_open.length;i++)
+        {
+
+            p2p_option_open[i].className="down";
+            p2p_option_open.pop(p2p_option_open[i]);
         }
+        vanish("p2p_option");
+        get("p2p_option").style.display="none";
+    }
+
+    p2p_option_open.push(ths);
+    ths.className="up";
+    show_p2p_option(ths.offsetLeft,ths.offsetTop,friend,menu);
+}
 
 
-        alert("v6");
+var p2p_option_open=[];
+
+function p2p_option(user,ths)
+{
+    console.log(ths.offsetTop+" "+ths.offsetLeft);
+
+    if(ths.className=="up")
+    {
+        p2p_option_open.pop(ths);
+        ths.className="down";
+        vanish("p2p_option");
+        get("p2p_option").style.display="none";
+        return 0;
+        //close
+    }
+        //close if anothers option is open
+    if(p2p_option_open.length>0)
+    {
+        for(var i=0;i<p2p_option_open.length;i++)
+        {
+
+            p2p_option_open[i].className="down";
+            p2p_option_open.pop(p2p_option_open[i]);
+        }
+        vanish("p2p_option");
+        get("p2p_option").style.display="none";
+    }
+
+    p2p_option_open.push(ths);
+
+    ths.className="up";
+    console.log("calling show_p2p_option");
+
+    show_p2p_option(ths.offsetLeft,ths.offsetTop,user);
+
+}
+
+
+
+function show_p2p_option(left,top,usr,menu=null)
+{
+    console.log("show_p2p_option"+usr);
+
+
+    var temp='';
+    if(menu==null)
+    {
+        temp='<div onclick="mark_as_read(\''+usr+'\')" class="p2p_options">Mark as read</div>\
+        <div onclick="delete_p2p(\''+usr+'\')" class="p2p_options">Delete Chat</div>  \
+        <div onclick="block(\''+usr+'\')" class="p2p_options">Block</div>\
+        ';
+    }
+    else
+    {
+        for(var i=0;i<menu.length;i++)
+        {
+          temp+='<div onclick="'+menu[i]["function"]+'(\''+menu[i]["parameters"]+'\')" class="p2p_options">'+menu[i]["function_name"]+'</div>';
+       
+        }
+    }
+    insert("p2p_option",temp);
+    get("p2p_option").style.position="absolute";
+    get("p2p_option").style.left=left-150+"px";
+    get("p2p_option").style.top=top+23+"px";
+    get("p2p_option").style.display="block";
+} 
+
+
+
+
+function block(friend)
+{
+    hide_options();
+    vanish("messages");
+    var id="user_list_"+friend;
+    remove(id);
+
+    var data={};
+    data["type"]="block";
+    data["friend"]=friend;
+    ws.send(JSON.stringify(data)); 
+
+}
+
+
+function unblock(friend)
+{
+    var data={};
+    data["type"]="unblock";
+    data["friend"]=friend;
+    ws.send(JSON.stringify(data)); 
+
+    hide_options();
+    var id="user_list_"+friend;
+    remove(id);
+
+}
+
+function hide_options()
+{
+        //close if anothers option is open
+    if(p2p_option_open.length>0)
+    {
+        for(var i=0;i<p2p_option_open.length;i++)
+        {
+
+            p2p_option_open[i].className="down";
+            p2p_option_open.pop(p2p_option_open[i]);
+        }
+        vanish("p2p_option");
+        get("p2p_option").style.display="none";
+    }
+
+}
 
 
 

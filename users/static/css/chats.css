@@ -137,3 +137,60 @@ margin-right: 45%;
     margin-left: 45%;
 }
 
+
+
+
+i {
+  border: solid black;
+  border-width: 0 3px 3px 0;
+  padding:5px;
+  float: right;
+  }
+
+
+
+.down {
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+    transition-duration: 850ms;
+}
+
+.up {
+  transform: rotate(-135deg);
+  -webkit-transform: rotate(-135deg);
+  transition-duration: 850ms;
+}
+
+.user
+{
+  cursor: pointer;
+}
+.user:hover
+{
+  background-color:orange;
+}
+
+
+
+
+#p2p_option
+{
+  padding: 10px 0px; 
+  background-color: white;
+  box-shadow: 0px  0px 5px 2px gray;
+   border-radius: 2px;
+  font-size: 15px;
+  width:150px;
+}
+
+.p2p_options
+{
+
+  padding: 10px 25px;
+  cursor: pointer;
+}
+.p2p_options:hover
+{
+  background-color: gray;
+  color: white;
+}

@@ -24,7 +24,7 @@ SECRET_KEY = '%o5fl27y1s1rminm_@*8$tn$9xe78jt4r^uc$z7+6a9)^=rr@v'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-ALLOWED_HOSTS = ['192.168.225.231','192.168.48.148','127.0.0.1','192.168.53.77','192.168.49.129','192.168.48.75','192.168.48.121']
+ALLOWED_HOSTS = ['192.168.225.231','192.168.48.148','127.0.0.1','192.168.53.77','192.168.49.129','192.168.48.75','192.168.48.121','[2409:4042:2098:b70a:a5ca:61a1:4eb3:3b04]','[2405:204:901e:d888:45fe:f992:2fe5:cbd1]','testit.dynv6.net']
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',

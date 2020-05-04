@@ -35,17 +35,12 @@ def main(request):
 		data=json.dumps(data)
 		return HttpResponse(data, content_type='application/json')
 	#user is loogin
-	conn=db.connect('sqlite3_manager/db')
-	c = conn.cursor()
+
 	id = request.session['u_id']
 	q="select u.fname,u.lname,pc.pic_url from users u,passwords p,pics pc where u.id='"+str(id)+"' and u.id=p.u_id and u.id=pc.u_id"
 	#pic varchar(25),gender integer,religion_id integer,address_id integer)
 	data["username"]=1
-	for i in c.execute(q):
-		data["data"]=list(i)
-	conn.close()
-	data=json.dumps(data)
-	return HttpResponse(data, content_type='application/json')
+	return HttpResponse(json.dumps(data), content_type='application/json')
 
 from bson.objectid import ObjectId as object_id
 
