@@ -7,7 +7,7 @@ from bson.objectid import ObjectId as object_id
 import time
 objs={}
 from cryptography.fernet import Fernet
-
+import re
 def is_my_friend(my_id,friend_id):
     myclient = pymongo.MongoClient('mongodb://localhost:27017/')
     mydb = myclient['social_network']
@@ -31,7 +31,6 @@ def register(obj,data):
 	websocket=mydb["websocket"]
 	if(websocket.find_one({"websocket":str(obj)})==None):
 		#user does not have another active session
-		print("user has not any another ws connection")
 		q={"_id":object_id(data['key']),"username":data['user']}
 		if(mycol.find(q)):
 			#user has active entry in session valid 
@@ -86,7 +85,7 @@ async def typing(obj,data):
 
 
 async def brodcost(obj,message):
-	print("brodcost")
+
 	global objs
 	myclient = pymongo.MongoClient('mongodb://localhost:27017/')
 	mydb = myclient['social_network']
@@ -114,7 +113,7 @@ async def  meta(obj):
 		
 	for i in websocket.find():
 		data["members"].append(i["username"])
-	print("meta: ",data)
+
 	data=json.dumps(data)
 	await obj.send(data)
 
@@ -148,9 +147,7 @@ async def rules(obj):
 	#ind({"$or":[{"sender_id":my_id,"receiver_id"
 
 	q1={"$or":[{"friend_id":my_id,"status":1},{"friend_id":my_id,"status":2}]}
-	print("#0q ",q1)
 	for i in friends.find(q1):
-		print("#0 ",i)
 		#check is that friend block by me
 		if(friends.find_one({"user_id":my_id,"status":2,"friend_id":i["user_id"]})!= None):
 			continue
@@ -158,14 +155,12 @@ async def rules(obj):
 
 	q2={"user_id":my_id,"status":1}
 	for i in friends.find(q2):
-		print("#2 ",i)
 		
 		uname=users.find_one({"_id":object_id(i["friend_id"])})["u_name"]
 		if(uname not in friend):
 			friend.append(uname)
 
 	data={"type":"rules","rules":rull,"friends":friend}
-	print("###",data)
 	data=json.dumps(data)
 	await obj.send(data)
 
@@ -186,9 +181,7 @@ async def  p2p(obj):
 	#ind({"$or":[{"sender_id":my_id,"receiver_id"
 
 	q1={"$or":[{"friend_id":my_id,"status":1},{"friend_id":my_id,"status":2}]}
-	print("#0q ",q1)
 	for i in friends.find(q1):
-		print("#0 ",i)
 		#check is that friend block by me
 		if(friends.find_one({"user_id":my_id,"status":2,"friend_id":i["user_id"]})!= None):
 			continue
@@ -196,7 +189,6 @@ async def  p2p(obj):
 
 	q2={"user_id":my_id,"status":1}
 	for i in friends.find(q2):
-		print("#2 ",i)
 		
 		uname=users.find_one({"_id":object_id(i["friend_id"])})["u_name"]
 		if(uname not in friend):
@@ -283,10 +275,10 @@ async def p2p_msg_load(obj,data):
 	friend_id=str(users.find_one({"u_name":friend_user_name},{"_id":1})["_id"])
 
 
-	print("loading messages of ",my_user_name," ",friend_user_name)
+	#print("loading messages of ",my_user_name," ",friend_user_name)
 	if(is_my_friend(my_id,friend_id)==0):
 		#the receiver is not a friend just skip the processes
-		print("not a friend")
+		#print("not a friend")
 		return 0
 
 	chat_data={}
@@ -310,8 +302,20 @@ def check_rule(msg,my_id,friend_user_name):
 	mydb = myclient['social_network']
 	rules=mydb["rules"]
 	#"user_id" : "5e8764dd189928d6d5aa33e6", "rule_name" : "first rule", "for_" : "admin1", "rule_type" : "1", "rule" : "^gm$" }
-	for rule in rules.find({"user_id":my_id,"for_":friend_user_name}):
-		 
+	for rule in rules.find({"user_id":my_id,"for_":friend_user_name}):		 	
+		found = re.findall(rule, msg)
+		if(len(found)>0):
+			print(":) Match message:",msg,"Rule:",rule," For: ",friend_user_name)
+			return 1#rule match spam
+
+	for rule in rules.find({"user_id":my_id,"for_":"null"}):		 	
+		found = re.findall(rule, msg)
+		if(len(found)>0):
+			print(":) Match message:",msg,"Rule:",rule," For: ","All(null)")
+			return 1#rule match spam
+
+	print(":( Not Match message:",msg)
+	return 0		#no match not a spam
 
 
 async def p2p_msg_send(obj,data):
@@ -334,7 +338,7 @@ async def p2p_msg_send(obj,data):
 	friend_id=str(users.find_one({"u_name":friend_user_name},{"_id":1})["_id"])
 	if(is_my_friend(my_id,friend_id)==0):
 		#the receiver is not a friend just skip the processes
-		print("not a friend")
+		#print("not a friend")
 		return 0
 	chat_save_data={}
 	chat_save_data["sender_id"]=my_id
@@ -353,7 +357,7 @@ async def p2p_msg_send(obj,data):
 		chat_save_data["status"]=1 #received by friend he is online
 		user_websocket_object_key=websocket.find_one({"username":data["friend"]})["websocket"]
 		await objs[user_websocket_object_key].send(json.dumps(data))
-		print("sending message ",data["content"]," from ",my_user_name," to ",data["friend"])
+		#print("sending message ",data["content"]," from ",my_user_name," to ",data["friend"])
 	else:
 		chat_save_data["status"]=0 #send to friend he is not online
 	chats.insert_one(chat_save_data)
@@ -487,7 +491,7 @@ async def update_p2p_online(obj):
 	q={"username":{"$in":friend}}
 	select={"websocket":1,"username":1}
 	for u in websocket.find(q,select):
-		print("sending_online status to ",u["websocket"])
+		#print("sending_online status to ",u["websocket"])
 
 		data={"type":"p2p_online","username":user_name}
 		try:
