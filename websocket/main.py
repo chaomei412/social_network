@@ -119,6 +119,57 @@ async def  meta(obj):
 	await obj.send(data)
 
 
+async def rules(obj):
+	global objs
+	myclient = pymongo.MongoClient('mongodb://localhost:27017/')
+	mydb = myclient['social_network']
+	websocket=mydb["websocket"]
+	friends=mydb["friends"]
+	users=mydb["users"]
+	rules=mydb["rules"]
+	user_name=websocket.find_one({"websocket":str(obj)})["username"]
+	my_id=str(users.find_one({"u_name":user_name})["_id"])
+
+
+
+
+	q={"user_id":my_id}
+	rull=[]
+	for i in  rules.find(q):
+		i["_id"]=str(i["_id"])
+		rull.append(i)
+	print("#rules ",rull)
+
+
+
+
+	friend=[]
+
+	#ind({"$or":[{"sender_id":my_id,"receiver_id"
+
+	q1={"$or":[{"friend_id":my_id,"status":1},{"friend_id":my_id,"status":2}]}
+	print("#0q ",q1)
+	for i in friends.find(q1):
+		print("#0 ",i)
+		#check is that friend block by me
+		if(friends.find_one({"user_id":my_id,"status":2,"friend_id":i["user_id"]})!= None):
+			continue
+		friend.append(users.find_one({"_id":object_id(i["user_id"])})["u_name"])
+
+	q2={"user_id":my_id,"status":1}
+	for i in friends.find(q2):
+		print("#2 ",i)
+		
+		uname=users.find_one({"_id":object_id(i["friend_id"])})["u_name"]
+		if(uname not in friend):
+			friend.append(uname)
+
+	data={"type":"rules","rules":rull,"friends":friend}
+	print("###",data)
+	data=json.dumps(data)
+	await obj.send(data)
+
+
 
 async def  p2p(obj):
 	global objs
@@ -149,7 +200,7 @@ async def  p2p(obj):
 		
 		uname=users.find_one({"_id":object_id(i["friend_id"])})["u_name"]
 		if(uname not in friend):
-			friend.append()
+			friend.append(uname)
 
 
 	q={"username":{"$in":friend}}
@@ -254,6 +305,14 @@ async def p2p_msg_load(obj,data):
 	#print("found chats data and sending as ",chat_data)	
 	await obj.send(json.dumps(chat_data))	
 
+def check_rule(msg,my_id,friend_user_name):
+	myclient = pymongo.MongoClient('mongodb://localhost:27017/')
+	mydb = myclient['social_network']
+	rules=mydb["rules"]
+	#"user_id" : "5e8764dd189928d6d5aa33e6", "rule_name" : "first rule", "for_" : "admin1", "rule_type" : "1", "rule" : "^gm$" }
+	for rule in rules.find({"user_id":my_id,"for_":friend_user_name}):
+		 
+
 
 async def p2p_msg_send(obj,data):
 	#currently loading old messges using websocket it can loaded using ajax too if websocket gives
@@ -282,9 +341,11 @@ async def p2p_msg_send(obj,data):
 	chat_save_data["receiver_id"]=friend_id
 	chat_save_data["message_content"]=data["content"]
 	chat_save_data["send_time"]=time.asctime(time.localtime(time.time()))
+	chat_save_data["spam"]=check_rule(data["content"],my_id,friend_user_name)	
+
 	
-	chat_save_data
-	chat_save_data
+
+
 	data["sender"]=my_user_name
 	#we found object only if friend is online
 	if(websocket.find({"username":data["friend"]}).count()==1):
@@ -381,6 +442,23 @@ async def unblock(obj,data):
 		q["status"]=1
 		friends.insert_one(q)
 
+async def add_rule(obj,data):
+	# {"type":"add_rule","rule_name":"rule","for_":"null","rule_type":"4","rule":".*gm$"}
+	
+
+	myclient = pymongo.MongoClient('mongodb://localhost:27017/')
+	mydb = myclient['social_network']
+	websocket=mydb["websocket"]
+	rules=mydb["rules"]
+	users=mydb["users"]
+
+	my_user_name=websocket.find_one({"websocket":str(obj)})["username"]
+	my_id=str(users.find_one({"u_name":my_user_name},{"_id":1})["_id"])
+
+	#my id is object id of rule definer and for is username of rule define for
+	q={"user_id":my_id,"rule_name":data["rule_name"],"for_":data["for_"],"rule_type":data["rule_type"],"rule":data["rule"]}
+	rules.insert(q)
+
 
 async def update_p2p_online(obj):
 	global objs
@@ -447,7 +525,10 @@ async def handler(websocket, path, extra_argument):
 					await blocked(websocket,data)
 				elif(data["type"]=="unblock"):
 					await unblock(websocket,data)
-
+				elif(data["type"]=="rules"):
+					await rules(websocket)
+				elif(data["type"]=="add_rule"):
+					await add_rule(websocket,data) 	
 
 	except websockets.exceptions.ConnectionClosed as e:
 		await update_p2p_offline(websocket)
@@ -456,12 +537,17 @@ async def handler(websocket, path, extra_argument):
 myclient = pymongo.MongoClient('mongodb://localhost:27017/')
 mydb = myclient['social_network']
 websocket=mydb["websocket"]
+mydb2 = myclient['webhost']
+my_ipv6=mydb2["my_ipv6"]
 
 websocket.remove({})
 
 
 
+
+ipv6='['+my_ipv6.find().limit(1).sort("_id",-1)[0]["ipv6"]+']'
+print("running websocket server on ",ipv6)
 bound_handler = functools.partial(handler, extra_argument='spam')
-start_server = websockets.serve(bound_handler, '127.0.0.1', 8765)
+start_server = websockets.serve(bound_handler,ipv6, 8765)
 asyncio.get_event_loop().run_until_complete(start_server)
 asyncio.get_event_loop().run_forever()

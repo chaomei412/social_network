@@ -1,0 +1,7 @@
+#month_data_row:hover{
+  background-color:  #444;
+}
+#month_data_row{
+    cursor: pointer;
+ background-color:gray;color:white
+}

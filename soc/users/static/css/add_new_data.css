@@ -1,0 +1,53 @@
+#month_data_row:hover{
+  background-color:  #444;
+}
+#month_data_row{
+    cursor: pointer;
+ background-color:#888;
+  color:white
+}
+#month_data_row:active{
+  background-color:brown;
+}
+#month_data_row>td>input:focus{
+  
+  border-color: green;
+  color:red;
+}
+#help{
+  border: solid 1px red;
+  padding:1px;
+  cursor: pointer;
+margin-left:0px;
+  color:green;
+  background-color: white;
+  
+}
+#help:hover{
+margin-left:2px;  
+}
+#view_help{
+  position: absolute;
+  z-index: 10;
+  background-color: white;
+  color:black;
+  border:solid black 1px;
+  margin: 2px;
+  padding: 5px;
+  border-radius: 5px; 
+  max-width:50%;
+}
+#new_data_submit_button{
+  font-size: 25px;
+ border:solid 1px black; 
+background-color: #white;
+  color:black;
+cursor:pointer;
+  width:95%;
+  margin:5px;
+}
+#new_data_submit_button:hover{
+  background-color: gray;
+ color:white; 
+}
+
