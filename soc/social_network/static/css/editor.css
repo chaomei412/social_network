@@ -58,6 +58,10 @@ float: right;
 	font-size: 25px;
 }
 
+#textEditor>div>img
+{
+  max-width: 100%;
+}
 
 
 

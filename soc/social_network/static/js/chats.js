@@ -116,6 +116,75 @@ function p2p()
 
 }
 
+function delete_rule(ths,id,rule_name)
+{
+    var sts=ths.getBoundingClientRect();
+   // x: 564.4666748046875, y: 189.11666870117188, width: 80.53334045410156, height: 40.80000305175781, top: 189.11666870117188, right: 645.0000152587891, bottom: 229.9166717529297, left: 564.4666748046875 }
+    remove("delete_rule");
+
+    var left=window.innerWidth/2-200;
+    var style='position:absolute;top:'+sts["top"]+'px; left:'+left+'px;';
+    var temp='<div id="delete_rule" style="'+style+'">\
+    <div id="delete_rule_name">'+rule_name+'</div>\
+    <div id="delete_rule_buttons">\
+    <button onclick="delete_rule_conform(\''+id+'\')">Confirm Delete</button>\
+    <button onclick="remove(\'delete_rule\')">Cancel</button>\
+    </div>\
+    </div>';
+
+    append("body",temp);
+}
+
+function delete_rule_conform(id)
+{
+    remove("delete_rule");
+    remove(id);
+    var data={};
+    data["type"]="rule_delete";
+    data["rule_id"]=id;
+    ws.send(JSON.stringify(data));
+}
+function update_rule(id,rule_name,For,rule)
+{
+    console.log(id);
+    console.log(rule_name);
+    console.log(For);
+    console.log(rule);
+
+
+
+    alert(rule);
+    if(rule.search("$")!=-1)
+        {
+            if(rule.search("^")!=-1)
+                valueas("rule_type",1);
+            else
+                valueas("rule_type",4);
+        }
+    else
+    {
+             if((rule.search("^")!=-1))
+                valueas("rule_type",3);
+            else
+                valueas("rule_type",2);
+    }
+    new_rul_box_toogle();
+    curl -X GET "https://api.cloudflare.com/client/v4/user/tokens/verify"    -H "Authorization: Bearer E4pknx6aZ61p9H4bC0TSBy7XO258DcijXU91mRmb" -H "Content-Type:application/json"
+
+
+    valueas("id",id);
+    valueas("rule_name",rule_name);
+    valueas("friend_select",For);
+
+
+
+    rule=rule.replace('^', '');
+
+    rule=rule.replace('$', '');
+
+    rule=rule.replace("\.\*","");
+    valueas("rule",rule);
+}
 
 function blocked()
 {
@@ -152,7 +221,7 @@ function put_old_rules(rules)
     var temp='<table><tbody>';
     for(var i=0;i<rules.length;i++)
     {
-    temp+='<tr id="rul_row">\
+    temp+='<tr class="rul_row"  id="'+rules[i]["_id"]+'">\
                 <td>'+rules[i]["rule_name"]+'</td>';
                 if(rules[i]["for_"]=="none")
                     temp+='<td>aAll</td>';
@@ -161,12 +230,25 @@ function put_old_rules(rules)
 
                 //in future remove regex and show plain text and block type as start with end or contain etc    
                 temp+='<td>'+rules[i]["rule"]+'</td>\
-                </tr>';
+                <td>\
+                    <table><tbody>\
+                    <tr>\
+                        <td><button onclick="update_rule(\''+rules[i]["_id"]+'\',\
+                        \''+rules[i]["rule_name"]+'\',\
+                        \''+rules[i]["for_"]+'\',\
+                        \''+rules[i]["rule"]+'\')">Update</button></td>\
+                        <td><button onclick="delete_rule(this,\''+rules[i]["_id"]+'\',\''+rules[i]["rule_name"]+'\')">Delete</button></td>\
+                    </tr>\
+                    </tbody></table>\
+                </td>\
+            </tr>';
             
     }
     temp+='</tbody></table>';
     append("messages",temp);
+    alert("old rule added");
 }
+
 function add_rule()
 {
 
@@ -203,6 +285,14 @@ function add_rule()
         tost("all fields are required",3,"red");
         return 0;
     }
+
+
+    data["id"]=valueof("id");
+
+
+
+
+
     new_rul_box_toogle();
 
     valueas("rule_type","");
@@ -211,6 +301,7 @@ function add_rule()
     valueas("rule_type","");
     valueas("friend_select","");
 
+    valueas("id","");
     switch(data["rule_type"])
     {
 
@@ -235,6 +326,35 @@ function add_rule()
     }
 
 
+    if(data["id"]!="")
+    {
+
+        //update append immidiatly
+        //if new append when recive from serevr id
+       var temp= '<td>'+data["rule_name"]+'</td>';
+        if(data["for_"]=="none")
+            temp+='<td>aAll</td>';
+        else
+            temp+='<td>'+data["for_"]+'</td>';
+
+        //in future remove regex and show plain text and block type as start with end or contain etc    
+        temp+='<td>'+data["rule"]+'</td>\
+        <td>\
+            <table><tbody>\
+            <tr>\
+                <td><button onclick="update_rule(\''+data["id"]+'\',\
+                \''+data["rule_name"]+'\',\
+                \''+data["for_"]+'\',\
+                \''+data["rule"]+'\')">Update</button></td>\
+                <td><button onclick="delete_rule(this,\''+data["id"]+'\',\''+data["rule_name"]+'\')">Delete</button></td>\
+            </tr>\
+            </tbody></table>\
+        </td>';
+        insert(data["id"],temp);
+    }
+
+
+
     console.log("adding rule: "+JSON.stringify(data));
 
     ws.send(JSON.stringify(data));
@@ -246,13 +366,23 @@ function new_rul_box_toogle()
         get("rule_form").style.display="block";
     else
         get("rule_form").style.display="none";    
+    
+    valueas("rule_type","");
+    valueas("rule_name","");
+    valueas("rule","");
+    valueas("rule_type","");
+    valueas("friend_select","");
+    valueas("id","");
+    
 }
+
 
 
 function add_new_rule(data)
 {
     var temp='\
     <div id="rule_form" style="display:none">\
+        <input type="text" id="id" style="display:none"/></br>\
         <input type="text" id="rule_name"/></br>\
         <label for="friend_select">Choose a friend:</label></br>\
         <select id="friend_select">\

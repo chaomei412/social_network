@@ -1,3 +1,4 @@
+#net start MongoDB
 import asyncio
 import functools
 import websockets
@@ -298,18 +299,20 @@ async def p2p_msg_load(obj,data):
 	await obj.send(json.dumps(chat_data))	
 
 def check_rule(msg,my_id,friend_user_name):
+
+
 	myclient = pymongo.MongoClient('mongodb://localhost:27017/')
 	mydb = myclient['social_network']
 	rules=mydb["rules"]
 	#"user_id" : "5e8764dd189928d6d5aa33e6", "rule_name" : "first rule", "for_" : "admin1", "rule_type" : "1", "rule" : "^gm$" }
 	for rule in rules.find({"user_id":my_id,"for_":friend_user_name}):		 	
-		found = re.findall(rule, msg)
+		found = re.findall(str(rule["rule"]), msg)
 		if(len(found)>0):
 			print(":) Match message:",msg,"Rule:",rule," For: ",friend_user_name)
 			return 1#rule match spam
 
 	for rule in rules.find({"user_id":my_id,"for_":"null"}):		 	
-		found = re.findall(rule, msg)
+		found = re.findall(str(rule["rule"]), msg)
 		if(len(found)>0):
 			print(":) Match message:",msg,"Rule:",rule," For: ","All(null)")
 			return 1#rule match spam
@@ -345,21 +348,25 @@ async def p2p_msg_send(obj,data):
 	chat_save_data["receiver_id"]=friend_id
 	chat_save_data["message_content"]=data["content"]
 	chat_save_data["send_time"]=time.asctime(time.localtime(time.time()))
-	chat_save_data["spam"]=check_rule(data["content"],my_id,friend_user_name)	
-
+	chat_save_data["spam"]=check_rule(data["content"],friend_id,my_user_name)	
+	#if it found spam then it should not notify to user no show on p2p show in spam
 	
 
 
 	data["sender"]=my_user_name
 	#we found object only if friend is online
-	if(websocket.find({"username":data["friend"]}).count()==1):
-		chat_save_data["deliver_time"]=time.asctime(time.localtime(time.time()))
-		chat_save_data["status"]=1 #received by friend he is online
-		user_websocket_object_key=websocket.find_one({"username":data["friend"]})["websocket"]
-		await objs[user_websocket_object_key].send(json.dumps(data))
-		#print("sending message ",data["content"]," from ",my_user_name," to ",data["friend"])
+	if(chat_save_data["spam"]==0):
+		#send to user if not spam
+		if(websocket.find({"username":data["friend"]}).count()==1):
+			chat_save_data["deliver_time"]=time.asctime(time.localtime(time.time()))
+			chat_save_data["status"]=1 #received by friend he is online
+			user_websocket_object_key=websocket.find_one({"username":data["friend"]})["websocket"]
+			await objs[user_websocket_object_key].send(json.dumps(data))
+			#print("sending message ",data["content"]," from ",my_user_name," to ",data["friend"])
+		else:
+			chat_save_data["status"]=0 #send to friend he is not online
 	else:
-		chat_save_data["status"]=0 #send to friend he is not online
+		chat_save_data["status"]=-1 #message is spamed		
 	chats.insert_one(chat_save_data)
 
 async def update_p2p_offline(obj):
@@ -446,6 +453,21 @@ async def unblock(obj,data):
 		q["status"]=1
 		friends.insert_one(q)
 
+async def delete_rule(obj,data):
+	myclient = pymongo.MongoClient('mongodb://localhost:27017/')
+	mydb = myclient['social_network']
+	websocket=mydb["websocket"]
+	rules=mydb["rules"]
+	users=mydb["users"]
+
+	my_user_name=websocket.find_one({"websocket":str(obj)})["username"]
+	my_id=str(users.find_one({"u_name":my_user_name},{"_id":1})["_id"])
+
+	#my id is object id of rule definer and for is username of rule define for
+	q={"_id":object_id(data["rule_id"]),"user_id":my_id}
+
+	rules.remove(q)
+
 async def add_rule(obj,data):
 	# {"type":"add_rule","rule_name":"rule","for_":"null","rule_type":"4","rule":".*gm$"}
 	
@@ -461,7 +483,11 @@ async def add_rule(obj,data):
 
 	#my id is object id of rule definer and for is username of rule define for
 	q={"user_id":my_id,"rule_name":data["rule_name"],"for_":data["for_"],"rule_type":data["rule_type"],"rule":data["rule"]}
-	rules.insert(q)
+
+	if(data["id"]!=""):
+		rules.update_one({"_id":object_id(data["id"])},{"$set":q})
+	else:
+		rules.insert(q)
 
 
 async def update_p2p_online(obj):
@@ -533,25 +559,40 @@ async def handler(websocket, path, extra_argument):
 					await rules(websocket)
 				elif(data["type"]=="add_rule"):
 					await add_rule(websocket,data) 	
-
+				elif(data["type"]=="rule_delete"):
+					await delete_rule(websocket,data)
 	except websockets.exceptions.ConnectionClosed as e:
 		await update_p2p_offline(websocket)
 		unregiter(websocket)#remove from object
 		await update_meta(websocket)
-myclient = pymongo.MongoClient('mongodb://localhost:27017/')
-mydb = myclient['social_network']
-websocket=mydb["websocket"]
-mydb2 = myclient['webhost']
-my_ipv6=mydb2["my_ipv6"]
-
-websocket.remove({})
+	except Exception as e:
+		print("exception in websocket handler as :",e)
+		unregiter(websocket)#remove from object	
 
 
 
+try:		
+	myclient = pymongo.MongoClient('mongodb://localhost:27017/')
+	mydb = myclient['social_network']
+	websocket=mydb["websocket"]
+	mydb2 = myclient['webhost']
+	my_ipv6=mydb2["my_ipv6"]
 
-ipv6='['+my_ipv6.find().limit(1).sort("_id",-1)[0]["ipv6"]+']'
-print("running websocket server on ",ipv6)
-bound_handler = functools.partial(handler, extra_argument='spam')
-start_server = websockets.serve(bound_handler,ipv6, 8765)
-asyncio.get_event_loop().run_until_complete(start_server)
-asyncio.get_event_loop().run_forever()
+	websocket.remove({})
+except Exception as e:
+	print("exception db init n websocket :",e)
+
+
+connected=0
+
+while(connected==0):
+	try:
+		ipv6='['+my_ipv6.find().limit(1).sort("_id",-1)[0]["ipv6"]+']'
+		bound_handler = functools.partial(handler, extra_argument='spam')
+		start_server = websockets.serve(bound_handler,ipv6, 8765)
+		asyncio.get_event_loop().run_until_complete(start_server)
+		asyncio.get_event_loop().run_forever()
+		print("running websocket server on ",ipv6)
+		connected=1
+	except Exception as e:
+		print("websocket exception at init as :",e)

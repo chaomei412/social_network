@@ -172,8 +172,12 @@ function logged_in(temp)
 
 
     ws_url='ws://'+data["websocket_ip"]+':8765'
-    alert("open websocket on "+ws_url);
+    //alert("open websocket on "+ws_url);
     ws = new WebSocket(ws_url);
+    if(ws=="")
+    {
+        wsclose();
+    }
     ws.onmessage = message_received;
         
     ws.onopen = function(e) {

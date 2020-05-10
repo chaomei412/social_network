@@ -247,15 +247,51 @@ i {
 {
   border: solid 1px black;
 }
-#rul_row
+.rul_row
 {
 text-align: center;
   
 }
-#rul_row>td
+.rul_row>td
 {
   width: 1%;
   border-right: solid 1px black;
   padding: 5px 10px;
 }
-#rul_row:nth-child(even) {background-color: #f2f2f2;}
+.rul_row:nth-child(even) {background-color: #f2f2f2;}
+
+
+
+#messages>table>tbody>#rul_row>td>table>tbody>tr>td>button
+{
+  margin: 10px;
+  padding: 8px;
+  display: inline-block;
+  text-align: center;
+}
+
+#delete_rule
+{
+  background-color: black;
+  padding: 20px;
+  color: white;
+  font-size: 19px;
+  text-align: center;
+  border-radius: 6px;
+  box-shadow: 0px 0px 8px 3px gray;
+  
+}
+#delete_rule>div
+{
+  padding: 5px;
+  margin: 5px;
+}
+#delete_rule>#delete_rule_buttons>button
+{
+  background-color: white;
+  color: black;
+  margin: 5px;
+  border-radius: 1px;
+  box-shadow: 3px 3px 3px 1px gray; 
+}
+
