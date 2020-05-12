@@ -311,8 +311,18 @@ function get(id)
 {
     /*return object of pass id*/
     try
-    {    return document.getElementById(id);}catch(e){return 0;}
+    {return document.getElementById(id);}catch(e){return 0;}
 }
+
+function get_class(ClassName)
+{
+    try
+    {
+            return document.getElementsByClassName(ClassName);
+    }catch(e){return 0;}
+
+}
+
 
 
 /* ask user before leave page*/

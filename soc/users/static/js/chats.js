@@ -144,6 +144,29 @@ function delete_rule_conform(id)
     data["rule_id"]=id;
     ws.send(JSON.stringify(data));
 }
+
+function rule_type(rule)
+{
+    /*
+    var exact  =  "^3355$";//      1
+  var   contain=  ".*cgcfg.*";//   2
+   var  start   = "^53454.*";//    3
+   var  end     = ".*dgfg$";//     4
+   */
+
+    if(rule.startsWith("^") && rule.endsWith("$"))
+        return 1;    
+  
+    
+    if(rule.startsWith("^"))
+    return 3;
+
+    if(rule.endsWith("$"))
+        return 4;
+    
+
+    return 2;
+}
 function update_rule(id,rule_name,For,rule)
 {
     console.log(id);
@@ -152,25 +175,17 @@ function update_rule(id,rule_name,For,rule)
     console.log(rule);
 
 
+    /*
+    exact    ^3355$      1
+    contain  .*cgcfg.*   2
+    start    ^53454.*    3
+    end      .*dgfg$     4
+    */ 
+ 
 
-    alert(rule);
-    if(rule.search("$")!=-1)
-        {
-            if(rule.search("^")!=-1)
-                valueas("rule_type",1);
-            else
-                valueas("rule_type",4);
-        }
-    else
-    {
-             if((rule.search("^")!=-1))
-                valueas("rule_type",3);
-            else
-                valueas("rule_type",2);
-    }
     new_rul_box_toogle();
-    curl -X GET "https://api.cloudflare.com/client/v4/user/tokens/verify"    -H "Authorization: Bearer E4pknx6aZ61p9H4bC0TSBy7XO258DcijXU91mRmb" -H "Content-Type:application/json"
-
+ 
+    valueas("rule_type",rule_type(rule));
 
     valueas("id",id);
     valueas("rule_name",rule_name);
@@ -182,6 +197,7 @@ function update_rule(id,rule_name,For,rule)
 
     rule=rule.replace('$', '');
 
+    rule=rule.replace("\.\*","");
     rule=rule.replace("\.\*","");
     valueas("rule",rule);
 }

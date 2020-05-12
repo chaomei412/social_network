@@ -12,7 +12,10 @@ from django.http import JsonResponse
 def index(request):
 	#entry point of site 127.0.0.1
 	return render(request,'index.html')
-	
+
+def emojis(request):
+	return render(request,'emojis.html')
+
 def fmain(request):
 	data={}
 	myclient = pymongo.MongoClient('mongodb://localhost:27017/')

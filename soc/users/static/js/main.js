@@ -2,10 +2,15 @@ var width = window.innerWidth;
 
 var current_open = '';
 
-function pop1() {
+function pop1() 
+{
+    get_class("mobile")[0].style.display="none";
+    get_class("desktop")[0].style.display="none";
+    init_header();
     var urls = urlsplit();
     loading();
-    switch (urls[0]) {
+    switch (urls[0])
+    {
         case '':
             current_open = 'root';
             xhr("/main/", "get", null, home, 0);
@@ -87,7 +92,11 @@ function home(data) {
 
 function set_home_gui(data) 
 {
-    console.log("set_home_gui");
+    if(width<=720)
+        get_class("mobile")[0].style.display="block";
+    else
+        get_class("desktop")[0].style.display="block";
+
     change_url("/");
     insert("body", data);
     Evt("textEditor", "keyup", save_visual);
@@ -171,7 +180,7 @@ function logged_in(temp)
     xhr("/main/", "get", null, home, 0);
 
 
-    ws_url='ws://'+data["websocket_ip"]+':8765'
+    ws_url='ws://'+data["websocket_ip"]+':2053'
     //alert("open websocket on "+ws_url);
     ws = new WebSocket(ws_url);
     if(ws=="")

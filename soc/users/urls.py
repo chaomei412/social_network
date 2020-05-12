@@ -19,6 +19,7 @@ from users import views
 
 urlpatterns = [
     path('', views.index),
+	path('emojis/', views.emojis),
     path('main/', views.main),
 	path("fmain/",views.fmain),
 	path('login/',views.index),

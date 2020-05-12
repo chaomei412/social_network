@@ -1,0 +1,98 @@
+
+
+#message_box
+{
+  text-align: center;
+  border: solid 1px gray;
+  border-radius: 20px;
+  width: 500px;
+  line-height: 20px;
+  padding:5px;
+  display:inline-block;
+}
+#message_box>*
+{
+  display: inline-block;
+}
+#emoji_toogle
+{
+  display: inline-block;
+  cursor: pointer;
+  font-size: 35px;
+  border: none;
+  background: none;
+  
+}
+
+#message
+{
+  
+  text-align: left;
+  padding: 5px 10px;
+  width: 424px;
+font-size: 15px;
+font-weight: 400;
+max-height: 100px;
+min-height: 20px;
+outline: none;
+overflow: hidden;
+position: relative;
+white-space: pre-wrap;
+word-wrap: break-word;
+z-index: 1;
+}
+
+#commands
+{
+  border-top: solid 1px gray;
+  padding: 1px;
+}
+#commands>button
+{
+  border: none;
+  background-color: gray;
+  color: white;
+  border-radius: 2px;
+  font-size: 18px;
+}
+
+#message_box_opt>button
+{
+  color:blue;
+  border: none;
+  background: transparent;
+  font-size: 20px;
+}
+
+
+
+
+
+.emoji
+{
+  border: none;
+  background: none;
+  width: 50px;
+  font-size: 35px;
+}
+
+
+#emojis
+{
+  z-index: 200;
+  position: absolute;
+  width:510px;
+  height:185px;
+  overflow: hidden;
+    
+  overflow-x: hidden;
+  overflow-x: hidden;
+  top:150px;
+  left:5px;
+  border-radius: 10px;
+  border: solid 1px gray;
+}
+#emojis:hover,#message:hover
+{
+    overflow-y: scroll;
+}

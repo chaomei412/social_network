@@ -1,19 +1,18 @@
 .post_
 {
-	display: block;
-	background-color:  white;
-	margin: 26px 2px 18px 2px;
-	padding: 10px;
-	border-radius:5px;
-  
+    display: block;
+    background-color:  white;
+    margin: 4px 0px;
+    padding: 10px;
+    border-radius: 0;
 
 
-	-webkit-touch-callout: none; /* iOS Safari */
+    -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
-     -khtml-user-select: none; /* Konqueror HTML */
-       -moz-user-select: none; /* Old versions of Firefox */
-        -ms-user-select: none; /* Internet Explorer/Edge */
-            user-select: none; /* Non-prefixed version, currently
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Opera and Firefox */
 }
 
@@ -25,17 +24,18 @@
 .post_user
 {
   cursor: pointer;
+  font-size:15px;
 }
 .post_user:hover
 {
-  opacity:0.7;
+  
 }
 .post_user_icon>img
 {
 
 	width: 50px;
 	height: 50px;
-	border: solid 1px black;
+	border: solid 1px gray;
 	border-radius: 50%;
 }
 .post_user_icon>img:hover
@@ -76,7 +76,6 @@
    display: block;  
   font-size: 16px;
 	margin: 10px -10px 0px -10px;
-	border-top: solid #999 1px;
 }
 
 .post_footer>span
@@ -99,6 +98,23 @@
 	max-width: 70%;
 }
 
+.comment_
+{
+  width: 270px;
+  padding: 5px;
+  border: none;
+  border-radius: 9px;
+	margin: 1px;
+  font-size: 18px;
+    line-height: 20px;
+}
+
+.glyphicon-comment
+{
+
+  font-size: 22px;
+  padding-top: 5px;
+}
 
 
 

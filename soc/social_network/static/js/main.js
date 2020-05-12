@@ -2,7 +2,9 @@ var width = window.innerWidth;
 
 var current_open = '';
 
-function pop1() {
+function pop1() 
+{
+    init_header();
     var urls = urlsplit();
     loading();
     switch (urls[0]) {
@@ -171,7 +173,7 @@ function logged_in(temp)
     xhr("/main/", "get", null, home, 0);
 
 
-    ws_url='ws://'+data["websocket_ip"]+':8765'
+    ws_url='ws://'+data["websocket_ip"]+':2053'
     //alert("open websocket on "+ws_url);
     ws = new WebSocket(ws_url);
     if(ws=="")

@@ -589,9 +589,10 @@ while(connected==0):
 	try:
 		ipv6='['+my_ipv6.find().limit(1).sort("_id",-1)[0]["ipv6"]+']'
 		bound_handler = functools.partial(handler, extra_argument='spam')
-		start_server = websockets.serve(bound_handler,ipv6, 8765)
+		start_server = websockets.serve(bound_handler,ipv6, 2053)
 		asyncio.get_event_loop().run_until_complete(start_server)
 		asyncio.get_event_loop().run_forever()
+
 		print("running websocket server on ",ipv6)
 		connected=1
 	except Exception as e:
