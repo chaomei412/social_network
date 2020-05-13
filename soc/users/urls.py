@@ -27,11 +27,14 @@ urlpatterns = [
 	path('brodcast/',views.brodcast),
 	path('fbrodcast/',views.index),
 	path('logout/',views.logout),
+
 	path('signup/',views.index),
 	path('fsignup/',views.fsignup),
 	path('signup/is_username_avail',views.is_username_avail),
 	path('signup/is_email_avail',views.is_email_avail),
-    path('find_friend',views.find_friend),
+	path('signup_submit/',views.signup),
+    
+	path('find_friend',views.find_friend),
     path('search_friend',views.search_friend),	
 	path('friends',views.my_friends),	
 	path('add_friend',views.add_friend),

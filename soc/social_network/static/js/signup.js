@@ -14,10 +14,13 @@ function check_user_name(res) {
     var count = data['count'];
     if (count != 0) {
         user_name_repeat = 1;
-        insert("user_name_error", "username is not available or not valid");
+        tost("username unavailable",3,"red");
+        get("user_name").style.boxShadow="0px 0px 2px 1px red";
+
     } else {
         user_name_repeat = 0;
         vanish("user_name_error");
+        get("user_name").style.boxShadow="none";
     }
 }
 

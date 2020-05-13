@@ -1,33 +1,28 @@
 <div id="login_box">
-    <form method="POST" onsubmit="signup();return 0;" class="post-form" action="/signup/" enctype="multipart/form-data">
+    <div id="logo">Social Network</div>
+    <form method="POST" id="signup_form" class="post-form" action="/signup/" enctype="multipart/form-data">
         {% csrf_token %}
-        <span id="step1">
-					<span >USER NAME</span><br>
-        <input type="text" id="user_name" onkeyup="is_username_available()" name="username" placeholder="username" onkeyup="key()" required="true" value="" /><br>
+
+
+        <input type="text" id="user_name" onkeyup="is_username_available()" onchange="is_username_available()" name="username" placeholder="username" onkeyup="key()" required="true" value="" />
         <div class="inpt_error" id="user_name_error"></div>
-        <span>PASSWORD</span><br>
-        <input type="password" id="user_pass" onkeyup="pass1()" name="password" placeholder="password" required="true" value="" /><br>
-        <div class="inpt_error" id="pass1_error"></div>
-        <span>PASSWORD AGAIN</span><br>
-        <input type="password" id="user_pass2" onkeyup="pass2()" name="password2" placeholder="password again" required="true" value="" /><br>
+        <input type="password" id="user_pass" onkeyup="pass2()" onchange="pass2()" name="password" placeholder="password" required="true" value="" />
+      
+        <input type="password" id="user_pass2" onkeyup="pass2()" name="password2" onchange="pass2()" placeholder="password again" required="true" value="" />
         <div class="inpt_error" id="pass2_error"></div>
-        <span>EMAIL</span><br>
-        <input type="email" id="email" name="email" placeholder="email" onkeyup="is_email_avail()" required="true" /><br>
-        <div class="inpt_error" id="email_error"></div>
-        <button onclick="step2()" id="next">Next</button>
-        </span>
-        <span id="step2" style="display:none">
-					<span >First Name</span><br>
-        <input type="text" id="f_name" name="f_name" onkeyup="key()" required="true" value="" /><br>
-        <span>Last Name</span><br>
-        <input type="password" id="l_pass" name="l_name" required="true" value="" /><br>
-        <span>Date of birth</span><br>
-        <input type="date" id="dob" name="dob" placeholder="" value="" /><br>
-        <span>select profile pic</span><br>
-        <input type="file" id="pic" name="pic" required="true" /><br>
-        </span>
+       
+        <input type="email" id="email" name="email" placeholder="email" onkeyup="is_email_avail()" required="true" />
+        
+        <input type="text" id="f_name" name="f_name" onkeyup="key()" required="true" value="" placeholder="First name"/>
+        <input type="text" id="l_name" name="l_name" required="true" value="" placeholder="Last name"/>
+        <span>Date of birth</span>
+        <input type="date" id="dob" name="dob" placeholder="" value="" />
+        <span>Select profile pic</span>
+        <input type="file" id="pic" name="pic" required="true" />
         {% if email == 1 %}
         <span id="login_error">username present</span> {% endif %}
+        <button type="submit" id="signup_submit">Signup</button>
     </form>
-    <button onclick="signup()" id="signup_submit" style="display:none;">Signup</button>
+    <div>Forgot your login details?<a onclick="forgot();event.preventDefault();" href="/forgot_password">Get help signing in.</a></div>
+    <div >have an account?<a onclick="gotologin();event.preventDefault();" href="/sign_up">Go to Log in.</a></div>
 </div>

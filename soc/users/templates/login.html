@@ -13,12 +13,17 @@
 				{% endif %}
 			</center>
 			<div id="login_box">
+
+				<div id="logo">Social Network</div>
 				<form method="POST" class="post-form"  action="/login/">  
 					{% csrf_token %}
-					<input type = "text"   placeholder = "Username" id = "username" />
-					<input type = "password"  placeholder = "Password" id = "password"/></br>
-					<br/><button type="submit" id="login_button">Login</button>
+					<input type = "text" placeholder = "Username" id = "username" onkeyup="login_input_check()"/>
+					<input type = "password"  placeholder = "Password" id = "password" onkeyup="login_input_check()"/>
+					<br/><button type="submit" id="login_button" >Log In</button>
 				</form>
+				<div>Forgot your login details?<a onclick="forgot();event.preventDefault();" href="/forgot_password">Get help signing in.</a></div>
+
+				<div >Don't have an account?<a onclick="gotosignup();event.preventDefault();" href="/sign_up">Sign up.</a></div>
 			</div>
 		
 		

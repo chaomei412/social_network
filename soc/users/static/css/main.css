@@ -10,39 +10,75 @@ body
   background-attachment: fixed;
 }
 
-#login_box>form>#step1>span,#login_box>form>#step2>span
+
+.inpt_error
 {
-  color: black;
-  font-size: 18px;
+  font-size: 15px;
+  text-align: right;
+  display: block;
 }
+
 #login_box
 {
-  display: block;
-  background-color: white;
-  width: 400px;
-  margin: auto;
-  margin-top:4px;
-  padding: 25px;
-  font-size:25px;
+  width: 380px;
+  min-height: 430px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color:white;
+  opacity:1;
+  
+}
+@media(max-width:380px)
+{
+ #login_box
+  {
+    width: 100%;
+  } 
+}
+#login_box>#logo
+{
+  color: black;
+  text-align: center;
+  font-family: Impact, Charcoal, sans-serif ;
+  font-size: 30px;
+  margin: 26px 0px;
+}
+#login_box>div
+{
+  font-size: 14px;
+  color: #aaa;
+}
+#login_box>form>input
+{
+  font-size: 20px;
+  padding: 3px 5px;
+  width: 100%;
+  border:solid 1px #ccc;
+  background-color: #eeef;
+  border-radius: 4px;
+}
+
+#user_name,#username,#user_pass,#password,#user_pass2,#email,#f_name,#l_name,#dob,#pic,#signup_submit,#login_button
+{
+  margin: 10px 0px 0px 0px;
+}
+
+.inpt_error
+{
+  color: red; 
+}
+#login_box>form>button
+{
+  width: 100%;
+  font-size: 20px;
+  padding: 6px 10px;
+    border-radius: 4px;
   color: white;
-}
-#login_box>form>#step1>input,#login_box>form>#step2>input,#login_box>form>input
-{
-    color: #111;
-	font-size:20px;
-  padding: 5px;
-  border:solid 1px gray;
-  margin: 10px 5px;
-  width:80%;
-  background-color: transparent;
-
+  background-color: powderblue;
+  opacity: 1;
+  border: none;
 }
 
-#login_button
-{
-  background-color: gray;
-  color:white;
-}
 
 
 

@@ -26,7 +26,7 @@ function pop1()
             break;
         case 'signup':
             current_open = 'signup';
-            xhr("/fsignup/", "get", null, signup, 0);
+            xhr("/fsignup/", "get", null, show_signup, 0);
             break;
         case 'lets_chat':
             current_open = 'login';
@@ -59,13 +59,22 @@ function show_chats(data)
 }
 
 
+function gotosignup()
+{
+    change_url("/signup");
+    loading();
+    current_open = 'signup';
+        xhr("/fsignup/", "get", null, show_signup, 0);
+}
 
 
-
-function signup(data) {
+function show_signup(data) {
     insert("body", data);
     finish_loading();
+    disable_signup();
 }
+
+
 
 function go_to_home() {
     change_url("/");
@@ -92,6 +101,7 @@ function home(data) {
 
 function set_home_gui(data) 
 {
+    
     if(width<=720)
         get_class("mobile")[0].style.display="block";
     else
@@ -110,15 +120,7 @@ function set_home_gui(data)
 }
 
 
-function login(data) 
-{
-    current_open = 'login';
-    insert("body", data);
-    document.getElementById("login_box").onsubmit = login_me;
-    finish_loading();
-    /*	document.getElementsByClassName("unactive")[0].style.width=(width/100)*30;//30%
-    	document.getElementsByClassName("active")[0].style.width=(width/100)*70;//70%			*/
-}
+
 
 
 function brodcast() 
@@ -143,12 +145,43 @@ function put_brodcast(data) {
 
 
 
+function gotologin()
+{
+    change_url("/login");
+    current_open = 'login';
+    xhr("/main/", "get", null, home, 0);
+ }
+ 
+function login(data) 
+{
+    current_open = 'login';
+    insert("body", data);
+    document.getElementById("login_box").onsubmit =function(obj){obj.preventDefault();};
+    finish_loading();
+}
 
 
+function login_input_check()
+{
+    //this function simply enable log in button if username and password field are not empty
+
+    document.getElementById("login_box").onsubmit =function(obj){obj.preventDefault();};
+    get("login_button").style.backgroundColor="powderblue";
+
+    if(valueof("username")=="")
+        return 0;
+     if(valueof("password")=="")
+        return 0;
+        
+        get("login_button").style.backgroundColor="blue";    
+    document.getElementById("login_box").onsubmit = login_me;
+}
 
 
 function login_me(obj) {
     obj.preventDefault();
+    document.getElementById("login_box").onsubmit =function(obj){obj.preventDefault();};
+    get("login_button").style.backgroundColor="powderblue";
     var fd = new FormData();
     fd.append("csrfmiddlewaretoken", document.getElementsByName("csrfmiddlewaretoken")[0].value);
     fd.append("username", get("username").value);
@@ -217,3 +250,12 @@ function togle_menu() {
         document.getElementById("right_menu_toggle").className = "glyphicon glyphicon-menu-hamburger";
     }
 }
+
+
+
+
+
+
+var height=window.innerHeight;
+
+
