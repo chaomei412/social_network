@@ -1,87 +1,9 @@
-#controls,#functions
-{
-font-size: 20px;
-}
+<html>
+    <head>
 
-#textEditor
-{
-	color:black;
-	height:400px;
-	width:100%;
-	overflow:scroll;
-	background-color:whitesmoke;
-	resize: none;		
-  -webkit-user-select:   text;
-}
-
-#code
-{
-	border:none;
-  display: none;
-	height:100%;
-	width:100%;
-	overflow:auto;
-	background-color:#444;
-	color:white;
-	word-break:break-all;
-  resize: none;		
-}
-#controls
-{
-     
-	text-align: left;
-
-}
-
-#new_post_changer
-{
-	border: none;
-	font-size: 18px;
-	cursor: pointer;
-}
-#new_post_changer:hover
-{
-	color: blue;
-}
-#visual_tools>button
-{
-	background: none;
-	color: black;
-	font-weight:  bold;
-	border: none;
-}
-
-#functions
-{
-	display: inline-block;
-float: right;
-	font-size: 25px;
-}
-
-#textEditor>div>img
-{
-  max-width: 100%;
-}
-
-
-
-#new_in_page_post
-{
-  display: block;
-  background-color: white;
-  margin:0px -5px;
-  padding:5px;
-  opacity: 0.9;
-}
-
-
-
-
-/* image*/
-
-
+        <style>
 .demo {
-	display: block;
+	display: block; // fixes image misalignment
 	height: 121px;
 	width: 182px;
 	position: relative;
@@ -91,6 +13,7 @@ float: right;
 .demoContainer {
 	position: relative;
 display: inline-block;
+    border: 1px solid black;
 }
 
 /* knob handles demo */
@@ -148,3 +71,24 @@ display: inline-block;
 	height: 6px;
 	width: 6px;
 }
+
+
+        </style>
+        <script src="yui-min.js"></script>
+    </head>
+<body>
+<div class="demoContainer yui3-resize-knob"> 
+    <img id="demo1" class="demo" onload="enable_resize_img('#demo1')" src="../../../media/3a06b508957211eabf219457a5b036e2.jpg" alt="Eduardo Lundgren, Nate Cavanaugh and the YUI Team at Yahoo">
+</div>
+
+
+<div class="demoContainer yui3-resize-knob"> 
+    <img id="demo2"   class="demo"  onload="enable_resize_img('#demo2')" src="../../../media/3a06b508957211eabf219457a5b036e2.jpg" alt="Eduardo Lundgren, Nate Cavanaugh and the YUI Team at Yahoo">
+</div>
+
+
+
+
+
+</body>
+</html>

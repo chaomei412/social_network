@@ -1,11 +1,19 @@
 var img_edit_src, img_edit_x, img_edit_y;
 
-function insert_edit_image() {
+
+var img_count=0;
+function insert_edit_image() 
+{
     get("img2").style.display = "none";
     get("myForm").style.display = "none";
     get("image_upload_error").innerHTML = '';
-    document.execCommand('insertImage', false, img_edit_src);
+
+    var temp='<div class="demoContainer yui3-resize-knob">\
+    <img id="img_'+img_count+'" class="demo" onload="enable_resize_img(\'#img_'+(img_count++)+'\')" src="'+img_edit_src+'">\
+    </div>';
+    document.execCommand("insertHTML", false, temp);
 }
+
 
 function setimgagain() {
     setimg(null);
@@ -359,7 +367,7 @@ function post() {
 function put_posts(data) {
 
     data = JSON.parse(data);
-    console.log(data);
+
     var i;
     for (var i = 0; i < data.length; i++) {
         var temp1 = document.createElement("div");
@@ -537,13 +545,7 @@ function expand_me(post) {
 
 
 var img_edit_src,img_edit_x,img_edit_y;
-function insert_edit_image()
-{
-get("img2").style.display="none";
-get("myForm").style.display="none";
-get("image_upload_error").innerHTML='';
-document.execCommand('insertImage', false, img_edit_src);
-}
+
 function setimgagain()
 {
 setimg(null);	

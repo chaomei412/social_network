@@ -47,13 +47,30 @@ function init_header()
     {
         //desktop
         //hide .mobile
-        get_class("mobile")[0].style.display="none";
+
+        get("body").style.marginTop="0px";
+        /*
+        current_open
+        "login"
+        current_open
+        "signup"*/
+
+        if(current_open=="login" || current_open=="signup")
+        {
+            get_class("mobile")[0].style.display="none";
+            get_class("desktop")[0].style.display="block";
+        }        
     }
     else
     {
         //mobile
         //hide .desktop
-        get_class("desktop")[0].style.display="none";
+        get_class("mobile")[0].style.position="fixed";
+        get_class("mobile")[0].style.top="0px";
+        get("body").style.marginTop=get_class("mobile")[0].clientHeight+"px";
 
+        if(current_open=="login" || current_open=="signup")
+            get_class("mobile")[0].style.display="block";
+       
     }
 }

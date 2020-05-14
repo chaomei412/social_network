@@ -17,8 +17,8 @@
 				<div id="logo">Social Network</div>
 				<form method="POST" class="post-form"  action="/login/">  
 					{% csrf_token %}
-					<input type = "text" placeholder = "Username" id = "username" onkeyup="login_input_check()"/>
-					<input type = "password"  placeholder = "Password" id = "password" onkeyup="login_input_check()"/>
+					<input type = "text" placeholder = "Username" id = "username" onchange="login_input_check()" onkeyup="login_input_check()"/>
+					<input type = "password"  placeholder = "Password" id = "password" onchange="login_input_check()" on onkeyup="login_input_check()"/>
 					<br/><button type="submit" id="login_button" >Log In</button>
 				</form>
 				<div>Forgot your login details?<a onclick="forgot();event.preventDefault();" href="/forgot_password">Get help signing in.</a></div>

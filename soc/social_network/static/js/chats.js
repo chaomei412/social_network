@@ -5,8 +5,8 @@ function punlic_brodcast()
     hide_options();
     current_open="punlic_brodcast";
     vanish("messages");
-    ratr("mdg_send","onclick");
-    satr("mdg_send","onclick","send_it()");
+    ratr("message_send","onclick");
+    satr("message_send","onclick","send_it()");
     
     ratr("message","onkeyup");
     satr("message","onkeyup","send_publick_msg_keyup(event)");
@@ -40,8 +40,8 @@ function  send_it()
 {
 	var d={};
 	d["type"]="public_brodcost_message";
-	d["content"]=document.getElementById("message").value;
-	document.getElementById("message").value="";
+    d["content"]=get("message").innerHTML;
+    get("message").innerHTML="";
 	ws.send(JSON.stringify(d)); 
 	var el=document.createElement("span");
 	el.className="left_mess";
@@ -109,8 +109,8 @@ function p2p()
     var d={};
     d["type"]="p2p";
     ws.send(JSON.stringify(d));
-    ratr("mdg_send","onclick");
-    satr("mdg_send","onclick","p2p_send()");
+    ratr("message_send","onclick");
+    satr("message_send","onclick","p2p_send()");
     ratr("message","onkeyup");
     satr("message","onkeyup","send_p2p_msg_keyup(event)");
 
@@ -212,7 +212,7 @@ function blocked()
     var d={};
     d["type"]="blocked";
     ws.send(JSON.stringify(d));
-    ratr("mdg_send","onclick");
+    ratr("message_send","onclick");
     ratr("message","onkeyup");
 }
 
@@ -474,8 +474,8 @@ function p2p_send()
 	var d={};
     d["type"]="p2p_message";
     d["friend"]=p2p_current_open;
-	d["content"]=document.getElementById("message").value;
-	valueas("message","");
+	d["content"]=get("message").innerHTML;
+	get("message").innerHTML="";
 	ws.send(JSON.stringify(d)); 
 	var el=document.createElement("span");
     

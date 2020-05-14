@@ -75,3 +75,76 @@ float: right;
 }
 
 
+
+
+/* image*/
+
+
+.demo {
+	display: block;
+	height: 121px;
+	width: 182px;
+	position: relative;
+
+}
+
+.demoContainer {
+	position: relative;
+display: inline-block;
+}
+
+/* knob handles demo */
+
+.yui3-resize-knob .yui3-resize-handle-tr,
+.yui3-resize-knob .yui3-resize-handle-br,
+.yui3-resize-knob .yui3-resize-handle-tl,
+.yui3-resize-knob .yui3-resize-handle-bl,
+.yui3-resize-knob .yui3-resize-handle-b,
+.yui3-resize-knob .yui3-resize-handle-t,
+.yui3-resize-knob .yui3-resize-handle-l,
+.yui3-resize-knob .yui3-resize-handle-r {
+	border: 1px solid #808080;
+	background-color: #F2F2F2;
+	height: 6px;
+	width: 6px;
+}
+
+.yui3-resize-knob .yui3-resize-handle-b,
+.yui3-resize-knob .yui3-resize-handle-t {
+	left: 45%;
+}
+
+.yui3-resize-knob .yui3-resize-handle-l,
+.yui3-resize-knob .yui3-resize-handle-r {
+	top: 45%;
+}
+
+.yui3-resize-knob .yui3-resize-handle-t,
+.yui3-resize-knob .yui3-resize-handle-tr,
+.yui3-resize-knob .yui3-resize-handle-tl {
+	top: -4px;
+}
+
+.yui3-resize-knob .yui3-resize-handle-b,
+.yui3-resize-knob .yui3-resize-handle-br,
+.yui3-resize-knob .yui3-resize-handle-bl {
+	bottom: -4px;
+}
+
+.yui3-resize-knob .yui3-resize-handle-l,
+.yui3-resize-knob .yui3-resize-handle-bl,
+.yui3-resize-knob .yui3-resize-handle-tl {
+	left: -4px;
+}
+
+.yui3-resize-knob .yui3-resize-handle-r,
+.yui3-resize-knob .yui3-resize-handle-br,
+.yui3-resize-knob .yui3-resize-handle-tr {
+	right: -4px;
+}
+
+.yui3-resize-knob .yui3-resize-handle-inner {
+	background: none;
+	height: 6px;
+	width: 6px;
+}

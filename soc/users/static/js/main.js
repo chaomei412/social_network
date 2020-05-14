@@ -41,21 +41,44 @@ function chats()
     loading();
     change_url("/lets_chat");
     xhr("/chats/","get",null,show_chats,0);
+    
 }
 function show_chats(data)
 {
     finish_loading();
     insert("body",data);
-    get("chat_box").style.height=(window.innerHeight-35-document.getElementById("header").clientHeight)+"px";
-    var all=window.innerHeight-30-document.getElementById("header").clientHeight-document.getElementById("chat_types").clientHeight-document.getElementById("options").clientHeight-document.getElementById("active_entity_meta").clientHeight;
-    document.getElementById("messages").style.height=all+"px";
+    if(width<=720)
+        
+    {
+        get("chat_box").style.height=(window.innerHeight-35-get_class("mobile")[0].clientHeight)+"px";
+        var all=window.innerHeight-30-get_class("mobile")[0].clientHeight-get("chat_types").clientHeight-get("options").clientHeight-get("active_entity_meta").clientHeight;
+    }
+    else
+    {
+        get("chat_box").style.height=(window.innerHeight-35-get_class("desktop")[0].clientHeight)+"px";
+        var all=window.innerHeight-30-get_class("desktop")[0].clientHeight-get("chat_types").clientHeight-get("options").clientHeight-get("active_entity_meta").clientHeight;
+    }
+
+    var all=window.innerHeight-30-get_class("header")[0].clientHeight-get("chat_types").clientHeight-get("options").clientHeight-get("active_entity_meta").clientHeight;
+    
+    get("messages").style.height=all+"px";
 
 
 
     get("message_entity").style.width=(get("message_box").clientWidth/100)*20-5+"px";
     get("message_body").style.width=(get("message_box").clientWidth/100)*80-5+"px"
-   
 
+    var message_box_opt_width=get("message_box_opt").clientWidth-10;//padding
+    var message_send_width=get("message_send").clientWidth;
+
+    get("message_box_1").style.width=message_box_opt_width-message_send_width+"px";
+
+
+    var message_box_1_width=get("message_box_1").clientWidth-15;//padding
+    get("emojis").style.width=message_box_1_width+"px";
+    var emoji_tooglee_width=get("emoji_toogle").clientWidth;
+    
+    get("message").style.width=message_box_1_width-emoji_tooglee_width+"px";
 }
 
 
@@ -90,7 +113,7 @@ function logout() {
 
 function home(data) {
     data = JSON.parse(data);
-    console.log(data);
+   
     if (data["username"] == 0) {
         change_url("/login");
         xhr("/flogin/", "get", null, login, 0);
@@ -131,7 +154,7 @@ function brodcast()
 function put_brodcast(data) {
     insert("body", data);
     finish_loading();
-    const node = document.getElementById("message");
+    const node = get("message");
     node.addEventListener("keyup", function(event) {
         if (event.key === "Enter") {
             // Do work
@@ -156,7 +179,7 @@ function login(data)
 {
     current_open = 'login';
     insert("body", data);
-    document.getElementById("login_box").onsubmit =function(obj){obj.preventDefault();};
+    get("login_box").onsubmit =function(obj){obj.preventDefault();};
     finish_loading();
 }
 
@@ -165,7 +188,7 @@ function login_input_check()
 {
     //this function simply enable log in button if username and password field are not empty
 
-    document.getElementById("login_box").onsubmit =function(obj){obj.preventDefault();};
+    get("login_box").onsubmit =function(obj){obj.preventDefault();};
     get("login_button").style.backgroundColor="powderblue";
 
     if(valueof("username")=="")
@@ -174,13 +197,13 @@ function login_input_check()
         return 0;
         
         get("login_button").style.backgroundColor="blue";    
-    document.getElementById("login_box").onsubmit = login_me;
+    get("login_box").onsubmit = login_me;
 }
 
 
 function login_me(obj) {
     obj.preventDefault();
-    document.getElementById("login_box").onsubmit =function(obj){obj.preventDefault();};
+    get("login_box").onsubmit =function(obj){obj.preventDefault();};
     get("login_button").style.backgroundColor="powderblue";
     var fd = new FormData();
     fd.append("csrfmiddlewaretoken", document.getElementsByName("csrfmiddlewaretoken")[0].value);
@@ -242,12 +265,12 @@ function home_page(data)
 function togle_menu() {
     if (window.innerWidth > 500)
         return 0;
-    if (document.getElementById("right_header_menus").style.display == "none" || document.getElementById("right_header_menus").style.display == "") {
-        document.getElementById("right_menu_toggle").className = "glyphicon glyphicon-remove";
-        document.getElementById("right_header_menus").style.display = "block";
+    if (get("right_header_menus").style.display == "none" || get("right_header_menus").style.display == "") {
+        get("right_menu_toggle").className = "glyphicon glyphicon-remove";
+        get("right_header_menus").style.display = "block";
     } else {
-        document.getElementById("right_header_menus").style.display = "none";
-        document.getElementById("right_menu_toggle").className = "glyphicon glyphicon-menu-hamburger";
+        get("right_header_menus").style.display = "none";
+        get("right_menu_toggle").className = "glyphicon glyphicon-menu-hamburger";
     }
 }
 

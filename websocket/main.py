@@ -577,7 +577,6 @@ try:
 	websocket=mydb["websocket"]
 	mydb2 = myclient['webhost']
 	my_ipv6=mydb2["my_ipv6"]
-
 	websocket.remove({})
 except Exception as e:
 	print("exception db init n websocket :",e)

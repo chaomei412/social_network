@@ -1,16 +1,18 @@
 
 
-#message_box
+#message_box_1
 {
   text-align: center;
   border: solid 1px gray;
+  background-color: #eee;
+
   border-radius: 20px;
   width: 500px;
   line-height: 20px;
   padding:5px;
   display:inline-block;
 }
-#message_box>*
+#message_box_1>*
 {
   display: inline-block;
 }
@@ -27,19 +29,25 @@
 #message
 {
   
-  text-align: left;
-  padding: 5px 10px;
-  width: 424px;
+text-align: left;
+padding: 5px 10px;
 font-size: 15px;
 font-weight: 400;
 max-height: 100px;
-min-height: 20px;
+min-height: 35px;
 outline: none;
 overflow: hidden;
 position: relative;
 white-space: pre-wrap;
 word-wrap: break-word;
 z-index: 1;
+
+
+
+padding: 8px;
+font-size: 15px;
+
+
 }
 
 #commands
@@ -79,18 +87,14 @@ z-index: 1;
 
 #emojis
 {
-  z-index: 200;
-  position: absolute;
-  width:510px;
+
   height:185px;
-  overflow: hidden;
-    
+  overflow: hidden;    
   overflow-x: hidden;
   overflow-x: hidden;
-  top:150px;
-  left:5px;
   border-radius: 10px;
   border: solid 1px gray;
+  background-color: #eee;
 }
 #emojis:hover,#message:hover
 {
