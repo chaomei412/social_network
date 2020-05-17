@@ -5,6 +5,8 @@
   color: black;
   background-color: white;
   font-size: 20px;
+  z-index: 1011;
+  border-bottom: solid 1px gray;
 }
 .mobile>#mob_header_1>input
 {

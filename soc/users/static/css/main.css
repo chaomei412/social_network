@@ -50,16 +50,27 @@ body
 }
 #login_box>form>input
 {
+  
   font-size: 20px;
   padding: 3px 5px;
-  width: 100%;
+  margin: 10px 0px 0px 0px; 
   border:solid 1px #ccc;
   background-color: #eeef;
   border-radius: 4px;
 }
-
+#login_box>form>input[type="checkbox"]
+{
+  color:red;
+  margin:10px 10px;
+}
+label[for="rember_me"]
+{
+  font-size: 13px;
+  color:gray;
+}
 #user_name,#username,#user_pass,#password,#user_pass2,#email,#f_name,#l_name,#dob,#pic,#signup_submit,#login_button
 {
+   width: 100%;
   margin: 10px 0px 0px 0px;
 }
 

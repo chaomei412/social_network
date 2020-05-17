@@ -44,6 +44,13 @@ function urlsplit()
 
 function xhr(url=null,method="get",data=null,callback=null,retry=0)
 {
+
+    console.log("url:"+url+" retry:"+retry);
+    if(retry>5)
+    {
+        tost("max retry finish");
+        return 0;
+    }
     if(retry===1)
     {
             tost("timeout reconnecting..");
@@ -56,9 +63,11 @@ function xhr(url=null,method="get",data=null,callback=null,retry=0)
 	{
 		alert("this browser is not support xhr error comes as "+e);
 		return 0; 
-	}
-    var tmr=setTimeout(xhr,10000,url,method,data,callback,1);    
+    }
+    if(retry<5)
+        var tmr=setTimeout(xhr,4000,url,method,data,callback,5);//old request taking too much time send one more   
     var XHR=new XMLHttpRequest(); 
+
     XHR.onreadystatechange=function() 
     { 
          if(this.readyState===4&&this.status===200)
@@ -73,15 +82,13 @@ function xhr(url=null,method="get",data=null,callback=null,retry=0)
         if(this.readyState===4&&this.status!==200)
         {
             clearTimeout(tmr);
-			if(retry>5)
+			if(retry>2)
 			{
-				alert("faild to reach server please reload page or check your network connection");
 				return 0;
 			}
             tost("bad response reconnecting..");
-            xhr(url,method,data,callback,++retry);
+            xhr(url,method,data,callback,++retry);//only one more request
         }
-		
     };
     XHR.open(method,url); 
     XHR.send(data);
@@ -326,11 +333,27 @@ function get_class(ClassName)
 
 
 /* ask user before leave page*/
-window.onbeforeunload = function() 
+
+
+function remember_me(ths)
 {
-    xhr("/logout/","GET","",null);
-    return(" are you sure to leave this site :) "); 
-};
+
+    if(ths.checked==true)
+    {
+        window.onbeforeunload = function() 
+    {
+
+        xhr("/logout/","GET","",null);
+            return("you will be loggged out :) "); 
+
+    };
+
+    }
+    else
+    {
+        window.onbeforeunload = null;
+    }
+}
 
 
 
@@ -385,8 +408,7 @@ function is_small()
 
 
 
-window.onpopstate = function(){pop1();};
-window.addEventListener("onpopstate",pop1);
+
 
 
 function wait()
@@ -440,3 +462,6 @@ function finish_loading()
     loaded=1;
     get("loading").style.width="0%";
 }
+
+blog=1;
+console.log("blogi5_lib loaded ");

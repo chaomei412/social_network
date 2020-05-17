@@ -2,70 +2,92 @@
 <html>
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>Login</title>
-    {% load staticfiles %}
 
 
+    <style>
+        body,
+    html {
+     width:100%;
+     height:100%;
+     -webkit-user-select:none;
+     color:#fff;
+     padding:0;
+     margin:0;
+     font-size:18px
+    }
+        body>div>a>img
+    {
+        display: none;
+    }
+    </style>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <meta name="Keywords" content="HTML,CSS,JavaScript,SQL,PHP,jQuery,XML,DOM,Bootstrap,Python,Web development,W3C,tutorials,programming,training,learning,quiz,primer,lessons,references,examples,exercises,source code,colors,demos,tips">
+    <meta name="Description" content="Well organized and easy to understand Web building tutorials with lots of examples of how to use HTML, CSS, JavaScript, SQL, PHP, and XML.">
+    <link rel="manifest" href="/manifeston">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="msapplication-TileImage" content="/ico/ms-icon-144x144.png">
+<meta name="theme-color" content="#ffffff">
 
-    
- 
-    <link rel="stylesheet" href="{% static 'animate/animate.min.css' %}">
 
-    <link rel="stylesheet" href="{% static 'bs/css/bootstrap.min.css' %}" media="screen">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="application-name" content="PWA">
+<meta name="apple-mobile-web-app-title" content="PWA">
+<meta name="theme-color" content="#2196F3">
+<meta name="msapplication-navbutton-color" content="#2196F3">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="msapplication-starturl" content="/index.html">
 
-    <link rel="stylesheet" href="{% static 'bs/css/bootstrap-glyphicons.css' %}"/>
+  {% load staticfiles %}
+<link rel="stylesheet" href="{% static 'bs/css/bootstrap-glyphicons.css' %}"/>
+
+<link rel="stylesheet" href="{% static 'fa/css/all.css' %}" /> <!--load all styles -->
+
+    <title>Social Network</title>
 
 
-<!-- friend symbol -->
-    <link rel="stylesheet" href="{% static 'fa/css/all.css' %}" /> <!--load all styles -->
-
-
-    <link rel="stylesheet" href="{% static 'css/bs.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/main.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/editor.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/profile.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/post.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/chats.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/brodcast.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/header_menu.css' %}">
-    <link rel="stylesheet" href="{% static 'css/emoji.css' %}"/>
-    <script src="{% static 'js/yui-min.js' %}"></script>
 
 </head>
 
-<body onload="pop1()" onresize="init_header()">
+<body>
+    <noscript>
+        <center><h1 style="color:red">please enable javaScript <br> blogi5.com is not work without javaScript :)</h1>
+            if you enable javaScript <a href="/">click here</a> 
+        </center>    
+    </noscript>
+
+
     {% csrf_token %}
     <div id="loading"></div>
     
-    <div class="header noselect desktop">
-                <a><img id="prof_pic" src="/media/{{data.2}}" onClick="togle_menu();profile();"/></a>			
+    <div class="header noselect desktop" style="display: none;">
+                <a><img id="prof_pic" src="/media/{{data.2}}" onClick="profile();"/></a>			
                 <span id="search_box">
                     <input type="text" id="search" placeholder="Search" onkeyup="search()"/>
-                    <span id="search_friend" class="glyphicon glyphicon-search" title="search friends" onclick="togle_menu();find_it();"></span>
+                    <span id="search_friend" class="glyphicon glyphicon-search" title="search friends" onclick="find_it();"></span>
                 </span>
-                <a onclick="go_to_home();togle_menu();"><span class="glyphicon glyphicon-home" title="nevigate to home"></span></a>
-                <a onclick="togle_menu();my_friends();"><span class="glyphicon glyphicon-user" title="your frinds, request, conform ..etc"></span><span class="glyphicon glyphicon-user" title="your frinds, request, conform ..etc" style="margin-left:-25px"></span></a>
-                <a onclick="togle_menu();chats();"><span class="glyphicon glyphicon-envelope" title="lets chat"></span></a>
+                <a onclick="go_to_home();"><span class="glyphicon glyphicon-home" title="nevigate to home"></span></a>
+                <a onclick="my_friends();"><span class="glyphicon glyphicon-user" title="your frinds, request, conform ..etc"></span><span class="glyphicon glyphicon-user" title="your frinds, request, conform ..etc" style="margin-left:-25px"></span></a>
+                <a onclick="chats();"><span class="glyphicon glyphicon-envelope" title="lets chat"></span></a>
                 <a onclick="logout();togle_menu()"><span class="glyphicon glyphicon-log-out" title="Logout your account"></span></a>
     </div>
 
-    <div class="header noselect mobile">
+    <div class="header noselect mobile"  style="display: none;">
 
         <div id="mob_header_1">
-            <a><img id="mob_prof_pic" src="/media/{{data.2}}" onClick="togle_menu();profile();"/></a>
+            <a><img id="mob_prof_pic" src="/media/{{data.2}}" onClick="profile();"/></a>
             <span id="mob_search_box">			
                 <input type="text" id="mob_search" placeholder="Search" onkeyup="search()"/>
-                <span id="mob_search_friend" class="glyphicon glyphicon-search" title="search friends" onclick="togle_menu();find_it();"></span>
+                <span id="mob_search_friend" class="glyphicon glyphicon-search" title="search friends" onclick="find_it();"></span>
             </span>
         </div>
 
         <table id="mob_header_2"><tbody></tbody>
             <tr>
-                <td><a onclick="go_to_home();togle_menu();" class="mob_menu"><span class="glyphicon glyphicon-home" title="nevigate to home"></span></a></td>
-                <td><a onclick="my_friends();togle_menu();"  class="mob_menu"><span class="fas fa-user-friends" title="your frinds, request, conform ..etc"></span></a></td>
-                <td>  <a onclick="togle_menu();chats();"  class="mob_menu"><span class="glyphicon glyphicon-envelope" title="lets chat"></span></a>            </td>
+                <td><a onclick="go_to_home();" class="mob_menu"><span class="glyphicon glyphicon-home" title="nevigate to home"></span></a></td>
+                <td><a onclick="my_friends();"  class="mob_menu"><span class="fas fa-user-friends" title="your frinds, request, conform ..etc"></span></a></td>
+                <td>  <a onclick="chats();"  class="mob_menu"><span class="glyphicon glyphicon-envelope" title="lets chat"></span></a>            </td>
                 <td>  <a onclick="logout();togle_menu()"  class="mob_menu"><span class="glyphicon glyphicon-log-out" title="Logout your account"></span></a></td>
             </tr>    
         </tbody></table>
@@ -75,6 +97,9 @@
     <div id="search_result"></div>
     
     <div id="body">
+        <span>Wait a while until we finish our setup</span>
+        <span>It will take bit more first time</span>
+        <span>you get a fast experience from next onwards</span> 
     </div>
     
     <div id="tost_div" style=" position: fixed;z-index: 5000; font-size: 18px; border-radius: 3px; right:5px;  bottom: 5px;">
@@ -82,20 +107,301 @@
     </div>
 
 
+    <script>
+        var blog=0,main=0,header=0;  
 
-	<script src="{% static 'animate/wow.min.js' %}" type="text/javascript"></script>
-    <script src="{% static 'js/add_friend.js' %}"  type="text/javascript"></script>
+        var ddl_js_loaded=0,form_loaded=0,current_open=0,kkbuilds_js_loaded=0,initiate_kk=0,error=0,error_reported=0;
+        
+        
+          window.onerror = function (event) 
+          {
+              var e=event;
+        
+        try{
+            event.preventDefault();/* it stop to showning error by browser */
+            
+                }catch(e){}
+                        console.log("error "+e);
+                                if(error_reported===1)
+                                    return 0;
+                                try
+                {
+                    var xhr=new XMLHttpRequest();
+                                xhr.onreadystatechange=function()
+                                {
+                                  if(this.readyState===4&&this.status===200)  
+                                  {
+                                      var x=JSON.parse(this.responseText);
+                                      localStorage.setItem("error_id",x[0]);
+                                      setTimeout(is_error_solve,5000);
+                                  }
+                                };
+                    var formdata=new FormData();
+                    try{formdata.append("app_name", navigator.appCodeName);}catch(e){formdata.append("appName", "-1");}
+                    try{formdata.append("version", navigator.appVersion);}catch(e){formdata.append("version", "-1");}
+                    try{formdata.append("error",event.message);}catch(e){formdata.append("error:","-1");}
+                    try{formdata.append("url",location.href);}catch(e){formdata.append("filename","-1");}
+                    try{formdata.append("lineno",event.lineno);}catch(e){formdata.append("lineno","-1");}
+                    try{formdata.append("current_open",current_open)}catch(e){formdata.append("page:","-1");}
+                    xhr.open("post","/assets/blog/php/report.php");
+                    xhr.send(formdata);
+                                error_reported=1;
+                    var temp={};
+                    temp["type"]="error";
+                    temp["data"]=JSON.stringify(formdata);            
+                    ws.send(JSON.stringify(temp));            
+                                tost("sorry there is an error  it reported to server and it get resolve as soon as possible");
+                                console.log("sorry there is an error  it reported to server and it get resolve as soon as possible");
+                }catch(e) 
+                {
+                    var temp={};
+                    temp["type"]="exception catch error";
+                    temp["data"]=JSON.stringify(e);            
+                    ws.send(JSON.stringify(temp));            
+                            try{tost("your browser is incompatible",30,"red");
+                        
+                        }catch(e){alert("your browser is incompatible");
+                        var temp={};
+                    temp["type"]="exception catch error";
+                    temp["data"]=JSON.stringify(e);            
+                    ws.send(JSON.stringify(temp));     
+                    }
+                        }
+                
+        
+          }; 
+        </script>
+        <script>
 
-	<script src="{% static 'js/brodcast.js' %}"  type="text/javascript"></script>
-	<script src="{% static 'js/chats.js' %}"  type="text/javascript"></script>
-    <script src="{% static 'js/editor1.js' %}"  type="text/javascript"></script>
-    <script src="{% static 'js/find_friend.js' %}"  type="text/javascript"></script>
-	<script src="{% static 'js/header_menus.js' %}"  type="text/javascript"></script>
+var js_list=new Array,css_list=new Array,page_loaded=0;
 
-	<script src="{% static 'js/signup.js' %}"  type="text/javascript"></script>
-    <script src="{% static 'js/main.js' %}"  type="text/javascript"></script>
-    <script src="{% static 'js/blogi5_lib.js' %}"  type="text/javascript"></script>
-    <script src="{% static 'js/emoji.js' %}" type="text/javascript"></script>
+function import_js(loc,name)
+{
+		if(localStorage.getItem(name))
+		{
+			addJs(name);
+            js_list.push([loc,name]);
+            update_js_list();
+		} 
+		else
+		{
+			get_js(loc,name);
+			//console.log(name+"is not present");
+			/*no any data store*/
+		}
+}
+
+
+
+var updating_js_=0;
+function update_js_list()
+{
+    
+
+    if(page_loaded!==1)
+    {
+        //need to wait;
+        setTimeout(update_js_list,100);
+        return 0;
+    }
+
+
+    if(updating_js_==1)
+        return 0;
+    
+    
+    updating_js_=1;
+
+    console.log("updating "+js_list.length+" js files");
+
+    for(var i=0;i<js_list.length;i++)
+    {
+        get_js(js_list[i][0],js_list[i][1],2);
+    }
+        console.log("updating "+js_list.length+" js files finished");
+}
+ var   updating_css_=0;
+function update_css_list()
+{
+
+
+        if(page_loaded!==1)
+        {
+            //need to wait;
+            setTimeout(update_css_list,100);
+            return 0;
+        }
+
+
+    if(updating_css_==1)
+        return 0;
+    
+    
+    updating_css_=1;
+
+                console.log("updating "+css_list.length+" css files");
+    for(var i=0;i<css_list.length;i++)
+    {
+        get_css(css_list[i][0],css_list[i][1],2);
+    }
+            console.log("updating "+css_list.length+" css files finished");
+}
+
+function get_js(loc,name,put=1)
+{
+    
+			var xmlhttp=new XMLHttpRequest();
+			xmlhttp.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) 
+			{
+				localStorage.setItem(name,this.responseText);
+                                if(put===1)
+        				addJs(name);
+                        }
+        };
+		
+        xmlhttp.open("GET", "/static/"+loc+name+".js", true);
+        xmlhttp.send();
+}
+
+
+function import_css(loc,name)
+{
+		if(localStorage.getItem(name))
+		{
+			addCss(name);
+            css_list.push([loc,name]);
+            update_css_list();
+		
+		} 
+		else
+		{
+			get_css(loc,name);
+			//console.log(name+"is not present");
+			/*no any data store*/
+		}
+}
+
+function get_css(loc,name,put=1)
+{
+	var xmlhttp=new XMLHttpRequest();
+			xmlhttp.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) 
+            {
+				localStorage.setItem(name,this.responseText);
+       				addCss(name);
+            }
+        };
+        xmlhttp.open("GET", "/static/"+loc+name+".css", true);
+        xmlhttp.send();
+}
+
+
+function addJs(Src)
+{	
+	var data=localStorage.getItem(Src);
+        
+        if(document.getElementsByClassName(Src).length!==0)/* it remove applyied css block with blanck*/ 
+        {
+            var csss=document.getElementsByClassName(Src);
+            for(var i=0;i<csss.length;i++)
+                csss[i].innerHTML='';
+        }
+
+        
+	var temp=document.createElement("script");
+	temp.innerHTML=data;
+        temp.setAttribute("class",Src);
+	try
+        {
+            document.body.appendChild(temp);
+	}
+	catch(e){console.log(e);}
+}
+
+function addCss(Src)
+{
+	var data=localStorage.getItem(Src);
+        
+        if(document.getElementsByClassName(Src).length!==0)/* it remove applyied css block with blanck*/ 
+        {
+            var csss=document.getElementsByClassName(Src);
+            for(var i=0;i<csss.length;i++)
+                csss[i].innerHTML='';
+        }
+        
+	var temp=document.createElement("style");
+	temp.innerHTML=data;
+        temp.setAttribute("class",Src);        
+	document.head.appendChild(temp);
+    }
+</script>
+    <script>
+
+    import_css("animate/","animate.min");
+  //  import_css("bs/css/","bootstrap.min");
+  //  import_css("bs/css/","bootstrap-glyphicons");
+  //  import_css("fa/css/","all");
+   // import_css("css/","bs");
+    import_css("css/","main");
+    import_css("css/","editor");
+    import_css("css/","profile");
+    import_css("css/","post");
+    import_css("css/","chats");
+    import_css("css/","brodcast");
+    import_css("css/","header_menu");
+    import_css("css/","emoji");
+</script>
+<script>
+
+//import_css("/blog/css/","night.php");
+    //import_js("blog/js/","test");
+    import_js("js/","header_menus");
+    import_js("js/","yui-min");
+    import_js("animate/","wow.min");
+    import_js("js/","add_friend");
+    import_js("js/","brodcast_js");
+    import_js("js/","chats_js");
+    import_js("js/","editor1");
+    import_js("js/","find_friend");
+    import_js("js/","signup");
+    import_js("js/","blogi5_lib");
+    import_js("js/","main_js");
+    import_js("js/","emoji_js");
+
+
+
+    </script>           
+
+<script>
+
+
+am_i_ready();
+
+function am_i_ready()
+{
+    console.log("waiting");
+    if(blog==0)
+    {
+        setTimeout(am_i_ready,500);
+        return 0; 
+    }
+    if(main==0)
+    {
+        setTimeout(am_i_ready,500);
+        return 0; 
+    }
+    if(header==0)
+    {
+        setTimeout(am_i_ready,500);
+        return 0; 
+    }
+    console.log("all ready");
+    pop1();
+    setTimeout(update_css_list,2000);
+    setTimeout(update_js_list,2000)
+}
+</script>
 </body>
 
 </html>

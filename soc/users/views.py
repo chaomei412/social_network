@@ -8,7 +8,7 @@ from django.contrib.staticfiles.storage import staticfiles_storage
 import sqlite3 as db
 import pymongo
 from django.http import JsonResponse
-
+from bson.objectid import ObjectId as object_id
 def index(request):
 	#entry point of site 127.0.0.1
 	return render(request,'index.html')
@@ -31,19 +31,63 @@ def fsignup(request):
 		return render(request, 'signup.html')		
 
 def main(request):
+	myclient = pymongo.MongoClient('mongodb://localhost:27017/')
+	mydb = myclient['social_network']
+	users=mydb["users"]
+	session = mydb["session"]
+
+	mydb2 = myclient['webhost']
+	my_ipv6=mydb2["my_ipv6"]
+
+	
+	if request.method == "POST":
+		data={}
+		data["username"]=request.POST.get('username')
+		data["_id"]=object_id(request.POST.get('_id'))
+		if(session.find_one(data)!=None):
+			#found old session ok
+			#data["username"]=username
+			data["_id"]=str(data["_id"])	
+			ipv6='['+my_ipv6.find().limit(1).sort("_id",-1)[0]["ipv6"]+']'
+			data["websocket_ip"]=ipv6
+			data=json.dumps(data)
+			return HttpResponse(data, content_type='application/json')
+		else:
+			#not found old session	
+			#user is not login
+			data={}
+			data["_id"]=-1
+			data=json.dumps(data)
+			return HttpResponse(data, content_type='application/json')
+	
 	data={}
 	if (not is_login(request)):#is user not login
 		#user is not login
-		data["username"]=0
+		data["_id"]=-1
 		data=json.dumps(data)
 		return HttpResponse(data, content_type='application/json')
 	#user is loogin
 
-	id = request.session['u_id']
-	q="select u.fname,u.lname,pc.pic_url from users u,passwords p,pics pc where u.id='"+str(id)+"' and u.id=p.u_id and u.id=pc.u_id"
-	#pic varchar(25),gender integer,religion_id integer,address_id integer)
-	data["username"]=1
-	return HttpResponse(json.dumps(data), content_type='application/json')
+	my_id = request.session['u_id']#object_id_of_mongo collection users if user is login
+
+	username=users.find_one({"_id":object_id(my_id)})["u_name"]
+	#return HttpResponse(username, content_type='application/json')
+	#get inserted quey data in session to use for chatting and current session
+
+	data=session.find_one({"username":username})
+	if(data==None):
+		data={}
+		#use has no active session
+		data["_id"]=-1	
+		data=json.dumps(data)
+		return HttpResponse(data, content_type='application/json')
+	
+	data["username"]=username
+	data["_id"]=str(data["_id"])	
+	ipv6='['+my_ipv6.find().limit(1).sort("_id",-1)[0]["ipv6"]+']'
+	data["websocket_ip"]=ipv6
+	data=json.dumps(data)
+	return HttpResponse(data, content_type='application/json')
 
 from bson.objectid import ObjectId as object_id
 
@@ -52,13 +96,20 @@ def logout(request):
 	mydb = myclient['social_network']
 	users=mydb["users"]
 	session = mydb["session"]
+
+	if(request.method=="POST"):
+		query={}
+		query["username"]=request.POST.get("username")
+		query["_id"]=object_id(request.POST.get("_id"))
+		session.remove(query)#delete session
+		return render(request, 'index.html', {"username" : 0})		
 	#websocket=mydb["websocket"]    removed websocket entry by websocket connection 
 
 	query={"username":users.find_one({"_id":object_id(request.session['u_id'])})["u_name"]}
 	session.remove(query)#delete session
 	#websocket.remove(query)#clear from websocket objects
 	request.session['u_id']=0#reset session variable
-	return render(request, 'main.html', {"username" : 0})
+	return render(request, 'index.html', {"username" : 0})
 
 
 def is_username_avail(request):
@@ -145,7 +196,7 @@ def login_check(request):
 		#LOGIN
 		data=validate_login(request,username,password)
 		if(data!=None):
-		#login success
+		#login data is correct found entry in db
 			#check is users session allready acive
 			myclient = pymongo.MongoClient('mongodb://localhost:27017/')
 			mydb = myclient['social_network']
@@ -171,8 +222,6 @@ def login_check(request):
 			q["username"]=request.POST.get("username")
 			q["client_time_stamp"]=request.POST.get("time_stamp")
 			q['server_time_stamp']=time.asctime(time.localtime(time.time()))
-			
-			
 
 			session.insert(q)
 			request.session['u_id'] = str(data["_id"])
@@ -220,7 +269,7 @@ def validate_login(request,u,p):
 	q={"u_name":u,"pass_d":p}
 	res=mycol.find_one(q)
 	#pic varchar(25),gender integer,religion_id integer,address_id integer)
-	print("login as ",res)
+	#print("login as ",res)
 	return res
 
 def is_login(request):

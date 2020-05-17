@@ -19,6 +19,8 @@
 					{% csrf_token %}
 					<input type = "text" placeholder = "Username" id = "username" onchange="login_input_check()" onkeyup="login_input_check()"/>
 					<input type = "password"  placeholder = "Password" id = "password" onchange="login_input_check()" on onkeyup="login_input_check()"/>
+				<input type="checkbox" id="rember_me" value="1" name="rember_me" onchange="remember_me(this)">
+					<label for="rember_me"> Keep me log in.</label><br>
 					<br/><button type="submit" id="login_button" >Log In</button>
 				</form>
 				<div>Forgot your login details?<a onclick="forgot();event.preventDefault();" href="/forgot_password">Get help signing in.</a></div>

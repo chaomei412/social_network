@@ -91,7 +91,9 @@ function gotosignup()
 }
 
 
-function show_signup(data) {
+function show_signup(data) 
+{
+    hide_header();
     insert("body", data);
     finish_loading();
     disable_signup();
@@ -114,21 +116,37 @@ function logout() {
 function home(data) {
     data = JSON.parse(data);
    
-    if (data["username"] == 0) {
+    if (data["_id"] == -1) 
+    {
+        //user is not login
         change_url("/login");
         xhr("/flogin/", "get", null, login, 0);
         return 0;
     }
+
+    /*now we found user is login becz we provide keep me login and now
+    we fetch login salt  from server in this positional data variable and form websocket connection from here  
+    */
+    //user is login
+    //form websocket
+    console.log("connecting to ws using old session");
+
+
+    ws_connect(data);
+
     xhr("/fmain/", "get", null, set_home_gui, 0);
 }
 
 function set_home_gui(data) 
 {
+
     
     if(width<=720)
         get_class("mobile")[0].style.display="block";
     else
         get_class("desktop")[0].style.display="block";
+
+    init_header();//it set #body margin top for mobile so body not get hidden behind .mobile ,.mobile is fixed in mobile
 
     change_url("/");
     insert("body", data);
@@ -172,15 +190,20 @@ function gotologin()
 {
     change_url("/login");
     current_open = 'login';
-    xhr("/main/", "get", null, home, 0);
+
+    xhr("/flogin/", "get", null, login, 0);
  }
  
 function login(data) 
 {
     current_open = 'login';
+    hide_header();
     insert("body", data);
+    console.log("page_loaded");
+    page_loaded=1;//user now see login box so update js and css to new one tilll we loaded old css and js
     get("login_box").onsubmit =function(obj){obj.preventDefault();};
     finish_loading();
+
 }
 
 
@@ -233,9 +256,16 @@ function logged_in(temp)
         tost("you are allready logged in in another device allready",2,"blue");
         return 0;
     } 
+
     xhr("/main/", "get", null, home, 0);
 
+    ws_connect(data);
 
+}
+
+
+function ws_connect(data)
+{
     ws_url='ws://'+data["websocket_ip"]+':2053'
     //alert("open websocket on "+ws_url);
     ws = new WebSocket(ws_url);
@@ -282,3 +312,5 @@ function togle_menu() {
 var height=window.innerHeight;
 
 
+main=1;//set to know main js loaded
+console.log("main_js loaded");

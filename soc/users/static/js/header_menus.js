@@ -74,3 +74,14 @@ function init_header()
        
     }
 }
+
+
+
+header=1;
+console.log("header_menus loaded");
+
+function hide_header()
+{
+    get_class("mobile")[0].style.display="none";
+    get_class("desktop")[0].style.display="none";
+}

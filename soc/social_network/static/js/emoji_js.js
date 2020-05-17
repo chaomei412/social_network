@@ -70,3 +70,6 @@ function select()
 
 
 
+
+
+update_js_list();update_css_list();
