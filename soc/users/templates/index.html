@@ -10,39 +10,22 @@
      width:100%;
      height:100%;
      -webkit-user-select:none;
-     color:#fff;
      padding:0;
      margin:0;
-     font-size:18px
-    }
-        body>div>a>img
-    {
-        display: none;
     }
     </style>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
-    <meta name="Keywords" content="HTML,CSS,JavaScript,SQL,PHP,jQuery,XML,DOM,Bootstrap,Python,Web development,W3C,tutorials,programming,training,learning,quiz,primer,lessons,references,examples,exercises,source code,colors,demos,tips">
-    <meta name="Description" content="Well organized and easy to understand Web building tutorials with lots of examples of how to use HTML, CSS, JavaScript, SQL, PHP, and XML.">
-    <link rel="manifest" href="/manifeston">
-<meta name="msapplication-TileColor" content="#ffffff">
-<meta name="msapplication-TileImage" content="/ico/ms-icon-144x144.png">
-<meta name="theme-color" content="#ffffff">
+    
 
 
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="application-name" content="PWA">
-<meta name="apple-mobile-web-app-title" content="PWA">
-<meta name="theme-color" content="#2196F3">
-<meta name="msapplication-navbutton-color" content="#2196F3">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="msapplication-starturl" content="/index.html">
+    <link rel="stylesheet" href="static/bs/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
-  {% load staticfiles %}
-<link rel="stylesheet" href="{% static 'bs/css/bootstrap-glyphicons.css' %}"/>
 
-<link rel="stylesheet" href="{% static 'fa/css/all.css' %}" /> <!--load all styles -->
+
+
+
 
     <title>Social Network</title>
 
@@ -70,13 +53,14 @@
                 <a onclick="go_to_home();"><span class="glyphicon glyphicon-home" title="nevigate to home"></span></a>
                 <a onclick="my_friends();"><span class="glyphicon glyphicon-user" title="your frinds, request, conform ..etc"></span><span class="glyphicon glyphicon-user" title="your frinds, request, conform ..etc" style="margin-left:-25px"></span></a>
                 <a onclick="chats();"><span class="glyphicon glyphicon-envelope" title="lets chat"></span></a>
+                <a onclick="menus()"><span class="fas fa-bars"></span></a>
                 <a onclick="logout();togle_menu()"><span class="glyphicon glyphicon-log-out" title="Logout your account"></span></a>
     </div>
 
     <div class="header noselect mobile"  style="display: none;">
 
         <div id="mob_header_1">
-            <a><img id="mob_prof_pic" src="/media/{{data.2}}" onClick="profile();"/></a>
+            <a><img id="mob_prof_pic" src="" onClick="profile();"/></a>
             <span id="mob_search_box">			
                 <input type="text" id="mob_search" placeholder="Search" onkeyup="search()"/>
                 <span id="mob_search_friend" class="glyphicon glyphicon-search" title="search friends" onclick="find_it();"></span>
@@ -88,13 +72,14 @@
                 <td><a onclick="go_to_home();" class="mob_menu"><span class="glyphicon glyphicon-home" title="nevigate to home"></span></a></td>
                 <td><a onclick="my_friends();"  class="mob_menu"><span class="fas fa-user-friends" title="your frinds, request, conform ..etc"></span></a></td>
                 <td>  <a onclick="chats();"  class="mob_menu"><span class="glyphicon glyphicon-envelope" title="lets chat"></span></a>            </td>
+                <td><a onclick="menus()"><span class="fas fa-bars"></span></a></td>
                 <td>  <a onclick="logout();togle_menu()"  class="mob_menu"><span class="glyphicon glyphicon-log-out" title="Logout your account"></span></a></td>
             </tr>    
         </tbody></table>
 
     </div>
 
-    <div id="search_result"></div>
+    <div id="search_result" style="display: none;"></div>
     
     <div id="body">
         <span>Wait a while until we finish our setup</span>
@@ -368,7 +353,7 @@ function addCss(Src)
     import_js("js/","blogi5_lib");
     import_js("js/","main_js");
     import_js("js/","emoji_js");
-
+    import_js("js/","a076d05399");
 
 
     </script>           
@@ -397,10 +382,14 @@ function am_i_ready()
         return 0; 
     }
     console.log("all ready");
-    pop1();
+    //pop1();
+	Main();//required jd are loaded
     setTimeout(update_css_list,2000);
     setTimeout(update_js_list,2000)
 }
+
+
+
 </script>
 </body>
 

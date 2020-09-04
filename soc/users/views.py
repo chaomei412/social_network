@@ -17,18 +17,10 @@ def emojis(request):
 	return render(request,'emojis.html')
 
 def fmain(request):
-	data={}
-	myclient = pymongo.MongoClient('mongodb://localhost:27017/')
-	mydb = myclient['social_network']
-	mycol = mydb["users"]
-	
-	id = request.session['u_id']
-	q={"_id":object_id(id)}
-	data=mycol.find_one(q)
-	return render(request, 'main.html', {"data" : data})
+	return render(request, 'main.html')
 
 def fsignup(request):
-		return render(request, 'signup.html')		
+	return render(request, 'signup.html')		
 
 def main(request):
 	myclient = pymongo.MongoClient('mongodb://localhost:27017/')
@@ -50,6 +42,7 @@ def main(request):
 			data["_id"]=str(data["_id"])	
 			ipv6='['+my_ipv6.find().limit(1).sort("_id",-1)[0]["ipv6"]+']'
 			data["websocket_ip"]=ipv6
+			data["pic_url"]=users.find_one({"u_name":data["username"]})["pic_url"]
 			data=json.dumps(data)
 			return HttpResponse(data, content_type='application/json')
 		else:
@@ -185,6 +178,7 @@ def decode(data,key):
 	return cipher_suite.decrypt(data)	
 	
 def login_check(request):
+	#url   /flogin
 	#login form submit request handle by this
 	if request.method == 'GET' and request.GET.get('x')=='1':#logout request
 		request.session['u_id']=0
@@ -203,7 +197,7 @@ def login_check(request):
 
 			mydb2 = myclient['webhost']
 			my_ipv6=mydb2["my_ipv6"]
-
+			users=mydb["users"]
 			session = mydb["session"]
 			websocket=mydb["websocket"]
 			query={"username":username}
@@ -231,6 +225,7 @@ def login_check(request):
 			data["_id"]=str(data["_id"])	
 			ipv6='['+my_ipv6.find().limit(1).sort("_id",-1)[0]["ipv6"]+']'
 			data["websocket_ip"]=ipv6
+			data["pic_url"]=users.find_one({"u_name":request.POST.get("username")})["pic_url"]
 			data=json.dumps(data)
 			return HttpResponse(data, content_type='application/json')
 		else:

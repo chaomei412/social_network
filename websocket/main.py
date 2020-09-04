@@ -50,14 +50,16 @@ def register(obj,data):
 
 def unregiter(obj):
 	global objs
-	myclient = pymongo.MongoClient('mongodb://localhost:27017/')
-	mydb = myclient['social_network']
-	websocket=mydb["websocket"]
-	websocket.remove({"websocket":str(obj)})
-	print("\n",websocket.find().count(), " users online as per db")
-	objs.pop(str(obj))
-	print("\n",len(objs), " users online as per objs ")
-
+	try:
+		myclient = pymongo.MongoClient('mongodb://localhost:27017/')
+		mydb = myclient['social_network']
+		websocket=mydb["websocket"]
+		websocket.remove({"websocket":str(obj)})
+		print("\n",websocket.find().count(), " users online as per db")
+		objs.pop(str(obj))
+		print("\n",len(objs), " users online as per objs ")
+	except :
+		pass
 async def typing(obj,data):
 	global objs
 	myclient = pymongo.MongoClient('mongodb://localhost:27017/')
@@ -101,6 +103,7 @@ async def brodcost(obj,message):
 		await objs[usr].send(data)
 
 async def  meta(obj):
+	#return members online in publick brodcost
 	global objs
 	data={}
 	data["type"]="meta"
@@ -108,12 +111,13 @@ async def  meta(obj):
 	myclient = pymongo.MongoClient('mongodb://localhost:27017/')
 	mydb = myclient['social_network']
 	websocket=mydb["websocket"]
-
+	users=mydb["users"]
 	data["count"]=len(objs)
 	data["members"]=[]
 		
 	for i in websocket.find():
-		data["members"].append(i["username"])
+		usr=users.find_one({"u_name":i["username"]},{"_id":0,"u_name":1,"pic_url":1,"f_name":1,"l_name":1})
+		data["members"].append(usr)
 
 	data=json.dumps(data)
 	await obj.send(data)
@@ -178,7 +182,7 @@ async def  p2p(obj):
 	my_id=str(users.find_one({"u_name":user_name})["_id"])
 
 	friend=[]
-
+	friend_u_names=[]
 	#ind({"$or":[{"sender_id":my_id,"receiver_id"
 
 	q1={"$or":[{"friend_id":my_id,"status":1},{"friend_id":my_id,"status":2}]}
@@ -186,22 +190,23 @@ async def  p2p(obj):
 		#check is that friend block by me
 		if(friends.find_one({"user_id":my_id,"status":2,"friend_id":i["user_id"]})!= None):
 			continue
-		friend.append(users.find_one({"_id":object_id(i["user_id"])})["u_name"])
-
+		usr=users.find_one({"_id":object_id(i["user_id"])},{"_id":0,"u_name":1,"pic_url":1,"f_name":1,"l_name":1})	
+		friend.append(usr)
+		friend_u_names.append(usr["u_name"])
 	q2={"user_id":my_id,"status":1}
 	for i in friends.find(q2):
 		
-		uname=users.find_one({"_id":object_id(i["friend_id"])})["u_name"]
-		if(uname not in friend):
-			friend.append(uname)
-
-
-	q={"username":{"$in":friend}}
+		usr=users.find_one({"_id":object_id(i["friend_id"])},{"_id":0,"u_name":1,"pic_url":1,"f_name":1,"l_name":1})
+		if(usr["u_name"] not in friend_u_names):
+			friend.append(usr)
+			friend_u_names.append(usr["u_name"])
+	q={"username":{"$in":friend_u_names}}
 	select={"username":1}
 	onlines=[]
 	for u in websocket.find(q,select):
 		onlines.append(u["username"])
 	data={"type":"p2p_users_meta","friends":friend,"onlines":onlines}
+	print(data)
 	data=json.dumps(data)	
 	await obj.send(data)
 
@@ -376,31 +381,33 @@ async def update_p2p_offline(obj):
 	websocket=mydb["websocket"]
 	friends=mydb["friends"]
 	users=mydb["users"]
+	try:
+		user_name=websocket.find_one({"websocket":str(obj)})["username"]
+		
+		my_id=str(users.find_one({"u_name":user_name})["_id"])
 
-	user_name=websocket.find_one({"websocket":str(obj)})["username"]
-	
-	my_id=str(users.find_one({"u_name":user_name})["_id"])
+		friend=[]
 
-	friend=[]
+		
+		q1={"friend_id":my_id,"status":1}
 
-	
-	q1={"friend_id":my_id,"status":1}
-
-	for i in friends.find(q1):
-		friend.append(users.find_one({"_id":object_id(i["user_id"])})["u_name"])
-	
-	q2={"user_id":my_id,"status":1}
-	for i in friends.find(q2):
-		friend.append(users.find_one({"_id":object_id(i["friend_id"])})["u_name"])
-	
-	q={"username":{"$in":friend}}
-	select={"websocket":1,"username":1}
-	for u in websocket.find(q,select):
-		data={"type":"p2p_ofline","username":user_name}
-		try:
-			await objs[u["websocket"]].send(json.dumps(data))
-		except :
-			pass
+		for i in friends.find(q1):
+			friend.append(users.find_one({"_id":object_id(i["user_id"])})["u_name"])
+		
+		q2={"user_id":my_id,"status":1}
+		for i in friends.find(q2):
+			friend.append(users.find_one({"_id":object_id(i["friend_id"])})["u_name"])
+		
+		q={"username":{"$in":friend}}
+		select={"websocket":1,"username":1}
+		for u in websocket.find(q,select):
+			data={"type":"p2p_ofline","username":user_name}
+			try:
+				await objs[u["websocket"]].send(json.dumps(data))
+			except :
+				pass
+	except :
+		pass
 async def block(obj,data):
 	global objs
 	#data={"type":"p2p_message","friend":"admin96","content"hi"}

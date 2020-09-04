@@ -1,60 +1,64 @@
-
-		<div id="new_in_page_post">
-			<span id="controls" style="float: left">
-		
-				<span id="visual_tools">
-						<span class="glyphicon glyphicon-bold" title="make selected text bold"  onClick="Func('bold','')"></span>
-						<span class="glyphicon glyphicon-italic"  title="make selected text italic"  onClick="Func('italic','')"></span>
-						  <button onClick="Func('underline','')"><u>U</u></button>
-						  <button onClick="Func('strikethrough','')"><del><s>Z</s></del></button>
-						<span class="glyphicon glyphicon-resize-horizontal" title="insertHorizontalRule" onClick="Func('insertHorizontalRule','')"></span>
-						<span class="glyphicon glyphicon-font"  onClick="select_font_style(event)"></span>
-						<span class="glyphicon glyphicon-text-color"  onClick="text_color_select(event)"></span>
-						<span class="glyphicon glyphicon-text-background" onClick="bg_color_select(event)"></span>
-						<span class="fas fa-link" title="add hyperlink to selected text" onClick="editor_link_adder(event)"></span>
-						<span class="fas fa-unlink"  title="remove hyperlink of selected text"  onClick="Func('unlink','')"></span>
-						<span class="glyphicon glyphicon-picture" onClick="setimg(event)"></span>
-						<span class="fas fa-paragraph" title="new paragraph" onClick="Func('insertParagraph','')"></span>
-						 <span class="glyphicon glyphicon-align-right" onClick="Func('justifyRight','')"></span>
-						 <span class="glyphicon glyphicon-align-left" title="justify left"  onClick="Func('justifyLeft','')"></span>
-						 <span class="glyphicon glyphicon-align-justify"  onClick="Func('justifyFull','')"></span>
-						 <span class="glyphicon glyphicon-align-center"  onClick="Func('justifyCenter','')"></span>
-						<span class="fas fa-list-ol" title="ordred list"  onClick="Func('insertOrderedList','')"></span>
-						<span title="unorderd list"  class="fas fa-list-ul" onClick="Func('insertUnorderedList','')"></span>
-						 <span class="glyphicon glyphicon-subscript"  onClick="Func('subscript','')"></span>
-						 <span class="glyphicon glyphicon-superscript" onClick="Func('superscript','')"></span>
-						<span  class="glyphicon glyphicon-text-size" onClick="Func('fontSize',5)"></span><!--int 1-7-->
-						<span class="fas fa-indent"  onClick="Func('indent','')"></span>
-						<span class="fas fa-outdent" onClick="Func('outdent','')"></span>
-						<!--document.execCommand("strikethrough", false, null);---????-->
-						<span class="glyphicon glyphicon-minus"  title="decrease font size"  onClick="Func('decreaseFontSize','1px')"></span>
-						<span class="glyphicon glyphicon-plus" title="incrise font size" onClick="Func('increaseFontSize','1px')"></span>
-						 <span class="glyphicon glyphicon-remove-sign" title="clear all applied styles" onClick="Func('removeFormat','')"></span>
-				</span>
-			</span>
-						  
-			<span id="functions">
-						  
-						  <span class="fas fa-undo" title="undo" onClick="Func('undo','')"></span>
-						 <span class=" 	fas fa-redo" title="redo" onClick="Func('redo','')"></span>
-						 <span  onclick="vanish('textEditor')" class="glyphicon glyphicon-floppy-remove" title="cancle"></span>
-						<span onclick="share()" class="glyphicon glyphicon-send"></span>
-			</span>
-
-			<form id="myForm" enctype="multipart/form-data" style="position:absolute;background-color:gray;padding:5px;color:white;overflow:hidden;width:150px;text-align:center;display:none" >
-				<input type="file" name="fileToUpload" id="fileToUpload"><br>
-				<div id="image_upload_error" style="color:red"></div>
-				<br>  <input type="submit"  id="image_add_butt" value="ADD IMAGE">
-			</form>
-
-			<div id="img2" style="position:absolute;background-color:gray;padding:5px;color:white;overflow:hidden;width:150px;text-align:center;display:none">
-				<button id="image_sub_butt" onClick="setimgagain()">ADD ANOTHER</button>
-				<div id="image_viewer"></div>
-				<button id="image_sub_butt" onClick="insert_edit_image()" >INSERT IT</button>
-			</div>
-
-			<div id="textEditor" contenteditable="true"></div>
+<div id="new_post">
+	<div id="message_box_1">
+	<!--	<button id="emoji_toogle" onclick="toogle_emoji()">&#x263A</button>-->
+	<div  id="textEditor"  onfocus="this.value = this.value;" spellcheck="true" contenteditable="true" onselectstart="select()"></div>
+		<div id="commands" style="display:none">
+			<button class="glyphicon glyphicon-bold" title="make selected text bold"  onClick="Func('bold','')"></button>
+			<button class="glyphicon glyphicon-italic"  title="make selected text italic"  onClick="Func('italic','')"></button>
+			<button class="fas fa-underline" onClick="Func('underline','')"></button>
+			<button class="fas fa-strikethrough"  onClick="Func('strikethrough','')"></button>
+			<button class="glyphicon glyphicon-resize-horizontal" title="insertHorizontalRule" onClick="Func('insertHorizontalRule','')"></button>
+			<button class="glyphicon glyphicon-font"  onClick="select_font_style(event)"></button>
+			<button class="glyphicon glyphicon-text-color"  onClick="text_color_select(event)"></button>
+			<button class="glyphicon glyphicon-text-background" onClick="bg_color_select(event)"></button>
+			<button class="fas fa-link" title="add hyperlink to selected text" onClick="editor_link_adder(event)"></button>
+			<button class="fas fa-unlink"  title="remove hyperlink of selected text"  onClick="Func('unlink','')"></button>
+			
+			<button class="glyphicon glyphicon-subscript"  onClick="Func('subscript','')"></button>
+			<button class="glyphicon glyphicon-superscript" onClick="Func('superscript','')"></button>
+			<button  class="glyphicon glyphicon-text-size" onClick="Func('fontSize',5)"></button><!--int 1-7-->
+			
+			<!--document.execCommand("strikethrough", false, null);---????-->
+			<button class="glyphicon glyphicon-minus"  title="decrease font size"  onClick="Func('decreaseFontSize','1px')"></button>
+			<button class="glyphicon glyphicon-plus" title="incrise font size" onClick="Func('increaseFontSize','1px')"></button>
+			<button class="glyphicon glyphicon-remove-sign" title="clear all applied styles" onClick="Func('removeFormat','')"></button>
 		</div>
+
+		<div id="functions">			
+			<button class="glyphicon glyphicon-picture" onClick="setimg(event)"></button>
+			<button class="fas fa-paragraph" title="new paragraph" onClick="Func('insertParagraph','')"></button>
+			<button class="glyphicon glyphicon-align-right" onClick="Func('justifyRight','')"></button>
+			<button class="glyphicon glyphicon-align-left" title="justify left"  onClick="Func('justifyLeft','')"></button>
+			<button class="glyphicon glyphicon-align-justify"  onClick="Func('justifyFull','')"></button>
+			<button class="glyphicon glyphicon-align-center"  onClick="Func('justifyCenter','')"></button>
+			<button class="fas fa-list-ol" title="ordred list"  onClick="Func('insertOrderedList','')"></button>
+			<button title="unorderd list"  class="fas fa-list-ul" onClick="Func('insertUnorderedList','')"></button>
+			<button class="glyphicon glyphicon-indent-left"  onClick="Func('indent','')"></button>
+			<button class="glyphicon glyphicon-indent-right" onClick="Func('outdent','')"></button>
+			</br>
+			<button class="fa fa-undo" title="undo" onClick="Func('undo','')"  style="background-color:white;color:blue"></button>
+			<button class="fas fa-redo" title="redo" onClick="Func('redo','')" style="background-color:white;color:blue" ></button>
+			<button  onclick="vanish('textEditor')" class="glyphicon glyphicon-floppy-remove" style="background-color:white;color:red" title="cancle"></button>
+			<button onclick="share()" class="glyphicon glyphicon-share" style="background-color:white;color:green"></button>
+		</div>
+	</div>
+
+							
+	
+
+	<form id="myForm" enctype="multipart/form-data" style="position:absolute;background-color:gray;padding:5px;color:white;overflow:hidden;width:150px;text-align:center;display:none" >
+		<input type="file" name="fileToUpload" id="fileToUpload"><br>
+		<div id="image_upload_error" style="color:red"></div>
+		<br>  <input type="submit"  id="image_add_butt" value="ADD IMAGE">
+	</form>
+
+	<div id="img2" style="position:absolute;background-color:gray;padding:5px;color:white;overflow:hidden;width:150px;text-align:center;display:none">
+		<button id="image_sub_butt" onClick="setimgagain()">ADD ANOTHER</button>
+		<div id="image_viewer"></div>
+		<button id="image_sub_butt" onClick="insert_edit_image()" >INSERT IT</button>
+	</div>
+			
+</div>
 
 		<!--here all posts are coming-->
 		
