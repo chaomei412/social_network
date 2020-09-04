@@ -1,18 +1,14 @@
 function punlic_brodcast()
 {
-
-
-    hide_options();
+    
     current_open="punlic_brodcast";
-    vanish("messages");
+    app_level=4;
+    vanish("current_participant_messages");
     ratr("message_send","onclick");
     satr("message_send","onclick","send_it()");
     
     ratr("message","onkeyup");
-    satr("message","onkeyup","send_publick_msg_keyup(event)");
-     
-
-    
+    satr("message","onkeyup","send_publick_msg_keyup(event)");   
     var d={};
     d["type"]="members";
     ws.send(JSON.stringify(d));
@@ -46,8 +42,8 @@ function  send_it()
 	var el=document.createElement("span");
 	el.className="left_mess";
 	el.innerHTML=d["content"];
-	document.getElementById("messages").appendChild(el);
-	get("messages").scrollTop = get("messages").scrollHeight;
+	document.getElementById("current_participant_messages").appendChild(el);
+	get("current_participant_messages").scrollTop = get("current_participant_messages").scrollHeight;
 }
 
 
@@ -84,9 +80,15 @@ function chat_types_active()
     {
         var cur=chttyps[i];
         if(cur.id==current_open)
-            cur.style.backgroundColor="black";
+        {
+            cur.style.backgroundColor="gray";            
+            cur.style.color="white";
+        }
         else
-            cur.style.backgroundColor="gray";   
+        {
+            cur.style.backgroundColor="white";   
+            cur.style.color="black";
+        }
     }
 
 }
@@ -101,11 +103,11 @@ function send_p2p_msg_keyup(event) {
 
 function p2p()
 {
-    hide_options();
+    app_level=4;
     current_open="p2p";
     p2p_current_open="";
     h_title(current_open);
-    vanish("messages");
+    vanish("current_participant_messages");
     var d={};
     d["type"]="p2p";
     ws.send(JSON.stringify(d));
@@ -204,11 +206,12 @@ function update_rule(id,rule_name,For,rule)
 
 function blocked()
 {
-    hide_options();
+    
     current_open="blocked";
+    app_level=4;
     p2p_current_open="";
     h_title(current_open);
-    vanish("messages");
+    vanish("current_participant_messages");
     var d={};
     d["type"]="blocked";
     ws.send(JSON.stringify(d));
@@ -219,12 +222,13 @@ function blocked()
 function rules()
 {
     current_open="rules";
-    vanish("messages");
-    vanish("message_entity");
-    vanish("active_entity_meta");
+    app_level=4;
+    vanish("current_participant_messages");
+    vanish("chat_participants");
+    vanish("current_participant_details");
 
     var temp='<div><button id="new_rul_box_toogle" onclick="new_rul_box_toogle()">New Rule</button></div>';
-    append("message_entity",temp);
+    append("chat_participants",temp);
     var data={};
     data["type"]="rules";
     ws.send(JSON.stringify(data))
@@ -261,8 +265,8 @@ function put_old_rules(rules)
             
     }
     temp+='</tbody></table>';
-    append("messages",temp);
-    alert("old rule added");
+    append("current_participant_messages",temp);
+    //alert("old rule added");
 }
 
 function add_rule()
@@ -399,7 +403,7 @@ function add_new_rule(data)
     var temp='\
     <div id="rule_form" style="display:none">\
         <input type="text" id="id" style="display:none"/></br>\
-        <input type="text" id="rule_name"/></br>\
+        <input type="text" id="rule_name" placeholder="name of rule Ex. GM wish "/></br>\
         <label for="friend_select">Choose a friend:</label></br>\
         <select id="friend_select">\
         <option value="null">All</option>';
@@ -415,9 +419,9 @@ function add_new_rule(data)
             <option value="3">start  with</option>\
             <option value="4">end with</option>\
         </select></br>\
-        <input type="text" id="rule"/></br>\
-        <button onclick="add_rule()">Add Rule</button>\
-        <button onclick="new_rul_box_toogle()">Cancel</button>\
+        <input type="text" id="rule" placeholder="Rule text Ex. good morning"/></br>\
+        <button style="color:white" onclick="add_rule()">Add Rule</button>\
+        <button style="color:white" onclick="new_rul_box_toogle()">Cancel</button>\
     </div>\
     ';
     try
@@ -426,13 +430,20 @@ function add_new_rule(data)
     }
     catch(e){}
     append("body",temp);
+
+    if(width<720)
+    {
+            get("rule_form").style.width=width-50+"px";
+            get("rule_form").style.left=25+"px";            
+            get("rule_form").style.top=get_class("mobile")[0].clientHeight+get("chat_types").clientHeight+"px";
+    }
 }
 function p2p_active(us)
 {
     if(p2p_current_open!=us)
     {
 
-        vanish("messages");
+        vanish("current_participant_messages");
         h_title(p2p_current_open);
         p2p_current_open=us;
 
@@ -441,12 +452,18 @@ function p2p_active(us)
         {
             var cur=document.getElementsByClassName("user")[i];
             if(cur.id.split("_")[2]==us)
-                cur.style.backgroundColor="orange";
+            {
+                cur.style.backgroundColor="gray";
+                cur.style.color="white";
+                
+            }
             else
-                cur.style.backgroundColor="white";   
+            {
+                    cur.style.backgroundColor="white";   
+                    cur.style.color="black";
+            }
         }
-
-        insert("active_entity_meta",p2p_current_open);
+        insert("current_participant_details",p2p_current_open);
 
         if(online_users.includes(us)==true)
             get("user_list_"+us).style.color="green";
@@ -457,7 +474,6 @@ function p2p_active(us)
         ws.send(JSON.stringify(data))
     }    
 }
-
 
 
 var p2p_current_open="";
@@ -482,16 +498,13 @@ function p2p_send()
     el.className="right_mess animated pulse";
 
 	el.innerHTML=d["content"];
-	document.getElementById("messages").appendChild(el);
-	get("messages").scrollTop = get("messages").scrollHeight;
+	document.getElementById("current_participant_messages").appendChild(el);
+	get("current_participant_messages").scrollTop = get("current_participant_messages").scrollHeight;
 }
 
-function wsclose()
-     {
-       tost("messaging server connection has been closed ");
-       logout();
-    }
+
 var online_users=[];
+
 function message_received(event) 
         {
         var res=event.data;
@@ -509,11 +522,11 @@ function message_received(event)
             var el=document.createElement("span");
             el.className="right_mess animated pulse";
             el.innerHTML=res["sender"]+" : "+res["content"];
-            get("messages").appendChild(el);
-            get("messages").scrollTop = get("messages").scrollHeight;
+            get("current_participant_messages").appendChild(el);
+            get("current_participant_messages").scrollTop = get("current_participant_messages").scrollHeight;
 			break;
         case 'typing':
-            console.log("typimg: ",res);
+            console.log("typing: ",res);
             if(res["section"]=="punlic_brodcast" &&(current_open=="p2p"))
                 tost(res["content"]+" is typing in public brodcost");
             else if(res["section"]=="p2p" && p2p_current_open==res["friend"])
@@ -525,29 +538,40 @@ function message_received(event)
         case 'meta':
             if(current_open!="punlic_brodcast")
                 break;
-            insert("active_entity_meta",res["count"]+" members online in this room");
-            vanish("message_entity");
+            insert("current_participant_details",res["count"]+" members online in this room");
+            vanish("chat_participants");
+
             for(var i=0;i<res["members"].length;i++)
-                append("message_entity",'<span class="user">'+res["members"][i]+'</span>');
-                break;
+            {
+                var user_box='<span class="user" id="user_list_'+res["members"][i]["u_name"]+'">\
+                    <img src="http://social.ulti.in/media/'+res["members"][i]["pic_url"]+'"/>\
+                    <span>'+res["members"][i]["l_name"]+' '+res["members"][i]["f_name"]+'</span>\
+                </span>';
+                append("chat_participants",user_box);
+            }
+            break;
         case 'p2p_users_meta':
             if(current_open!="p2p")
                 break;
-            insert("active_entity_meta",res["onlines"].length+" friends online");
-            vanish("message_entity");
-            vanish("messages");
+            insert("current_participant_details",res["onlines"].length+" friends online");
+            vanish("chat_participants");
+            vanish("current_participant_messages");
             for(var i=0;i<res["friends"].length;i++)
                 {
-                    console.log(1);
-                    append("message_entity",'<span class="user" id="user_list_'+res["friends"][i]+'" onclick="p2p_active(\''+res["friends"][i]+'\')">'+res["friends"][i]+'<i class="down" onclick="p2p_option(\''+res["friends"][i]+'\',this)"></i></span>');
-                    var id="user_list_"+res["friends"][i];
+                    var user_box='<span class="user" id="user_list_'+res["friends"][i]["u_name"]+'" onclick="p2p_active(\''+res["friends"][i]["u_name"]+'\')" ontouchstart="touchstart(this,\''+res["friends"][i]["u_name"]+ '\')">\
+                        <img src="http://social.ulti.in/media/'+res["friends"][i]["pic_url"]+'"/>\
+                        <span>'+res["friends"][i]["l_name"]+' '+res["friends"][i]["f_name"]+'</span>\
+                    </span>';
+                    append("chat_participants",user_box);
+                    var id="user_list_"+res["friends"][i]["u_name"];
                     get(id).style.color="blue";
                 }
             for (var i=0;i<res["onlines"].length;i++)
             {
-                if(online_users.includes(res["friends"][i])==false)
-                    online_users.push(res["friends"][i]);
-                var id="user_list_"+res["friends"][i];
+              
+                if(online_users.includes(res["friends"][i]["u_name"])==false)
+                    online_users.push(res["friends"][i]["u_name"]);
+                var id="user_list_"+res["friends"][i]["u_name"];
                 get("user_list_"+res["onlines"][i]).style.color="green";
             }
             break;
@@ -556,14 +580,14 @@ function message_received(event)
             if(current_open!="p2p")
                 break;
             get("user_list_"+res["username"]).style.color="blue";
-            insert("active_entity_meta",online_users.length+" friends online");
+            insert("current_participant_details",online_users.length+" friends online");
                 break;
         case 'p2p_online':
             online_users.push(res["username"]);
             if(current_open!="p2p")
                 break;        
             get("user_list_"+res["username"]).style.color="green";
-            insert("active_entity_meta",online_users.length+" friends online");
+            insert("current_participant_details",online_users.length+" friends online");
                 break
         case 'p2p_message':
                     //data={"type":"p2p_message","friend":"admin96","content"hi","sender":"Admin"}
@@ -571,7 +595,8 @@ function message_received(event)
             {
                 tost("new message from "+res["sender"]);
                 h_title("new message from "+res["sender"]);
-                break;
+                try{notification("","new message from "+res["sender"],"","",1);}catch(e){}
+				break;
             }
 
             if(p2p_current_open==res["sender"])
@@ -580,8 +605,8 @@ function message_received(event)
 
                 el.className="left_mess animated pulse";
                 el.innerHTML=res["content"];
-                get("messages").appendChild(el);
-                get("messages").scrollTop = get("messages").scrollHeight;
+                get("current_participant_messages").appendChild(el);
+                get("current_participant_messages").scrollTop = get("current_participant_messages").scrollHeight;
             }
             else
             {
@@ -606,21 +631,21 @@ function message_received(event)
                         else
                             el.className="left_mess animated pulse";
                         el.innerHTML=res["content"][i]["message_content"];
-                        get("messages").appendChild(el);
+                        get("current_participant_messages").appendChild(el);
                     }
-                    get("messages").scrollTop = get("messages").scrollHeight;
+                    get("current_participant_messages").scrollTop = get("current_participant_messages").scrollHeight;
                 }
             break;
         case 'blocked':
                 //	data={"type":"blocked","blocked":friend}
                 if(current_open!="blocked")
                     break;
-                insert("active_entity_meta",res["blocked"].length+" friends block");
-                vanish("message_entity");
-                vanish("messages");
+                insert("current_participant_details",res["blocked"].length+" friends block");
+                vanish("chat_participants");
+                vanish("current_participant_messages");
                 for(var i=0;i<res["blocked"].length;i++)
                     {
-                        append("message_entity",'<span class="user" id="user_list_'+res["blocked"][i]+'" onclick="p2p_active(\''+res["blocked"][i]+'\')">'+res["blocked"][i]+'<i class="down" onclick="block_option(\''+res["blocked"][i]+'\',this)"></i></span>');
+                        append("chat_participants",'<span class="user" id="user_list_'+res["blocked"][i]+'" onclick="p2p_active(\''+res["blocked"][i]+'\')">'+res["blocked"][i]+'<i class="down" onclick="block_option(\''+res["blocked"][i]+'\',this)"></i></span>');
                         var id="user_list_"+res["blocked"][i];
                         get(id).style.color="blue";
                     }
@@ -634,6 +659,25 @@ function message_received(event)
     }   
 }
 
+
+var timer;
+var touchduration = 800; //length of time we want the user to touch before we do something
+
+function touchstart(e,data) 
+{
+    e.preventDefault();
+    if (!timer) {
+        timer = setTimeout(p2p_option, touchduration,data,e);
+    }
+}
+
+function touchend() {
+    //stops short touches from firing the event
+    if (timer) {
+        clearTimeout(timer);
+        timer = null;
+    }
+}
 
 
 function block_option(friend,ths)
@@ -741,8 +785,8 @@ function show_p2p_option(left,top,usr,menu=null)
 
 function block(friend)
 {
-    hide_options();
-    vanish("messages");
+    
+    vanish("current_participant_messages");
     var id="user_list_"+friend;
     remove(id);
 
@@ -761,28 +805,14 @@ function unblock(friend)
     data["friend"]=friend;
     ws.send(JSON.stringify(data)); 
 
-    hide_options();
+    
     var id="user_list_"+friend;
     remove(id);
 
 }
 
-function hide_options()
-{
-        //close if anothers option is open
-    if(p2p_option_open.length>0)
-    {
-        for(var i=0;i<p2p_option_open.length;i++)
-        {
-
-            p2p_option_open[i].className="down";
-            p2p_option_open.pop(p2p_option_open[i]);
-        }
-        vanish("p2p_option");
-        get("p2p_option").style.display="none";
-    }
-
-}
 
 
 
+  
+  

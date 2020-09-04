@@ -1,101 +1,87 @@
-
-#chat_box
+html,body
 {
-
-  background-color: #dddd;
-  width: 95%;
-  height: 95%;
-  margin:auto;
-  border-radius: 3px;
-  padding: 5px;
+  padding: 0;
+  margin: 0;
 }
 
-#chat_box>tbody>tr>#message_body,#chat_box>tbody>tr>#message_entity
+#chat_types,#chat_participants,#friend_suggest
+{
+  background-color: #eee;
+  max-width: 100%;
+  text-align: center;
+  margin:auto;
+  border-radius: 1px;
+  padding: 5px;
+  overflow: auto;
+  margin:1px 0px; 
+white-space: nowrap;
+}
+
+
+
+
+
+.chat_types
 {
   display: inline-block;
+  padding: 15px;
   background-color: white;
+  border-radius: 50%;
+  margin: 1px;
 }
 
-#chat_box>tbody>tr>#message_entity
-{
- width:20%; 
-  height: 100%;
-}
-#chat_box>tbody>tr>#message_body
-{
-  width: 78%;
-}
-#chat_types>td>button
-{
-  border: solid 0px black;
-  font-size: 20px;
-  margin: 0px 0px;
-  padding: 11px;
-  background-color: #ddddd;
-  border-radius: 2px;
-}
+
 .user
 {
+  display: inline-block;
+  background-color: white; 
+  padding: 0px;
+  margin:0px 1px;
+  border-radius: 3px;
+}
+.user>img
+{
+  width: 60px;
+  height: 50px;
+  border-radius: 50%;
   display: block;
-  border-bottom: solid 1px black;
-  font-size: 20px;
-  margin: 1px 0px;
-  padding: 11px;
-  background-color: #ddddd;
-  border-radius: 2px;
+  margin: auto;
+}
+.user>span
+{
+  display: inline-block;
+  text-align: center;
+  padding: 1px;
+  width: 60px;
+  overflow: auto;
 }
 
-#message_body
+#current_participant_details
 {
-  font-size: 20px;
-}
-
-#message_body>table>tbody>tr>td
-{
-  width: 107%;
-  padding: 5px 35px;
-}
-#messages
-{
-  overflow-y: scroll;
-}
-#active_entity_meta
-{
- 
-  
+  display: block;
+  font-size: 22px;
+  text-align: center;
+  background-color: #eee;
+  font-size:13px;
 }
 
 
-#mdg_send
+#current_participant_messages
 {
-  background-color: #dddddd;
-  border: none;
   width: 100%;
-  border-radius: 5px;  
-  padding: 7px 10px;
-  font-size: 20px;
-
-  
-}
-#mdg_send:hover
-{
-  background-color: #dddddd;
-  cursor:pointer;
-}
-
-#messages
-{
-display: block;
-height: 8%
-overflow:scroll;
+  padding: 10px;
+  overflow:auto;
 }
 
 
-#online_users
-{
-  border-bottom: solid 1px black;
-  
-}
+#current_participant_messages>table>tbody>tr:nth-child(even) {background: white}
+
+#current_participant_messages>table>tbody>tr:nth-child(odd) {background: #eee}
+
+
+
+
+
 
 
 
@@ -127,61 +113,24 @@ margin-right: 45%;
 
 
 
-i {
-  border: solid black;
-  border-width: 0 3px 3px 0;
-  padding:5px;
-  float: right;
-  }
-
-
-
-.down {
-  transform: rotate(45deg);
-  -webkit-transform: rotate(45deg);
-    transition-duration: 850ms;
-}
-
-.up {
-  transform: rotate(-135deg);
-  -webkit-transform: rotate(-135deg);
-  transition-duration: 850ms;
-}
-
-.user
+#message_box_1
 {
-  cursor: pointer;
+ width: 100%; 
 }
-.user:hover
+
+
+
+
+
+#message_send
 {
-  background-color:orange;
+  background: none;
+  border: none;
+
+  font-size: 20px;
+color: blue;
+  
 }
-
-
-
-
-#p2p_option
-{
-  padding: 10px 0px; 
-  background-color: white;
-  box-shadow: 0px  0px 5px 2px gray;
-   border-radius: 2px;
-  font-size: 15px;
-  width:150px;
-}
-
-.p2p_options
-{
-
-  padding: 10px 25px;
-  cursor: pointer;
-}
-.p2p_options:hover
-{
-  background-color: gray;
-  color: white;
-}
-
 
 
 
@@ -230,10 +179,6 @@ i {
 
 
 
-#messages>table
-{
-  border: solid 1px black;
-}
 .rul_row
 {
 text-align: center;
@@ -282,3 +227,91 @@ text-align: center;
   box-shadow: 3px 3px 3px 1px gray; 
 }
 
+
+
+
+
+
+#message_box_1
+{
+  text-align: center;
+  border: solid 1px gray;
+  background-color: #eee;
+  border-radius: 20px;
+  width: 1250px;
+  line-height: 20px;
+  display:inline-block;
+}
+#message_box_1>*
+{
+  display: inline-block;
+}
+#message
+{
+    overflow: auto;
+    text-align: left;  
+    font-weight: 400;
+    max-height: 100px;
+    min-height: 35px;
+    outline: none;
+    overflow: hidden;
+    position: relative;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    z-index: 1;
+    font-size: 15px;
+}
+#emoji_toogle
+{
+  display: inline-block;
+  cursor: pointer;
+  font-size: 45px;
+  border: none;
+  background: none;
+  
+}
+
+
+#commands
+{
+  display: block;
+  border-top: solid 1px gray;
+
+}
+#commands>button,#functions>button
+{
+  border: none;
+  background-color: gray;
+  color: white;
+  border-radius: 2px;
+  font-size: 18px;
+}
+
+
+
+
+.emoji
+{
+  border: none;
+  background: none;
+  width: 50px;
+  font-size: 35px;
+}
+
+
+#emojis
+{
+	width: 100%;
+  max-height:185px;
+  overflow: hidden;    
+  overflow-x: hidden;
+  overflow-x: hidden;
+  border-radius: 10px;
+  border: solid 1px gray;
+  background-color: #eee;
+
+}
+#emojis,#message
+{
+    overflow-y: auto;
+}

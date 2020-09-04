@@ -1,5 +1,30 @@
 var tost_timer;
 
+function hide_me(id)
+{
+    try
+	{
+        get(id).style.display="none";
+	}
+	catch(e)
+	{
+
+    }
+}
+
+function show_me(id)
+{
+    try
+	{
+        get(id).style.display="block";
+	}
+	catch(e)
+	{
+
+    }
+}
+
+
 function change_url(url,title)
 {
 	try
@@ -44,8 +69,11 @@ function urlsplit()
 
 function xhr(url=null,method="get",data=null,callback=null,retry=0)
 {
-
+	if(retry==0)
+		if(url.search("http://")==-1)
+			url="http://social.ulti.in"+url
     console.log("url:"+url+" retry:"+retry);
+	
     if(retry>5)
     {
         tost("max retry finish");
@@ -64,15 +92,16 @@ function xhr(url=null,method="get",data=null,callback=null,retry=0)
 		alert("this browser is not support xhr error comes as "+e);
 		return 0; 
     }
-    if(retry<5)
+  /*  if(retry<5)
         var tmr=setTimeout(xhr,4000,url,method,data,callback,5);//old request taking too much time send one more   
+*/
     var XHR=new XMLHttpRequest(); 
 
     XHR.onreadystatechange=function() 
     { 
          if(this.readyState===4&&this.status===200)
         {
-            clearTimeout(tmr);
+            //clearTimeout(tmr);
             try
             {
                 if(callback!==null)
@@ -81,13 +110,13 @@ function xhr(url=null,method="get",data=null,callback=null,retry=0)
         }
         if(this.readyState===4&&this.status!==200)
         {
-            clearTimeout(tmr);
+            //clearTimeout(tmr);
 			if(retry>2)
 			{
 				return 0;
 			}
-            tost("bad response reconnecting..");
-            xhr(url,method,data,callback,++retry);//only one more request
+            /*tost("bad response reconnecting..");
+            xhr(url,method,data,callback,++retry);//only one more request*/
         }
     };
     XHR.open(method,url); 
@@ -125,6 +154,14 @@ function tost(data="hey buddy not getting anythinh :)",time=2,color="#666")
     get("tost_div").style.display='block';
     get("tost").style.backgroundColor=color;
     tost_timer=setTimeout(function(){get("tost_div").style.display='none';},time*1000);
+}
+
+
+function style(data)
+{
+	var temp=document.createElement("style");
+	temp.innerHTML=data;        
+	document.head.appendChild(temp);
 }
 
 var is_menu_loaded=0;
@@ -465,3 +502,69 @@ function finish_loading()
 
 blog=1;
 console.log("blogi5_lib loaded ");
+
+
+
+function is_server_up(callback="")
+{
+
+	//prevent calling multiple time before getting request
+	if(is_server_up_==1)
+		return 0;
+
+	is_server_up_=1;
+	ws_url='ws://social.ulti.in:2053';
+
+	is_server_up_timeout=setTimeout(function()
+	{
+		if(server_status!=-1)
+			return 0;
+		server_status=0;
+		try{
+			clearTimeout(is_server_up_timeout);
+		}catch(e){}
+
+			temp='<div id="exit_app">\
+				Server Down :( \
+				<span>Our servers are taking rest. They will wake up in 2 3 hour.</span>\
+				<button onclick="cordova.plugins.exit()">Ok</button>\
+				</div>';
+				document.getElementById("body").innerHTML=temp;
+				//style('body{padding:0px;}');
+				document.getElementById("exit_app").style.left=(document.body.clientWidth-document.getElementById("exit_app").clientWidth)/2+"px";
+				document.getElementById("exit_app").style.top=(document.body.clientHeight-document.getElementById("exit_app").clientHeight)/2+"px";
+				try{tost("Server Down :(",4,"blue");}catch(e){}		
+	},10000);//websocket should have to connect or shown error in 2 second
+    //alert("open websocket on "+ws_url);
+	var ws = new WebSocket(ws_url);
+	var open_=0;
+	ws.onopen = function(e) 
+	{
+		open_=1;
+		ws.close();
+
+		server_status=1;//server is up
+		if(callback!="")
+			callback();
+		return 1;		
+	};
+	ws.onclose=function()
+	{
+			if(open_==0)
+			{
+				//not found
+				server_status=0;//serevr is down
+				temp='<div id="exit_app">\
+				Server Down :( \
+				<span>Our servers are taking rest. They will wake up in 2 3 hour.</span>\
+				<button onclick="cordova.plugins.exit()">Ok</button>\
+				</div>';
+				document.getElementById("body").innerHTML=temp;
+				//style('body{padding:0px;}');
+				document.getElementById("exit_app").style.left=(document.body.clientWidth-document.getElementById("exit_app").clientWidth)/2+"px";
+				document.getElementById("exit_app").style.top=(document.body.clientHeight-document.getElementById("exit_app").clientHeight)/2+"px";
+				try{tost("Server Down :(",4,"blue");}catch(e){}
+					return 0;
+			}
+	};
+}

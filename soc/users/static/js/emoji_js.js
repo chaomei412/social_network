@@ -3,14 +3,18 @@
 //document.execCommand('insertText', false, 'banana')
 function toogle_emoji()
 {
-
-
 	get("emojis").style.bottom="0px";
 	document.getElementById("message").focus();
 		if(document.getElementById("emojis").style.display=="block")
-			document.getElementById("emojis").style.display="none";
+		{	
+		document.getElementById("emojis").style.display="none";
+		get("current_participant_messages").style.height=get("current_participant_messages").clientHeight+183+"px";
+		}
 		else
+		{
 			document.getElementById("emojis").style.display="block";
+			get("current_participant_messages").style.height=get("current_participant_messages").clientHeight-183+"px";
+		}
 }
 
 
@@ -52,7 +56,6 @@ function emoji(em)
 var command_timer="";
 function select()
 {
-
 	try
 	{
 		clearTimeout(command_timer);
@@ -61,11 +64,20 @@ function select()
 	{
 
 	}
-	console.log("selecting");
 	document.getElementById("commands").style.display="block";
 
-	command_timer=setTimeout(function(){document.getElementById("commands").style.display="none";},5000);
+	command_timer=setTimeout(is_still_selecting,5000);
 }
+
+
+function is_still_selecting()
+{
+	if(document.getSelection().toString().length==0)
+		document.getElementById("commands").style.display="none";
+	else
+			command_timer=setTimeout(is_still_selecting,5000);
+}
+
 
 
 

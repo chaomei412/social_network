@@ -13,87 +13,90 @@ import pymongo
 from bson import ObjectId
 
 def initiate(request):
-    my_id=request.session['u_id']
+	#fd.append("_id",Get("_id"));
+	#fd.append("username",Get("username"));
 
-    myclient = pymongo.MongoClient('mongodb://localhost:27017/')
-    mydb = myclient['social_network']
-    mycol = mydb["users"]
-    friends=mydb["friends"]
+	myclient = pymongo.MongoClient('mongodb://localhost:27017/')
+	mydb = myclient['social_network']
+	users = mydb["users"]
+	friends=mydb["friends"]
+	session=mydb["session"]
+	if(session.find_one({"_id":object_id(request.POST.get("_id")),"username":request.POST.get("username")})==None):
+		return HttpResponse(json.dumps({}, default=str), content_type="application/json")
+
+	my_id=str(users.find_one({"u_name":request.POST.get("username")})["_id"])
+
+	friend=[]
+	friend_int=[]
+
+	print("F.R.I.E.N.D.S.: ",friend)
+
+	q1={"friend_id":my_id,"status":1}
+
+	print("friens query: ",q1)
+	for i in friends.find(q1):
+		friend.append(i["user_id"])
+		friend_int.append(i["user_id"])
+	print("F.R.I.E.N.D.S.: ",friend)
+
+	q2={"user_id":my_id,"status":1}
+	print("friens query: ",q2)    
+	for i in friends.find(q2):
+		friend.append(i["friend_id"])
+		friend_int.append(i["friend_id"])
+	print("F.R.I.E.N.D.S.: ",friend)
+
+	friend.append(my_id)	
+	#friend_int.append(my_id) #dont show own posts on home screen
+
+	print("F.R.I.E.N.D.S.: ",friend)
+
+	request.session['friends']=','.join(friend)	
+	data=[]
+
+	mycol = mydb["post"]
+	users=mydb["users"]
+	like_dislike=mydb["like_dislike"]
+	comments=mydb["comments"]
 
 
+	q={"user_id":{"$in":friend_int}}
+	x = mycol.find(q)#all post loaded directly we can use .limit()  insted to use next post function to load posts in bunch
 
+	for row in x: 
+		frnd={"_id":object_id(row["user_id"])}#need to focus here later on pastly it save int of autoincrement of sqlite now on it has to save user _id
+		select={"f_name":1,"l_name":1,"pic_url":1}
+		xxx=users.find_one(frnd,select)
+		row["f_name"]=xxx["f_name"]
+		row["l_name"]=xxx["l_name"]
+		row["pic_url"]=xxx["pic_url"]
 
-    friend=[]
-    friend_int=[]
+		#add no of likes
+		lks={"post_id":str(row["_id"]),"action":1}
+		row["likes_count"]=like_dislike.find(lks).count()
+		
+		#no of dislike
+		dslks={"post_id":str(row["_id"]),"action":1}
+		row["dislikes_count"]=like_dislike.find(dslks).count()
+		
+		#am i like/dislike this ?
+		ami={"post_id":str(row["_id"]),"user_id":my_id}
+		select={"action":1}
+		row["am_i"]=like_dislike.find_one(ami,select)
+		#add no of comments
+		cmnts={"post_id":str(row["_id"])}
+		row["comments_count"]=comments.find(cmnts).count()
+		row["_id"]=str(row["_id"])
+		data.append(row)
 
-    print("F.R.I.E.N.D.S.: ",friend)
-
-    q1={"friend_id":my_id,"status":1}
-
-    print("friens query: ",q1)
-    for i in friends.find(q1):
-        friend.append(i["user_id"])
-        friend_int.append(i["user_id"])
-    print("F.R.I.E.N.D.S.: ",friend)
-
-    q2={"user_id":my_id,"status":1}
-    print("friens query: ",q2)    
-    for i in friends.find(q2):
-        friend.append(i["friend_id"])
-        friend_int.append(i["friend_id"])
-    print("F.R.I.E.N.D.S.: ",friend)
-
-    friend.append(my_id)	
-    friend_int.append(my_id)
-
-    print("F.R.I.E.N.D.S.: ",friend)
-
-    request.session['friends']=','.join(friend)	
-    data=[]
-
-    mycol = mydb["post"]
-    users=mydb["users"]
-    like_dislike=mydb["like_dislike"]
-    comments=mydb["comments"]
-
-
-    q={"user_id":{"$in":friend_int}}
-    x = mycol.find(q)#all post loaded directly we can use .limit()  insted to use next post function to load posts in bunch
-
-    for row in x: 
-        frnd={"_id":object_id(row["user_id"])}#need to focus here later on pastly it save int of autoincrement of sqlite now on it has to save user _id
-        select={"f_name":1,"l_name":1,"pic_url":1}
-        xxx=users.find_one(frnd,select)
-        row["f_name"]=xxx["f_name"]
-        row["l_name"]=xxx["l_name"]
-        row["pic_url"]=xxx["pic_url"]
-
-        #add no of likes
-        lks={"post_id":str(row["_id"]),"action":1}
-        row["likes_count"]=like_dislike.find(lks).count()
-        
-        #no of dislike
-        dslks={"post_id":str(row["_id"]),"action":1}
-        row["dislikes_count"]=like_dislike.find(dslks).count()
-        
-        #am i like/dislike this ?
-        ami={"post_id":str(row["_id"]),"user_id":my_id}
-        select={"action":1}
-        row["am_i"]=like_dislike.find_one(ami,select)
-        #add no of comments
-        cmnts={"post_id":str(row["_id"])}
-        row["comments_count"]=comments.find(cmnts).count()
-        row["_id"]=str(row["_id"])
-        data.append(row)
-
-    #below use for load n post at time
-    '''if(len(data)!=0):
-        request.session['last_fetch_post_id']=data[-1][0]
-    print(data)
-    for i in range(len(data)):
-        data[i][0]["_id"]=str(data[i][0]["_id"])
-    print(data)'''    
-    return HttpResponse(json.dumps(data, default=str), content_type="application/json")
+	#below use for load n post at time
+	'''if(len(data)!=0):
+		request.session['last_fetch_post_id']=data[-1][0]
+	print(data)
+	for i in range(len(data)):
+		data[i][0]["_id"]=str(data[i][0]["_id"])
+	print(data)'''    
+	return HttpResponse(json.dumps(data, default=str), content_type="application/json")
 
 
 def post(request):

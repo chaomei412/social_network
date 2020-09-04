@@ -1,18 +1,13 @@
 function punlic_brodcast()
 {
-
-
-    hide_options();
+    
     current_open="punlic_brodcast";
-    vanish("messages");
+    vanish("current_participant_messages");
     ratr("message_send","onclick");
     satr("message_send","onclick","send_it()");
     
     ratr("message","onkeyup");
-    satr("message","onkeyup","send_publick_msg_keyup(event)");
-     
-
-    
+    satr("message","onkeyup","send_publick_msg_keyup(event)");   
     var d={};
     d["type"]="members";
     ws.send(JSON.stringify(d));
@@ -46,8 +41,8 @@ function  send_it()
 	var el=document.createElement("span");
 	el.className="left_mess";
 	el.innerHTML=d["content"];
-	document.getElementById("messages").appendChild(el);
-	get("messages").scrollTop = get("messages").scrollHeight;
+	document.getElementById("current_participant_messages").appendChild(el);
+	get("current_participant_messages").scrollTop = get("current_participant_messages").scrollHeight;
 }
 
 
@@ -101,11 +96,11 @@ function send_p2p_msg_keyup(event) {
 
 function p2p()
 {
-    hide_options();
+    
     current_open="p2p";
     p2p_current_open="";
     h_title(current_open);
-    vanish("messages");
+    vanish("current_participant_messages");
     var d={};
     d["type"]="p2p";
     ws.send(JSON.stringify(d));
@@ -204,11 +199,11 @@ function update_rule(id,rule_name,For,rule)
 
 function blocked()
 {
-    hide_options();
+    
     current_open="blocked";
     p2p_current_open="";
     h_title(current_open);
-    vanish("messages");
+    vanish("current_participant_messages");
     var d={};
     d["type"]="blocked";
     ws.send(JSON.stringify(d));
@@ -219,12 +214,12 @@ function blocked()
 function rules()
 {
     current_open="rules";
-    vanish("messages");
-    vanish("message_entity");
-    vanish("active_entity_meta");
+    vanish("current_participant_messages");
+    vanish("chat_participants");
+    vanish("current_participant_details");
 
     var temp='<div><button id="new_rul_box_toogle" onclick="new_rul_box_toogle()">New Rule</button></div>';
-    append("message_entity",temp);
+    append("chat_participants",temp);
     var data={};
     data["type"]="rules";
     ws.send(JSON.stringify(data))
@@ -261,7 +256,7 @@ function put_old_rules(rules)
             
     }
     temp+='</tbody></table>';
-    append("messages",temp);
+    append("current_participant_messages",temp);
     alert("old rule added");
 }
 
@@ -432,7 +427,7 @@ function p2p_active(us)
     if(p2p_current_open!=us)
     {
 
-        vanish("messages");
+        vanish("current_participant_messages");
         h_title(p2p_current_open);
         p2p_current_open=us;
 
@@ -446,7 +441,7 @@ function p2p_active(us)
                 cur.style.backgroundColor="white";   
         }
 
-        insert("active_entity_meta",p2p_current_open);
+        insert("current_participant_details",p2p_current_open);
 
         if(online_users.includes(us)==true)
             get("user_list_"+us).style.color="green";
@@ -482,16 +477,13 @@ function p2p_send()
     el.className="right_mess animated pulse";
 
 	el.innerHTML=d["content"];
-	document.getElementById("messages").appendChild(el);
-	get("messages").scrollTop = get("messages").scrollHeight;
+	document.getElementById("current_participant_messages").appendChild(el);
+	get("current_participant_messages").scrollTop = get("current_participant_messages").scrollHeight;
 }
 
-function wsclose()
-     {
-       tost("messaging server connection has been closed ");
-       logout();
-    }
+
 var online_users=[];
+
 function message_received(event) 
         {
         var res=event.data;
@@ -509,8 +501,8 @@ function message_received(event)
             var el=document.createElement("span");
             el.className="right_mess animated pulse";
             el.innerHTML=res["sender"]+" : "+res["content"];
-            get("messages").appendChild(el);
-            get("messages").scrollTop = get("messages").scrollHeight;
+            get("current_participant_messages").appendChild(el);
+            get("current_participant_messages").scrollTop = get("current_participant_messages").scrollHeight;
 			break;
         case 'typing':
             console.log("typimg: ",res);
@@ -525,21 +517,21 @@ function message_received(event)
         case 'meta':
             if(current_open!="punlic_brodcast")
                 break;
-            insert("active_entity_meta",res["count"]+" members online in this room");
-            vanish("message_entity");
+            insert("current_participant_details",res["count"]+" members online in this room");
+            vanish("chat_participants");
             for(var i=0;i<res["members"].length;i++)
-                append("message_entity",'<span class="user">'+res["members"][i]+'</span>');
+                append("chat_participants",'<span class="user">'+res["members"][i]+'</span>');
                 break;
         case 'p2p_users_meta':
             if(current_open!="p2p")
                 break;
-            insert("active_entity_meta",res["onlines"].length+" friends online");
-            vanish("message_entity");
-            vanish("messages");
+            insert("current_participant_details",res["onlines"].length+" friends online");
+            vanish("chat_participants");
+            vanish("current_participant_messages");
             for(var i=0;i<res["friends"].length;i++)
                 {
                     console.log(1);
-                    append("message_entity",'<span class="user" id="user_list_'+res["friends"][i]+'" onclick="p2p_active(\''+res["friends"][i]+'\')">'+res["friends"][i]+'<i class="down" onclick="p2p_option(\''+res["friends"][i]+'\',this)"></i></span>');
+                    append("chat_participants",'<span class="user" id="user_list_'+res["friends"][i]+'" onclick="p2p_active(\''+res["friends"][i]+'\')">'+res["friends"][i]+'<i class="down" onclick="p2p_option(\''+res["friends"][i]+'\',this)"></i></span>');
                     var id="user_list_"+res["friends"][i];
                     get(id).style.color="blue";
                 }
@@ -556,14 +548,14 @@ function message_received(event)
             if(current_open!="p2p")
                 break;
             get("user_list_"+res["username"]).style.color="blue";
-            insert("active_entity_meta",online_users.length+" friends online");
+            insert("current_participant_details",online_users.length+" friends online");
                 break;
         case 'p2p_online':
             online_users.push(res["username"]);
             if(current_open!="p2p")
                 break;        
             get("user_list_"+res["username"]).style.color="green";
-            insert("active_entity_meta",online_users.length+" friends online");
+            insert("current_participant_details",online_users.length+" friends online");
                 break
         case 'p2p_message':
                     //data={"type":"p2p_message","friend":"admin96","content"hi","sender":"Admin"}
@@ -580,8 +572,8 @@ function message_received(event)
 
                 el.className="left_mess animated pulse";
                 el.innerHTML=res["content"];
-                get("messages").appendChild(el);
-                get("messages").scrollTop = get("messages").scrollHeight;
+                get("current_participant_messages").appendChild(el);
+                get("current_participant_messages").scrollTop = get("current_participant_messages").scrollHeight;
             }
             else
             {
@@ -606,21 +598,21 @@ function message_received(event)
                         else
                             el.className="left_mess animated pulse";
                         el.innerHTML=res["content"][i]["message_content"];
-                        get("messages").appendChild(el);
+                        get("current_participant_messages").appendChild(el);
                     }
-                    get("messages").scrollTop = get("messages").scrollHeight;
+                    get("current_participant_messages").scrollTop = get("current_participant_messages").scrollHeight;
                 }
             break;
         case 'blocked':
                 //	data={"type":"blocked","blocked":friend}
                 if(current_open!="blocked")
                     break;
-                insert("active_entity_meta",res["blocked"].length+" friends block");
-                vanish("message_entity");
-                vanish("messages");
+                insert("current_participant_details",res["blocked"].length+" friends block");
+                vanish("chat_participants");
+                vanish("current_participant_messages");
                 for(var i=0;i<res["blocked"].length;i++)
                     {
-                        append("message_entity",'<span class="user" id="user_list_'+res["blocked"][i]+'" onclick="p2p_active(\''+res["blocked"][i]+'\')">'+res["blocked"][i]+'<i class="down" onclick="block_option(\''+res["blocked"][i]+'\',this)"></i></span>');
+                        append("chat_participants",'<span class="user" id="user_list_'+res["blocked"][i]+'" onclick="p2p_active(\''+res["blocked"][i]+'\')">'+res["blocked"][i]+'<i class="down" onclick="block_option(\''+res["blocked"][i]+'\',this)"></i></span>');
                         var id="user_list_"+res["blocked"][i];
                         get(id).style.color="blue";
                     }
@@ -741,8 +733,8 @@ function show_p2p_option(left,top,usr,menu=null)
 
 function block(friend)
 {
-    hide_options();
-    vanish("messages");
+    
+    vanish("current_participant_messages");
     var id="user_list_"+friend;
     remove(id);
 
@@ -761,28 +753,12 @@ function unblock(friend)
     data["friend"]=friend;
     ws.send(JSON.stringify(data)); 
 
-    hide_options();
+    
     var id="user_list_"+friend;
     remove(id);
 
 }
 
-function hide_options()
-{
-        //close if anothers option is open
-    if(p2p_option_open.length>0)
-    {
-        for(var i=0;i<p2p_option_open.length;i++)
-        {
-
-            p2p_option_open[i].className="down";
-            p2p_option_open.pop(p2p_option_open[i]);
-        }
-        vanish("p2p_option");
-        get("p2p_option").style.display="none";
-    }
-
-}
 
 
 

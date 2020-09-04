@@ -18,8 +18,8 @@ function enable_signup()
 function is_username_available() 
 {
     var data = valueof("user_name");
-    var fd = new FormData();
-    fd.append("csrfmiddlewaretoken", document.getElementsByName("csrfmiddlewaretoken")[0].value);
+    var fd = user_meta_();
+
     fd.append("u_name", data);
     xhr("/signup/is_username_avail", "post", fd, check_user_name, 0);
 }

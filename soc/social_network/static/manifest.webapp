@@ -1,0 +1,51 @@
+{
+  "version": "1.1.6",
+  "name": "Localization",
+  "description": "Use l10n to localize language for your application",
+  "subtitle": "Localization",
+  "launch_path": "/index.html",
+  "categories": ["games"],
+  "icons": {
+    "56": "/icons/kaios_56.png",
+    "112": "/icons/kaios_112.png"
+  },
+  "fullscreen" : true,
+  "developer": {
+    "name": "KaiOS",
+    "url": "http://kaiostech.com"
+  },
+  "type": "web",
+  "locales": {
+    "en-US": {
+      "name": "Localization",
+      "subtitle": "Localization",
+      "description": "Use l10n to localize language for your application"
+    },
+    "ru": {
+      "name": "локализация",
+      "subtitle": "локализация",
+      "description": "Используйте l10n для локализации языка для вашего приложения"
+    },
+    "es-MX": {
+      "name": "Localización",
+      "subtitle": "Localización",
+      "description": "Use l10n para localizar el idioma de su aplicación"
+    },
+    "fr-FR": {
+      "name": "Localisation",
+      "subtitle": "Localisation",
+      "description": "Utilisez l10n pour localiser la langue de votre application"
+    },
+    "ur": {
+      "name": "لوکلائزیشن",
+      "subtitle": "لوکلائزیشن",
+      "description": "اپنی درخواست کیلئے زبان کو مقامی بنانے کے ل l l10n کا استعمال کریں"
+    },
+    "sw": {
+      "name": "Ujanibishaji",
+      "subtitle": "Ujanibishaji",
+      "description": "Tumia l10n kubinafsisha lugha kwa programu yako"
+    }
+  },
+  "default_locale": "en-US"
+}

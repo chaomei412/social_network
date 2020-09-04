@@ -19,14 +19,13 @@ function init_header()
 
 
     get("mob_header_1").style.width=width+"px";
-
-
+    
     get("mob_header_2").style.width=width+"px";
 
     get("mob_prof_pic").style.width="40px";
-    get("mob_search_box").style.width=width-60+"px";
+    get("mob_search_box").style.width=width-60-40+"px";
 
-    get("mob_search").style.width=width-40-65+"px";
+    get("mob_search").style.width=get("mob_search_box").clientWidth-60+"px";
 
     get("mob_search_friend").style.width="65px";
 

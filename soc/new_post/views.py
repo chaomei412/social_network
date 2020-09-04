@@ -26,36 +26,44 @@ def new_post(request):
 	#return HttpResponse("ok new post")
 import uuid
 def upload_post_image(request):
-	my_id=request.session['u_id']
-	pic=request.FILES['fileToUpload']
 
 	myclient = pymongo.MongoClient('mongodb://localhost:27017/')
 	mydb = myclient['social_network']
 	mycol = mydb["images"]
+	session=mydb["session"]
+	users=mydb["users"]
+
+	data_={}
+	data_["request_method"]=request.method
+	if request.method == "POST":
+		data={}
+
+		data["username"]=data_["username"]=request.POST.get('username')
+		data["_id"]=data_["_id"]=object_id(request.POST.get('_id'))
+		if(session.find_one(data)!=None):
+			my_id=str(users.find_one({"u_name":data["username"]})['_id'])
+			pic=request.FILES['fileToUpload']
+			#save image with user id in db so we can identify which image is of witch user
+
+			extension=pic.name.split(".")[-1]
+			img_id=uuid.uuid1().hex #it can be int bytes to
+
+			img_url=img_id+"."+extension
+
+			q={"user_id":my_id,"pic_url":img_url}
+			mycol.insert_one(q)
 
 
+			#handle pic
 
-	#save image with user id in db so we can identify which image is of witch user
+			fs = FileSystemStorage()
+			filename = fs.save(img_url, pic)
+			uploaded_file_url = fs.url(filename)
+			print(uploaded_file_url)
+			print("pic new name",img_url)
 
-	extension=pic.name.split(".")[-1]
-	img_id=uuid.uuid1().hex #it can be int bytes to
-
-	img_url=img_id+"."+extension
-
-	q={"user_id":my_id,"pic_url":img_url}
-	mycol.insert_one(q)
-
-
-	#handle pic
-
-	fs = FileSystemStorage()
-	filename = fs.save(img_url, pic)
-	uploaded_file_url = fs.url(filename)
-	print(uploaded_file_url)
-	print("pic new name",img_url)
-
-	return HttpResponse("/media/"+img_url)
-
+			return HttpResponse("http://social.ulti.in/media/"+img_url)
+	return HttpResponse(json.dumps(data_), content_type="application/json")
 
 def share(request):
 	

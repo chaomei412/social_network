@@ -1,63 +1,124 @@
-import sqlite3 as db
+import pymongo
+from bson.objectid import ObjectId as object_id
 from django.shortcuts import render, redirect  
 import json
 from django.http import HttpResponse , HttpResponseRedirect
 from datetime import date
+
+
+
+
 def account(request):
-    conn=db.connect('sqlite3_manager/db')	
-    c = conn.cursor()
-    my_id=request.session['u_id']
+
+    myclient = pymongo.MongoClient('mongodb://localhost:27017/')
+    mydb = myclient['social_network']
+    users=mydb["users"]
+    session = mydb["session"]
+    post=mydb["post"]
+    mydb2 = myclient['webhost']
+    my_ipv6=mydb2["my_ipv6"]
+
     data={}
-    q="select pic_url from pics where u_id="+str(my_id)
-    #pic varchar(25),gender integer,religion_id integer,address_id integer)
-    for i in c.execute(q):
-        data['my_pic']=i[0]
-    user_id=my_id
-    
-    
-    
-      #select personal info
-    q="select fname,lname,dob,gender from users where id="+str(user_id)
-    for row in c.execute(q):
-        data['user_id']=user_id
-        data['name']=list(row[0:2])
-        data['dob']=[row[2][0:4],row[2][4:6],row[2][6:]]
-        data['gender']=row[3]
-        #in future add current age of that user
+    if request.method == "POST":
+        data={}
+        data["username"]=request.POST.get('username')
+        data["_id"]=object_id(request.POST.get('_id'))
+        if(session.find_one(data)!=None):
+            data=users.find_one({"u_name":data["username"]},{"pass_d":0})
+            data["_id"]=str(data["_id"])
+        else:
+            data={}
+            data["_id"]=-1
+            data=json.dumps(data)
+            return HttpResponse(data, content_type='application/json')    
+    else:
+        data={}
+        data["_id"]=-1
+        data=json.dumps(data)
+        return HttpResponse(data, content_type='application/json')            
+
+
+
+
+    #in future add current age of that user
         
-    #profile pic url    
-    q="select pic_url from pics where u_id="+str(user_id)
-    for row in c.execute(q):
-        data['pic']=row[0]
-    
-    
-    
+
+
+
+
     #select no of posts
-    q="select count(id)  from post where u_id="+str(user_id)
-    for row in c.execute(q):
-        data['post_count']=row[0]
-    
+    user_id=data["_id"]
+    q={"user_id":user_id}
+    data['post_count']=post.count_documents(q)
+
+
     #select no of comments
-    q="select count(id)  from comment where u_id="+str(user_id)
-    for row in c.execute(q):
-        data['comments_count']=row[0]
-    
+    comments=mydb["comments"]
+    q={"user_id":user_id}
+
+    data['comments_count']=comments.count_documents(q)
+ 
+
     #select no of likes
-    q="select count(id)  from like_dislike where u_id="+str(user_id)
-    for row in c.execute(q):
-        data['like_count']=row[0]
+    likes=mydb["like_dislike"]
+    data['like_count']=likes.count_documents(q)
+
+
+
     
 
     #select no of likes to this users post
-    q="select count(l.id)  from like_dislike l,post p where p.u_id="+str(user_id)+" and p.id=l.p_id"
-    for row in c.execute(q):
-        data['own_like_count']=row[0]
-    
+
+    #1. get user post ids
+
+    post_ids=[]
+    for i in post.find(q,{"id":1}):
+        post_ids.append(str(i["_id"])) 
+    q={}
+    data['own_like_count']=likes.count_documents({"post_id": { "$in": post_ids },"action":1})
+
 
     #select no of comments to this users post
-    q="select count(c.id)  from comment c,post p where p.u_id="+str(user_id)+" and p.id=c.p_p_id"
-    for row in c.execute(q):
-        data['own_comment_count']=row[0]
+    data['own_comment_count']=comments.count_documents({"post_id": { "$in": post_ids }})
+
+    #data=json.dumps(data)
+    #return HttpResponse(data, content_type='application/json')
     return render(request, 'account.html', {"data" : data})
     #return HttpResponse(json.dumps(data), content_type="application/json")
-    
+
+
+
+def menu(request):
+    myclient = pymongo.MongoClient('mongodb://localhost:27017/')
+    mydb = myclient['social_network']
+    users=mydb["users"]
+    session = mydb["session"]
+    post=mydb["post"]
+
+
+    data={}
+    if request.method == "POST":
+        data={}
+        data["username"]=request.POST.get('username')
+        data["_id"]=object_id(request.POST.get('_id'))
+        if(session.find_one(data)!=None):
+            data=users.find_one({"u_name":data["username"]},{"pass_d":0})
+            data["_id"]=str(data["_id"])
+        else:
+            data={}
+            data["_id"]=-1
+            data=json.dumps(data)
+            return HttpResponse(data, content_type='application/json')    
+    else:
+        data={}
+        data["_id"]=-1
+        data=json.dumps(data)
+        return HttpResponse(data, content_type='application/json')            
+
+    #data contain user details name pic_url
+    return render(request, 'menu.html', {"data" : data})
+
+
+
+
+

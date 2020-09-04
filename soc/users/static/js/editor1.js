@@ -335,9 +335,7 @@ editor1 = 1;
 
 function share() {
     var content = get("textEditor").innerHTML;
-    var crf = document.getElementsByName("csrfmiddlewaretoken")[0].value;
-    var fd = new FormData();
-    fd.append("csrfmiddlewaretoken", crf);
+    var fd = new FormData();    
     fd.append("date", date());
     fd.append("content", content);
     xhr("/new_post/share", "post", fd, shared, 0);
@@ -361,12 +359,24 @@ function shared(data) {
 
 
 function post() {
-    xhr("/post/get_next", "get", null, put_posts, 0);
+    xhr("/post/", "get", null, put_posts, 0);
 }
 
-function put_posts(data) {
+function put_posts(data) 
+{
+    if(current_open=="home" || current_open=="account");
 
+    else
+        return 0;
     data = JSON.parse(data);
+    if(data.length==0)
+	{
+        if(current_open=="home")
+             append("body","<h3>We not found any posts for you.</h3></br><h4>add some more friends</h4>");
+        if(current_open=="account")
+        append("body","<h3>you not have shared anything .</h3></br><h4>try to create some posts</h4>");
+       //first half posts
+	}
 
     var i;
     for (var i = 0; i < data.length; i++) {
@@ -375,7 +385,7 @@ function put_posts(data) {
 							<span class="post_head">\
 								<span class="post_user" title="view prifile of ' + data[i]["f_name"] + ' ' + data[i]["l_name"] + '"  onclick="user(\'' + data[i]["user_id"] + '\')">\
 									<span class="post_user_icon">\
-										<img src="/media/' + data[i]["pic_url"] + '"/>\
+										<img src="http://social.ulti.in/media/' + data[i]["pic_url"] + '"/>\
 									</span>\
                                     <span class="post_user_name">' + data[i]["l_name"] + ' ' + data[i]["f_name"] + '</span>\
                                     <span class="post_cats">' + JSON.stringify(data[i]["category"]) + '</span>\
@@ -401,9 +411,12 @@ function put_posts(data) {
 							<span class="commentras" id="comments_' + data[i]["_id"] + '" onclick="expand_me(this)" title="click to expand"></span>\
 						</span>';
         temp1.innerHTML = temp;
-        get("body").appendChild(temp1);
+        if(current_open=="home" || current_open=="account")
+            get("body").appendChild(temp1);
+        else
+            return 0;
     }
-    //first half posts
+
 
 
     //temp1.onfocus = post();  on last post view load next posts currently loading all posts at time
@@ -412,21 +425,86 @@ function put_posts(data) {
 
 function profile() {
     change_url("/account");
-    xhr("/account", "get", null, account, 0);
+    var fd=new FormData();
+    fd.append("_id",Get("_id"));
+    fd.append("username",Get("username"));
+    
+    xhr("/account", "post", fd, account, 0);
+	current_open="account";
 }
 
-function account(data) {
-    document.write(data);
+function account(data) 
+{
+	if(current_open!="account")
+		return 0;
+    insert("body",data);
+
+    //get own friends
+    var fd=new FormData();
+	fd.append("username",Get("username"));
+	fd.append("_id",Get("_id"));
+	xhr("/friends/","post",fd,put_my_friends_,0);
+    post();
 }
+
+function put_my_friends_(data)
+{
+    if(current_open=="my_friends" || current_open=="account");
+    else
+    	return 0;
+	//sow actual search results
+	data=JSON.parse(data);
+	var temp='';
+	if(data.length==0)
+	{
+		temp+='<div class="search_result">you dont have any friends :(</div>';
+		show_suggestions();
+	}
+	for(let i=0;i<data.length;i++)
+	{
+		var x=data[i]["status"],action,evt;
+		switch(x)
+		{
+			case 0:				action="cancle request",evt="cancle_frindship";
+			break;
+			case 1:				action="remove friend",evt="cancle_frindship";
+			break;
+			case 2:				action="unblock",evt="unblock";
+			break;			
+			case 3:				action="accept",evt="accept";
+			break;			
+		}
+		let name=data[i]["f_name"]+" "+data[i]["l_name"];
+		temp+='<div class="friend_suggest"><img src="http://social.ulti.in/media/'+data[i]["pic_url"]+'"/><span class="search_result_name">'+name+'</span><button onclick="'+evt+'(this,\''+data[i]["friend_id"]+'\')">'+action+'</button></div>';
+	}
+
+
+
+	//append to body 
+
+	append("body",temp);	
+	append("body",'<div id="friend_suggest"></div>');
+	var fd=user_meta_();
+	xhr("/friend_suggestions/","POST",fd,show_suggestions,0);
+}
+
+
 
 function user(id) {
     // view user profile ater click on icon or nAME
     change_url("/profile?id=" + id);
     xhr("/profile?id=" + id, "get", null, show_user, 0);
+    //get post of this uder and friend of this user without any action  like add friend, etc
+
+    
 }
 
-function show_user(data) {
-    document.write(data);
+function show_user(data) 
+{
+   insert("body",data);
+
+   
+
 }
 
 function load_comments(ths, id) {
@@ -437,7 +515,8 @@ function load_comments(ths, id) {
 
 }
 
-function put_comments(data) {
+function put_comments(data) 
+{
 
     data = JSON.parse(data)
     console.log(data);
@@ -452,9 +531,9 @@ var gid;
 function comment(id) {
     var comment = valueof("comment_" + id);
     valueas("comment_" + id, "");
-    var crf = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+    
     var fd = new FormData();
-    fd.append("csrfmiddlewaretoken", crf);
+    
     fd.append("date", date());
     fd.append("p_id", id);
     fd.append("comment", comment);
@@ -479,7 +558,7 @@ function commented(data) {
     temp.innerHTML = t2;
     var id = "comments_" + data['post_id'];
     get(id).insertBefore(temp, get(id).firstChild);
-
+    //asign uniq id to comment count and incrise it when user comment here
 }
 
 
@@ -571,8 +650,8 @@ function sendData()
     var form=get("myForm");
     // Bind the FormData object and the form element
     var FD = new FormData(form);
-    var crf=document.getElementsByName("csrfmiddlewaretoken")[0].value;
-    FD.append("csrfmiddlewaretoken",crf);
+    FD.append("username",Get("username"));
+    FD.append("_id",Get("_id"));
     // Define what happens on successful data submission
     XHR.addEventListener("load", function(event) 
     {
